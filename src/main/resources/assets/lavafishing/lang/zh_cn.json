@@ -1,0 +1,16 @@
+{
+  "effect.lavafishing.blessed": "祝福",
+  "effect.lavafishing.endless_flame": "无尽之火",
+  "effect.lavafishing.lava_walker": "岩浆行者",
+  "item.lavafishing.agni_fish": "火神鱼",
+  "item.lavafishing.arowana_fish": "龙鱼",
+  "item.lavafishing.flame_squat_lobster": "烈焰铠甲虾",
+  "item.lavafishing.obsidian_fishing_rod": "黑曜石钓竿",
+  "item.lavafishing.obsidian_sword_fish": "黑曜石剑鱼",
+  "item.lavafishing.quartz_fish": "石英鱼",
+  "item.lavafishing.steam_flying_fish": "蒸汽飞鱼",
+  "item.minecraft.potion.effect.lava_walker": "岩浆行者药水",
+  "item.minecraft.splash_potion.effect.lava_walker": "喷溅型岩浆行者药水",
+  "item.minecraft.lingering_potion.effect.lava_walker": "滞留型岩浆行者药水",
+  "itemGroup.Lava Fishing": "岩浆钓鱼"
+}
