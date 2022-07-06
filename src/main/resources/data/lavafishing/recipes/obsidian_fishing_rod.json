@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  y",
+    " yx",
+    "y x"
+  ],
+  "key": {
+    "x": {
+      "item": "minecraft:string"
+    },
+    "y": {
+      "item": "minecraft:obsidian"
+    }
+  },
+  "result": {
+    "item": "lavafishing:obsidian_fishing_rod"
+  }
+}
