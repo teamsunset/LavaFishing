@@ -29,7 +29,7 @@ displayName = "Lava Fishing" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile = "lavafishing.png" #optional
 # A text field displayed in the mod UI
-credits = "Chen" #optional
+credits = "Chen,teddyxlandlee," #optional
 # A text field displayed in the mod UI
 authors = "Sgolden" #optional
 # The description text for the mod (multi line!) (#mandatory)

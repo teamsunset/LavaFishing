@@ -1,3 +1,6 @@
 {
-  "parent": "minecraft:item/cod"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "lavafishing:item/flame_squat_lobster"
+  }
 }
