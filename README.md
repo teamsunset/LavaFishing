@@ -1,3 +1,6 @@
+<br>
+<img src="src/main/resources/logo.png" style="image-rendering: pixelated;" alt="logo">
+
 # Lava Fishing
 
 ---
