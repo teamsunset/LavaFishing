@@ -8,7 +8,7 @@
       "predicate": {
         "cast": 1
       },
-      "model": "minecraft:item/fishing_rod_cast"
+      "model": "lavafishing:item/obsidian_fishing_rod_cast"
     }
   ]
 }

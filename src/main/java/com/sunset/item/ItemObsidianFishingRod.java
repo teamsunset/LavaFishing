@@ -34,7 +34,7 @@ public class ItemObsidianFishingRod extends FishingRodItem
         else {
             playThrowSound(pPlayer, pLevel);
             if (!pLevel.isClientSide) {
-                EntityObsidianHook entityFishHook = new EntityObsidianHook(pPlayer, pLevel, 1, 1);
+                EntityObsidianHook entityFishHook = new EntityObsidianHook(pPlayer, pLevel, 0, 0);
                 pLevel.addFreshEntity(entityFishHook);
             }
             pPlayer.swing(pHand);
