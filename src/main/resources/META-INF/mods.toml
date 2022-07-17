@@ -31,7 +31,7 @@ logoFile = "logo.png" #optional
 # A text field displayed in the mod UI
 credits = "Chen, teddyxlandlee, Wei, Karth" #optional
 # A text field displayed in the mod UI
-authors = "Sgolden" #optional
+authors = "Sgolden, Mr_Scallop" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description = '''
 A mod which allows you to fish in the lava.

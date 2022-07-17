@@ -41,7 +41,7 @@ public class EffectBlessed extends MobEffect
         LivingEntity target = event.getEntityLiving();
         if (source.getEntity() instanceof LivingEntity sourceEntity) {
             if (!source.isProjectile() && !source.isMagic() && sourceEntity.getEffect(EffectCollection.EFFECT_BLESSED) != null && sourceEntity.getMainHandItem().is(Items.AIR)) {
-                target.addEffect(new MobEffectInstance(EffectCollection.EFFECT_ENDLESS_FLAME, 4800), sourceEntity);
+                target.addEffect(new MobEffectInstance(EffectCollection.EFFECT_ENDLESS_FLAME, 1200), sourceEntity);
                 spawnHitParticle((ServerLevel) target.getLevel(), target.position());
             }
         }
