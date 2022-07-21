@@ -29,7 +29,7 @@ displayURL = "https://github.com/dsx137/lavafishing" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile = "logo.png" #optional
 # A text field displayed in the mod UI
-credits = "Chen, teddyxlandlee, Wei, Karth" #optional
+credits = "Chen, teddyxlandlee, Wei, Karth, Kun" #optional
 # A text field displayed in the mod UI
 authors = "Sgolden, Mr_Scallop" #optional
 # The description text for the mod (multi line!) (#mandatory)

@@ -6,7 +6,7 @@ import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
 public class LootTableHandler
 {
-    public static final ResourceLocation FISH = register("gameplay/fishing/fish");
+    public static final ResourceLocation FISH = register("gameplay/fishing");
 
     private static ResourceLocation register(String path) {
         return BuiltInLootTables.register(new ResourceLocation(Reference.MOD_ID, path));

@@ -2,6 +2,7 @@ package com.sunset.event;
 
 import com.sunset.client.particle.ParticleFirePunch;
 import com.sunset.client.renderer.entity.EntityObsidianHookRenderer;
+import com.sunset.item.ItemObsidianFishingRod;
 import com.sunset.util.ModBrewingRecipe;
 import com.sunset.util.Reference;
 import com.sunset.util.RegistryCollections.EntityTypeCollection;
@@ -9,12 +10,9 @@ import com.sunset.util.RegistryCollections.ItemCollection;
 import com.sunset.util.RegistryCollections.ParticleTypeCollection;
 import com.sunset.util.RegistryCollections.PotionCollection;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.Potions;
@@ -30,7 +28,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import static com.sunset.util.RegistryCollections.EffectCollection.RegistryEffects;
 import static com.sunset.util.RegistryCollections.EntityTypeCollection.RegistryEntities;
-import static com.sunset.util.RegistryCollections.ItemCollection.OBSIDIAN_FISHING_ROD;
 import static com.sunset.util.RegistryCollections.ItemCollection.RegistryItems;
 import static com.sunset.util.RegistryCollections.ParticleTypeCollection.RegistryParticles;
 import static com.sunset.util.RegistryCollections.PotionCollection.RegistryPotions;
@@ -80,21 +77,7 @@ public class EventRegistry
     {
         @SubscribeEvent
         public static void propertyOverrideRegistry(FMLClientSetupEvent event) {
-            event.enqueueWork(() -> {
-                ItemProperties.register(OBSIDIAN_FISHING_ROD, new ResourceLocation("cast"), (pStack, pLevel, pEntity, pSeed) -> {
-                    if (pEntity instanceof Player player) {
-                        if (player.getMainHandItem() == pStack) {
-                            if (player.fishing != null)
-                                return 1.0f;
-                        }
-                        else if (player.getOffhandItem() == pStack) {
-                            if (player.fishing != null)
-                                return 1.0f;
-                        }
-                    }
-                    return 0;
-                });
-            });
+            ItemObsidianFishingRod.propertyOverrideRegistry(event);
         }
 
         @SubscribeEvent
