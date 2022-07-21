@@ -2,6 +2,8 @@ package com.sunset.item;
 
 import com.sunset.creativetab.TabLavaFishing;
 import com.sunset.entity.EntityObsidianHook;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -12,6 +14,9 @@ import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+
+import static com.sunset.util.RegistryCollections.ItemCollection.OBSIDIAN_FISHING_ROD;
 
 public class ItemObsidianFishingRod extends FishingRodItem
 {
@@ -59,4 +64,21 @@ public class ItemObsidianFishingRod extends FishingRodItem
         pLevel.playSound((Player) null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), SoundEvents.FISHING_BOBBER_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (pLevel.getRandom().nextFloat() * 0.4F + 0.8F));
     }
 
+    public static void propertyOverrideRegistry(FMLClientSetupEvent event) {
+        event.enqueueWork(() -> {
+            ItemProperties.register(OBSIDIAN_FISHING_ROD, new ResourceLocation("cast"), (pStack, pLevel, pEntity, pSeed) -> {
+                if (pEntity instanceof Player player) {
+                    if (player.getMainHandItem() == pStack) {
+                        if (player.fishing != null)
+                            return 1.0f;
+                    }
+                    else if (player.getOffhandItem() == pStack) {
+                        if (player.fishing != null)
+                            return 1.0f;
+                    }
+                }
+                return 0;
+            });
+        });
+    }
 }

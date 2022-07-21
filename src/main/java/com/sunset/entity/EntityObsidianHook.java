@@ -7,10 +7,6 @@ import com.sunset.util.RegistryCollections.EntityTypeCollection;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
-import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,7 +31,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.event.entity.player.ItemFishedEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +38,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class EntityObsidianHook extends FishingHook implements IEntityAdditionalSpawnData
+public class EntityObsidianHook extends FishingHook
 {
     private final Random lavaTickRand = new Random();
 
@@ -55,19 +50,23 @@ public class EntityObsidianHook extends FishingHook implements IEntityAdditional
         super(pPlayer, pLevel, pLuck, pLureSpeed);
     }
 
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-    }
+//    @Override
+//    protected void defineSynchedData() {
+//        super.defineSynchedData();
+//    }
+//
+//    @Override
+//    public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> pKey) {
+//        super.onSyncedDataUpdated(pKey);
+//    }
 
-    @Override
-    public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> pKey) {
-        super.onSyncedDataUpdated(pKey);
+    private boolean isInLavaFishing() {
+        return level.getFluidState(this.blockPosition().offset(0, -1, 0)).is(FluidTags.LAVA) || level.getFluidState(this.blockPosition()).is(FluidTags.LAVA);
     }
 
     @Override
     public void tick() {
-        if (level.getFluidState(this.blockPosition().offset(0, -1, 0)).is(FluidTags.LAVA) || level.getFluidState(this.blockPosition()).is(FluidTags.LAVA)) {
+        if (isInLavaFishing()) {
             lavaFishingTick();
         }
         else {
@@ -220,7 +219,7 @@ public class EntityObsidianHook extends FishingHook implements IEntityAdditional
 
     @Override
     public int retrieve(@NotNull ItemStack pStack) {
-        if (level.getFluidState(this.blockPosition().offset(0, -1, 0)).is(FluidTags.LAVA) || this.isInLava()) {
+        if (isInLavaFishing()) {
             Player player = this.getPlayerOwner();
             if (!this.level.isClientSide && player != null && !this.shouldStopFishing(player)) {
                 int i = 0;
@@ -404,7 +403,7 @@ public class EntityObsidianHook extends FishingHook implements IEntityAdditional
         if (angler != null) {
             Vec3 vec3 = new Vec3(angler.getX() - this.getX(), angler.getY() - this.getY(), angler.getZ() - this.getZ());
             if (pulledEntity instanceof ItemEntity && pulledEntity.isInLava()) {
-                vec3 = vec3.scale(0.8D);
+                vec3 = vec3.scale(1D);
             }
             else {
                 vec3 = vec3.scale(0.1D);
@@ -413,15 +412,15 @@ public class EntityObsidianHook extends FishingHook implements IEntityAdditional
         }
     }
 
-    @Override
-    public @NotNull Packet<?> getAddEntityPacket() {
-        return super.getAddEntityPacket();
-    }
-
-    @Override
-    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
-        super.recreateFromPacket(pPacket);
-    }
+//    @Override
+//    public @NotNull Packet<?> getAddEntityPacket() {
+//        return super.getAddEntityPacket();
+//    }
+//
+//    @Override
+//    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
+//        super.recreateFromPacket(pPacket);
+//    }
 
     public static EntityType<EntityObsidianHook> BuildEntityType() {
         return EntityType.Builder
@@ -435,15 +434,15 @@ public class EntityObsidianHook extends FishingHook implements IEntityAdditional
                 .build(new ResourceLocation(Reference.MOD_ID, "obsidian_hook").toString());
     }
 
-    @Override
-    public void writeSpawnData(FriendlyByteBuf buffer) {
-
-    }
-
-    @Override
-    public void readSpawnData(FriendlyByteBuf additionalData) {
-
-    }
+//    @Override
+//    public void writeSpawnData(FriendlyByteBuf buffer) {
+//
+//    }
+//
+//    @Override
+//    public void readSpawnData(FriendlyByteBuf additionalData) {
+//
+//    }
 
 
     @Override
