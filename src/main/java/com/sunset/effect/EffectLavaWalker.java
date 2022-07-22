@@ -26,26 +26,20 @@ public class EffectLavaWalker extends MobEffect
             BlockPos onPos = pLivingEntity.getOnPos();
             BlockPos futurePos = new BlockPos(pos.add(movement));
             if (pLivingEntity.isInLava()) {
-                if (pLivingEntity.level.isClientSide()) {
-                    pLivingEntity.setDeltaMovement(movement.add(0, 0.1, 0));
-                }
+                pLivingEntity.setDeltaMovement(movement.add(0, 0.1, 0));
             }
             else if (pLivingEntity.level.getFluidState(onPos).is(FluidTags.LAVA)) {
                 if (pLivingEntity.level instanceof ServerLevel level) {
                     level.sendParticles(ParticleTypes.WHITE_ASH, pos.x(), pos.y() + 0.1D, pos.z(), 10, 0.2, 0.1, 0.2, 1.5);
                 }
-                else {
-                    pLivingEntity.setDeltaMovement(movement.x(), Math.max(movement.y(), 0D), movement.z());
-                    pLivingEntity.setOnGround(true);
-                }
+                pLivingEntity.setDeltaMovement(movement.x(), Math.max(movement.y(), 0D), movement.z());
+                pLivingEntity.setOnGround(true);
             }
             else if (pLivingEntity.level.getFluidState(futurePos).is(FluidTags.LAVA) && movement.y() > -0.8) {
                 if (pLivingEntity.level instanceof ServerLevel level) {
                     level.sendParticles(ParticleTypes.WHITE_ASH, pos.x(), pos.y() + 0.1D, pos.z(), 10, 0.2, 0.1, 0.2, 1.5);
                 }
-                else {
-                    pLivingEntity.setDeltaMovement(movement.x(), Math.max(movement.y(), movement.y() * 0.5), movement.z());
-                }
+                pLivingEntity.setDeltaMovement(movement.x(), Math.max(movement.y(), movement.y() * 0.5), movement.z());
             }
             super.applyEffectTick(pLivingEntity, pAmplifier);
         }
