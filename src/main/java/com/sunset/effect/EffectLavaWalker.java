@@ -1,7 +1,6 @@
 package com.sunset.effect;
 
 import com.sunset.util.RegistryCollections.EffectCollection;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -27,7 +26,7 @@ public class EffectLavaWalker extends MobEffect
             BlockPos onPos = pLivingEntity.getOnPos();
             BlockPos futurePos = new BlockPos(pos.add(movement));
             if (pLivingEntity.isInLava()) {
-                if (pLivingEntity.level instanceof ClientLevel) {
+                if (pLivingEntity.level.isClientSide()) {
                     pLivingEntity.setDeltaMovement(movement.add(0, 0.1, 0));
                 }
             }
@@ -58,7 +57,7 @@ public class EffectLavaWalker extends MobEffect
     }
 
     public static void onPlayerBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (event.getPlayer().hasEffect(EffectCollection.EFFECT_LAVA_WALKER)) {
+        if (event.getPlayer().hasEffect(EffectCollection.EFFECT_LAVA_WALKER) && event.getPlayer().level.getFluidState(event.getPlayer().getOnPos()).is(FluidTags.LAVA)) {
             event.setNewSpeed(event.getNewSpeed() * 5);
         }
     }
