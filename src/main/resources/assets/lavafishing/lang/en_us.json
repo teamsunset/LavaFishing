@@ -1,0 +1,16 @@
+{
+  "effect.lavafishing.blessed": "Blessed",
+  "effect.lavafishing.endless_flame": "Endless Flame",
+  "effect.lavafishing.lava_walker": "Lava Walker",
+  "item.lavafishing.agni_fish": "Agni Fish",
+  "item.lavafishing.arowana_fish": "Arowana Fish",
+  "item.lavafishing.flame_squat_lobster": "Flame Squat Lobster",
+  "item.lavafishing.obsidian_fishing_rod": "Obsidian Fishing Rod",
+  "item.lavafishing.obsidian_sword_fish": "Obsidian Sword Fish",
+  "item.lavafishing.quartz_fish": "Quartz Fish",
+  "item.lavafishing.steam_flying_fish": "Steam Flying Fish",
+  "item.minecraft.potion.effect.lava_walker": "Potion of Lava Walker",
+  "item.minecraft.splash_potion.effect.lava_walker": "Splash Potion of Lava Walker",
+  "item.minecraft.lingering_potion.effect.lava_walker": "Lingering Potion of Lava Walker",
+  "itemGroup.Lava Fishing": "Lava Fishing"
+}

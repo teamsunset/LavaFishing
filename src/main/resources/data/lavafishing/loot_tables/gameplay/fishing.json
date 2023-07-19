@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:fishing",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "weight": 90,
+          "quality": -1,
+          "name": "lavafishing:gameplay/fishing/fish"
+        },
+        {
+          "type": "minecraft:loot_table",
+          "weight": 10,
+          "quality": 0,
+          "name": "lavafishing:gameplay/fishing/misc"
+        }
+      ]
+    }
+  ]
+}
