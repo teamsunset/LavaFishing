@@ -1,20 +1,17 @@
 package com.sunset.util.RegistryCollections;
 
+import com.sunset.util.Reference;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ParticleTypeCollection
 {
-    public static final List<ParticleType<?>> RegistryParticles = new ArrayList<>();
-    public static final SimpleParticleType PARTICLE_FIRE_PUNCH = (SimpleParticleType) register(new SimpleParticleType(true), "fire_punch");
+    public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPE_DEFERRED_REGISTER = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Reference.MOD_ID);
 
-    public static ParticleType register(ParticleType<?> particleType, String registryName) {
-        particleType.setRegistryName(registryName);
-        RegistryParticles.add(particleType);
-        return particleType;
-    }
+    public static final RegistryObject<SimpleParticleType> PARTICLE_FIRE_PUNCH = PARTICLE_TYPE_DEFERRED_REGISTER.register("fire_punch", () -> new SimpleParticleType(false));
+
 
 }

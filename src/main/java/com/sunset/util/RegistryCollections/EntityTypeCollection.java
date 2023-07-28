@@ -1,21 +1,16 @@
 package com.sunset.util.RegistryCollections;
 
 import com.sunset.entity.EntityObsidianHook;
+import com.sunset.util.Reference;
 import net.minecraft.world.entity.EntityType;
-
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class EntityTypeCollection
 {
-    public static final List<EntityType<?>> RegistryEntities = new ArrayList<>();
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPE_DEFERRED_REGISTER = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, Reference.MOD_ID);
+    
+    public static final RegistryObject<EntityType<EntityObsidianHook>> ENTITY_OBSIDIAN_HOOK = ENTITY_TYPE_DEFERRED_REGISTER.register("obsidian_hook", EntityObsidianHook::BuildEntityType);
 
-    public static final EntityType<EntityObsidianHook> ENTITY_OBSIDIAN_HOOK = register(EntityObsidianHook.BuildEntityType(), "obsidian_hook");
-
-    public static EntityType register(EntityType<?> entityType, String registryName) {
-        RegistryEntities.add(entityType);
-//      entityType.setRegistryName(MOD_ID, registryName);
-        entityType.setRegistryName(registryName);
-        return entityType;
-    }
 }

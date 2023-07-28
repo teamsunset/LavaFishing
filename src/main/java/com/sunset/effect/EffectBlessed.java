@@ -4,6 +4,7 @@ import com.sunset.util.RegistryCollections.EffectCollection;
 import com.sunset.util.RegistryCollections.ParticleTypeCollection;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -24,10 +25,10 @@ public class EffectBlessed extends MobEffect
         pLivingEntity.heal(1f);
         pLivingEntity.setSharedFlagOnFire(true);
         if (pLivingEntity.isInWaterOrRain()) {
-            pLivingEntity.hurt(DamageSource.ON_FIRE, 1.0f);
+            pLivingEntity.hurt(pLivingEntity.damageSources().onFire(), 1.0f);
 
         }
-        pLivingEntity.hurt(DamageSource.ON_FIRE, 5.0f);
+        pLivingEntity.hurt(pLivingEntity.damageSources().onFire(), 5.0f);
         super.applyEffectTick(pLivingEntity, pAmplifier);
     }
 
@@ -38,11 +39,11 @@ public class EffectBlessed extends MobEffect
 
     public static void onEntityDamaged(LivingDamageEvent event) {
         DamageSource source = event.getSource();
-        LivingEntity target = event.getEntityLiving();
+        LivingEntity target = event.getEntity();
         if (source.getEntity() instanceof LivingEntity sourceEntity) {
-            if (!source.isProjectile() && !source.isMagic() && sourceEntity.getEffect(EffectCollection.EFFECT_BLESSED) != null && sourceEntity.getMainHandItem().is(Items.AIR)) {
-                target.addEffect(new MobEffectInstance(EffectCollection.EFFECT_ENDLESS_FLAME, 1200), sourceEntity);
-                spawnHitParticle((ServerLevel) target.getLevel(), target.position());
+            if (!source.is(DamageTypes.MOB_PROJECTILE) && !source.is(DamageTypes.MAGIC) && sourceEntity.getEffect(EffectCollection.EFFECT_BLESSED.get()) != null && sourceEntity.getMainHandItem().is(Items.AIR)) {
+                target.addEffect(new MobEffectInstance(EffectCollection.EFFECT_ENDLESS_FLAME.get(), 1200), sourceEntity);
+                spawnHitParticle((ServerLevel) target.level(), target.position());
             }
         }
     }
@@ -51,7 +52,7 @@ public class EffectBlessed extends MobEffect
 //        level.addParticle(ParticleTypeCollection.PARTICLE_FIRE_PUNCH,
 //                pos.x(), pos.y(), pos.z(),
 //                0, 0, 0);
-        level.sendParticles(ParticleTypeCollection.PARTICLE_FIRE_PUNCH, pos.x(), pos.y() + 1.3f, pos.z(),
+        level.sendParticles(ParticleTypeCollection.PARTICLE_FIRE_PUNCH.get(), pos.x(), pos.y() + 1.3f, pos.z(),
                 1, 0.3, 0.3, 0.3, 1);
     }
 }

@@ -1,6 +1,5 @@
 package com.sunset.item.fishes;
 
-import com.sunset.creativetab.TabLavaFishing;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
@@ -19,7 +18,7 @@ public class ItemAgniFish extends Item
 
     @Override
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, LivingEntity pLivingEntity) {
-        pLivingEntity.addEffect(new MobEffectInstance(EFFECT_BLESSED, 2400));
+        pLivingEntity.addEffect(new MobEffectInstance(EFFECT_BLESSED.get(), 2400));
         return super.finishUsingItem(pStack, pLevel, pLivingEntity);
     }
 
@@ -29,7 +28,6 @@ public class ItemAgniFish extends Item
                 .saturationMod(0.5F)
                 .build();
         return new Properties()
-                .tab(TabLavaFishing.TAB_LAVA_FISHING)
                 .food(foodProperties)
                 .fireResistant();
     }

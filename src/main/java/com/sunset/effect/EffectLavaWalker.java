@@ -23,20 +23,21 @@ public class EffectLavaWalker extends MobEffect
         if (!(pLivingEntity instanceof Player player && player.isSpectator())) {
             Vec3 pos = pLivingEntity.position();
             Vec3 movement = pLivingEntity.getDeltaMovement();
+            Vec3 futurePos = pos.add(movement);
             BlockPos onPos = pLivingEntity.getOnPos();
-            BlockPos futurePos = new BlockPos(pos.add(movement));
+            BlockPos futureBlockPos = new BlockPos((int) futurePos.x, (int) futurePos.y, (int) futurePos.z);
             if (pLivingEntity.isInLava()) {
                 pLivingEntity.setDeltaMovement(movement.add(0, 0.1, 0));
             }
-            else if (pLivingEntity.level.getFluidState(onPos).is(FluidTags.LAVA)) {
-                if (pLivingEntity.level instanceof ServerLevel level) {
+            else if (pLivingEntity.level().getFluidState(onPos).is(FluidTags.LAVA)) {
+                if (pLivingEntity.level() instanceof ServerLevel level) {
                     level.sendParticles(ParticleTypes.WHITE_ASH, pos.x(), pos.y() + 0.1D, pos.z(), 10, 0.2, 0.1, 0.2, 1.5);
                 }
                 pLivingEntity.setDeltaMovement(movement.x(), Math.max(movement.y(), 0D), movement.z());
                 pLivingEntity.setOnGround(true);
             }
-            else if (pLivingEntity.level.getFluidState(futurePos).is(FluidTags.LAVA) && movement.y() > -0.8) {
-                if (pLivingEntity.level instanceof ServerLevel level) {
+            else if (pLivingEntity.level().getFluidState(futureBlockPos).is(FluidTags.LAVA) && movement.y() > -0.8) {
+                if (pLivingEntity.level() instanceof ServerLevel level) {
                     level.sendParticles(ParticleTypes.WHITE_ASH, pos.x(), pos.y() + 0.1D, pos.z(), 10, 0.2, 0.1, 0.2, 1.5);
                 }
                 pLivingEntity.setDeltaMovement(movement.x(), Math.max(movement.y(), movement.y() * 0.5), movement.z());
@@ -51,7 +52,7 @@ public class EffectLavaWalker extends MobEffect
     }
 
     public static void onPlayerBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (event.getPlayer().hasEffect(EffectCollection.EFFECT_LAVA_WALKER) && event.getPlayer().level.getFluidState(event.getPlayer().getOnPos()).is(FluidTags.LAVA)) {
+        if (event.getEntity().hasEffect(EffectCollection.EFFECT_LAVA_WALKER.get()) && event.getEntity().level().getFluidState(event.getEntity().getOnPos()).is(FluidTags.LAVA)) {
             event.setNewSpeed(event.getNewSpeed() * 5);
         }
     }

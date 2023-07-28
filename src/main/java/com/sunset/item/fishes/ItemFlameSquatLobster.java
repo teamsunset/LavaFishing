@@ -1,6 +1,5 @@
 package com.sunset.item.fishes;
 
-import com.sunset.creativetab.TabLavaFishing;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,7 +28,6 @@ public class ItemFlameSquatLobster extends Item
                 .saturationMod(0.8F)
                 .build();
         return new Properties()
-                .tab(TabLavaFishing.TAB_LAVA_FISHING)
                 .food(foodProperties)
                 .fireResistant();
     }
