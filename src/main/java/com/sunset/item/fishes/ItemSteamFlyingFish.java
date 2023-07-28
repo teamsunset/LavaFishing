@@ -1,6 +1,5 @@
 package com.sunset.item.fishes;
 
-import com.sunset.creativetab.TabLavaFishing;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
@@ -18,7 +17,7 @@ public class ItemSteamFlyingFish extends Item
 
     @Override
     public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
-        pLivingEntity.addEffect(new MobEffectInstance(EFFECT_LAVA_WALKER, 300));
+        pLivingEntity.addEffect(new MobEffectInstance(EFFECT_LAVA_WALKER.get(), 300));
         return super.finishUsingItem(pStack, pLevel, pLivingEntity);
     }
 
@@ -28,7 +27,6 @@ public class ItemSteamFlyingFish extends Item
                 .saturationMod(0.6F)
                 .build();
         return new Properties()
-                .tab(TabLavaFishing.TAB_LAVA_FISHING)
                 .food(foodProperties)
                 .fireResistant();
     }

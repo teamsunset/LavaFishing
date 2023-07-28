@@ -1,6 +1,5 @@
 package com.sunset.item.fishes;
 
-import com.sunset.creativetab.TabLavaFishing;
 import com.sunset.util.RegistryCollections.ItemCollection;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -23,7 +22,7 @@ public class ItemObsidianSwordFish extends SwordItem
 {
     public enum ModItemTier implements Tier
     {
-        FISH(0, 0, 2.0F, 0.0F, 15, () -> Ingredient.of(ItemCollection.ITEM_OBSIDIAN_SWORD_FISH), null);
+        FISH(0, 0, 2.0F, 0.0F, 15, () -> Ingredient.of(ItemCollection.ITEM_OBSIDIAN_SWORD_FISH.get()), null);
         private final int level;
         private final int maxUses;
         private final float speed;
@@ -94,7 +93,6 @@ public class ItemObsidianSwordFish extends SwordItem
                 return this;
             }
         }
-                .tab(TabLavaFishing.TAB_LAVA_FISHING)
                 .food(foodProperties)
                 .fireResistant()
                 .setNoRepair();

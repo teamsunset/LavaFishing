@@ -1,6 +1,5 @@
 package com.sunset.item;
 
-import com.sunset.creativetab.TabLavaFishing;
 import com.sunset.entity.EntityObsidianHook;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -34,7 +33,7 @@ public class ItemObsidianFishingRod extends FishingRodItem
                 });
             }
             pPlayer.swing(pHand);
-            pLevel.gameEvent(pPlayer, GameEvent.FISHING_ROD_REEL_IN, pPlayer);
+            pPlayer.gameEvent(GameEvent.ITEM_INTERACT_FINISH, pPlayer);
         }
         else {
             playThrowSound(pPlayer, pLevel);
@@ -44,7 +43,7 @@ public class ItemObsidianFishingRod extends FishingRodItem
             }
             pPlayer.swing(pHand);
             pPlayer.awardStat(Stats.ITEM_USED.get(this));
-            pLevel.gameEvent(pPlayer, GameEvent.FISHING_ROD_CAST, pPlayer);
+            pPlayer.gameEvent(GameEvent.ITEM_INTERACT_START, pPlayer);
         }
         return InteractionResultHolder.sidedSuccess(itemstack, pLevel.isClientSide());
     }
@@ -56,7 +55,6 @@ public class ItemObsidianFishingRod extends FishingRodItem
 
     public static Properties GetProperties() {
         return new Properties()
-                .tab(TabLavaFishing.TAB_LAVA_FISHING)
                 .durability(128);
     }
 
@@ -66,7 +64,7 @@ public class ItemObsidianFishingRod extends FishingRodItem
 
     public static void propertyOverrideRegistry(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            ItemProperties.register(OBSIDIAN_FISHING_ROD, new ResourceLocation("cast"), (pStack, pLevel, pEntity, pSeed) -> {
+            ItemProperties.register(OBSIDIAN_FISHING_ROD.get(), new ResourceLocation("cast"), (pStack, pLevel, pEntity, pSeed) -> {
                 if (pEntity instanceof Player player) {
                     if (player.getMainHandItem() == pStack) {
                         if (player.fishing != null)

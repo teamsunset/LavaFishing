@@ -2,9 +2,7 @@ package com.sunset.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.sunset.entity.EntityObsidianHook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -19,6 +17,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 
 import javax.annotation.Nonnull;
 
@@ -40,7 +40,7 @@ public class EntityObsidianHookRenderer extends EntityRenderer<EntityObsidianHoo
             pMatrixStack.pushPose();
             pMatrixStack.scale(0.5F, 0.5F, 0.5F);
             pMatrixStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
-            pMatrixStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
+            pMatrixStack.mulPose(Axis.YP.rotationDegrees(180.0F));
             PoseStack.Pose posestack$pose = pMatrixStack.last();
             Matrix4f matrix4f = posestack$pose.pose();
             Matrix3f matrix3f = posestack$pose.normal();
@@ -67,7 +67,7 @@ public class EntityObsidianHookRenderer extends EntityRenderer<EntityObsidianHoo
             double d6;
             float f3;
             if ((this.entityRenderDispatcher.options == null || this.entityRenderDispatcher.options.getCameraType().isFirstPerson()) && player == Minecraft.getInstance().player) {
-                double d7 = 960.0D / this.entityRenderDispatcher.options.fov;
+                double d7 = 960.0D / this.entityRenderDispatcher.options.fov().get();
                 Vec3 vec3 = this.entityRenderDispatcher.camera.getNearPlane().getPointOnPlane((float) i * 0.525F, -0.1F);
                 vec3 = vec3.scale(d7);
                 vec3 = vec3.yRot(f1 * 0.5F);
