@@ -15,7 +15,7 @@ public class EffectEndlessFlame extends MobEffect
         pLivingEntity.setRemainingFireTicks(20);
         pLivingEntity.setSharedFlagOnFire(true);
         if (pLivingEntity.isInWaterOrRain()) {
-            pLivingEntity.hurt(pLivingEntity.damageSources().onFire(), 1.0f);
+            pLivingEntity.hurt(pLivingEntity.damageSources().onFire(), 0.2f);
         }
         pLivingEntity.hurt(pLivingEntity.damageSources().onFire(), 5.0f);
         super.applyEffectTick(pLivingEntity, pAmplifier);

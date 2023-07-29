@@ -9,6 +9,7 @@ displayName = "${mod_name}"
 displayURL = "https://github.com/dsx137/lavafishing"
 logoFile = "logo.png"
 authors = "${mod_authors}"
+credits = "${mod_credits}"
 
 description = '''${mod_description}'''
 
@@ -22,5 +23,11 @@ side = "BOTH"
 modId = "minecraft"
 mandatory = true
 versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.${ mod_id }]]
+modId = "aquaculture"
+mandatory = true
+versionRange = "${aquaculture_version_range}"
 ordering = "NONE"
 side = "BOTH"

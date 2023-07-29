@@ -12,9 +12,7 @@ import static com.sunset.lavafishing.util.RegistryCollection.EffectCollection.EF
 
 public class ItemAgniFish extends Item
 {
-    public ItemAgniFish() {
-        super(GetProperties());
-    }
+    public ItemAgniFish() {super(GetProperties());}
 
     @Override
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, LivingEntity pLivingEntity) {
