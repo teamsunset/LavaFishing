@@ -7,7 +7,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import static com.sunset.lavafishing.util.RegistryCollections.EffectCollection.EFFECT_LAVA_WALKER;
+import static com.sunset.lavafishing.util.RegistryCollection.EffectCollection.EFFECT_LAVA_WALKER;
 
 public class ItemSteamFlyingFish extends Item
 {

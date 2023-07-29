@@ -1,6 +1,6 @@
 package com.sunset.lavafishing.item.fishes;
 
-import com.sunset.lavafishing.util.RegistryCollections.ItemCollection;
+import com.sunset.lavafishing.util.RegistryCollection.ItemCollection;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;

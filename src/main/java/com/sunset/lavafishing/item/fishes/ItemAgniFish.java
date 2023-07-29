@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import static com.sunset.lavafishing.util.RegistryCollections.EffectCollection.EFFECT_BLESSED;
+import static com.sunset.lavafishing.util.RegistryCollection.EffectCollection.EFFECT_BLESSED;
 
 public class ItemAgniFish extends Item
 {

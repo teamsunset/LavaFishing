@@ -7,12 +7,12 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
-import static com.sunset.lavafishing.util.RegistryCollections.CreativeModeTabCollection.CREATIVE_MODE_TAB_DEFERRED_REGISTER;
-import static com.sunset.lavafishing.util.RegistryCollections.EffectCollection.MOB_EFFECT_DEFERRED_REGISTER;
-import static com.sunset.lavafishing.util.RegistryCollections.EntityTypeCollection.ENTITY_TYPE_DEFERRED_REGISTER;
-import static com.sunset.lavafishing.util.RegistryCollections.ItemCollection.ITEM_DEFERRED_REGISTER;
-import static com.sunset.lavafishing.util.RegistryCollections.ParticleTypeCollection.PARTICLE_TYPE_DEFERRED_REGISTER;
-import static com.sunset.lavafishing.util.RegistryCollections.PotionCollection.POTION_DEFERRED_REGISTER;
+import static com.sunset.lavafishing.util.RegistryCollection.CreativeModeTabCollection.CREATIVE_MODE_TAB_DEFERRED_REGISTER;
+import static com.sunset.lavafishing.util.RegistryCollection.EffectCollection.MOB_EFFECT_DEFERRED_REGISTER;
+import static com.sunset.lavafishing.util.RegistryCollection.EntityTypeCollection.ENTITY_TYPE_DEFERRED_REGISTER;
+import static com.sunset.lavafishing.util.RegistryCollection.ItemCollection.ITEM_DEFERRED_REGISTER;
+import static com.sunset.lavafishing.util.RegistryCollection.ParticleTypeCollection.PARTICLE_TYPE_DEFERRED_REGISTER;
+import static com.sunset.lavafishing.util.RegistryCollection.PotionCollection.POTION_DEFERRED_REGISTER;
 
 @Mod(Reference.MOD_ID)
 public class LavaFishing

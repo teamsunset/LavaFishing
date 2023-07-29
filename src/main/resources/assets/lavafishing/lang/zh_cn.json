@@ -1,16 +1,16 @@
 {
-  "effect.${mod_id}.blessed": "祝福",
-  "effect.${mod_id}.endless_flame": "无尽之火",
-  "effect.${mod_id}.lava_walker": "岩浆行者",
-  "item.${mod_id}.agni_fish": "火神鱼",
-  "item.${mod_id}.arowana_fish": "龙鱼",
-  "item.${mod_id}.flame_squat_lobster": "烈焰铠甲虾",
-  "item.${mod_id}.obsidian_fishing_rod": "黑曜石钓竿",
-  "item.${mod_id}.obsidian_sword_fish": "黑曜石剑鱼",
-  "item.${mod_id}.quartz_fish": "石英鱼",
-  "item.${mod_id}.steam_flying_fish": "蒸汽飞鱼",
+  "effect.lavafishing.blessed": "祝福",
+  "effect.lavafishing.endless_flame": "无尽之火",
+  "effect.lavafishing.lava_walker": "岩浆行者",
+  "item.lavafishing.agni_fish": "火神鱼",
+  "item.lavafishing.arowana_fish": "龙鱼",
+  "item.lavafishing.flame_squat_lobster": "烈焰铠甲虾",
+  "item.lavafishing.obsidian_fishing_rod": "黑曜石钓竿",
+  "item.lavafishing.obsidian_sword_fish": "黑曜石剑鱼",
+  "item.lavafishing.quartz_fish": "石英鱼",
+  "item.lavafishing.steam_flying_fish": "蒸汽飞鱼",
   "item.minecraft.potion.effect.lava_walker": "岩浆行者药水",
   "item.minecraft.splash_potion.effect.lava_walker": "喷溅型岩浆行者药水",
   "item.minecraft.lingering_potion.effect.lava_walker": "滞留型岩浆行者药水",
-  "itemGroup.${mod_id}": "岩浆钓鱼"
+  "itemGroup.lavafishing": "岩浆钓鱼"
 }

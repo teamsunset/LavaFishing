@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-import static com.sunset.lavafishing.util.RegistryCollections.ItemCollection.OBSIDIAN_FISHING_ROD;
+import static com.sunset.lavafishing.util.RegistryCollection.ItemCollection.ITEM_OBSIDIAN_FISHING_ROD;
 
 public class ItemObsidianFishingRod extends FishingRodItem
 {
@@ -63,7 +63,7 @@ public class ItemObsidianFishingRod extends FishingRodItem
 
     public static void propertyOverrideRegistry(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            ItemProperties.register(OBSIDIAN_FISHING_ROD.get(), new ResourceLocation("cast"), (pStack, pLevel, pEntity, pSeed) -> {
+            ItemProperties.register(ITEM_OBSIDIAN_FISHING_ROD.get(), new ResourceLocation("cast"), (pStack, pLevel, pEntity, pSeed) -> {
                 if (pEntity instanceof Player player) {
                     if (player.getMainHandItem() == pStack) {
                         if (player.fishing != null)

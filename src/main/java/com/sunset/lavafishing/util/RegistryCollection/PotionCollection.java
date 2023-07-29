@@ -1,4 +1,4 @@
-package com.sunset.lavafishing.util.RegistryCollections;
+package com.sunset.lavafishing.util.RegistryCollection;
 
 import com.sunset.lavafishing.potion.PotionLavaWalker;
 import com.sunset.lavafishing.util.Reference;

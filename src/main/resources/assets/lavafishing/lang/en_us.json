@@ -1,16 +1,16 @@
 {
-  "effect.${mod_id}.blessed": "Blessed",
-  "effect.${mod_id}.endless_flame": "Endless Flame",
-  "effect.${mod_id}.lava_walker": "Lava Walker",
-  "item.${mod_id}.agni_fish": "Agni Fish",
-  "item.${mod_id}.arowana_fish": "Arowana Fish",
-  "item.${mod_id}.flame_squat_lobster": "Flame Squat Lobster",
-  "item.${mod_id}.obsidian_fishing_rod": "Obsidian Fishing Rod",
-  "item.${mod_id}.obsidian_sword_fish": "Obsidian Sword Fish",
-  "item.${mod_id}.quartz_fish": "Quartz Fish",
-  "item.${mod_id}.steam_flying_fish": "Steam Flying Fish",
+  "effect.lavafishing.blessed": "Blessed",
+  "effect.lavafishing.endless_flame": "Endless Flame",
+  "effect.lavafishing.lava_walker": "Lava Walker",
+  "item.lavafishing.agni_fish": "Agni Fish",
+  "item.lavafishing.arowana_fish": "Arowana Fish",
+  "item.lavafishing.flame_squat_lobster": "Flame Squat Lobster",
+  "item.lavafishing.obsidian_fishing_rod": "Obsidian Fishing Rod",
+  "item.lavafishing.obsidian_sword_fish": "Obsidian Sword Fish",
+  "item.lavafishing.quartz_fish": "Quartz Fish",
+  "item.lavafishing.steam_flying_fish": "Steam Flying Fish",
   "item.minecraft.potion.effect.lava_walker": "Potion of Lava Walker",
   "item.minecraft.splash_potion.effect.lava_walker": "Splash Potion of Lava Walker",
   "item.minecraft.lingering_potion.effect.lava_walker": "Lingering Potion of Lava Walker",
-  "itemGroup.${mod_id}": "Lava Fishing"
+  "itemGroup.lavafishing": "Lava Fishing"
 }
