@@ -1,12 +1,12 @@
 package com.sunset.lavafishing.entity;
 
-import com.sunset.lavafishing.item.ItemObsidianFishingRod;
 import com.sunset.lavafishing.loot.LootTableHandler;
 import com.sunset.lavafishing.util.Reference;
 import com.sunset.lavafishing.util.RegistryCollection.EntityTypeCollection;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,6 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -35,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.function.BiFunction;
 
 public class EntityObsidianHook extends FishingHook
 {
@@ -75,6 +77,7 @@ public class EntityObsidianHook extends FishingHook
     protected void lavaFishingTick() {
         this.lavaTickRand.setSeed(this.getUUID().getLeastSignificantBits() ^ this.level().getGameTime());
         projectileTick();
+        //---vanilla code
         Player player = this.getPlayerOwner();
         if (player == null) {
             this.discard();
@@ -135,7 +138,7 @@ public class EntityObsidianHook extends FishingHook
                     } else {
                         this.openWater = this.openWater && this.outOfWaterTime < 10 && this.calculateOpenWater(blockpos);
                     }
-
+                    //vanilla code---
                     if (inLava) {
                         this.outOfWaterTime = Math.max(0, this.outOfWaterTime - 1);
                         if (this.biting) {
@@ -150,11 +153,10 @@ public class EntityObsidianHook extends FishingHook
                     }
                 }
             }
-
             if (!fluidState.is(FluidTags.LAVA)) {
                 this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.03D, 0.0D));
             }
-
+            //---vanilla code
             this.move(MoverType.SELF, this.getDeltaMovement());
             this.updateRotation();
             if (this.currentState == FishingHook.FishHookState.FLYING && (this.onGround() || this.horizontalCollision)) {
@@ -164,20 +166,7 @@ public class EntityObsidianHook extends FishingHook
             double d1 = 0.92D;
             this.setDeltaMovement(this.getDeltaMovement().scale(0.92D));
             this.reapplyPosition();
-        }
-    }
-
-    @Override
-    protected boolean shouldStopFishing(Player pPlayer) {
-        ItemStack mainHandItem = pPlayer.getMainHandItem();
-        ItemStack offhandItem = pPlayer.getOffhandItem();
-        boolean isRodInMainHand = mainHandItem.getItem() instanceof ItemObsidianFishingRod;
-        boolean isRodInOffHand = offhandItem.getItem() instanceof ItemObsidianFishingRod;
-        if (!pPlayer.isRemoved() && pPlayer.isAlive() && (isRodInMainHand || isRodInOffHand) && !(this.distanceToSqr(pPlayer) > 1024.0D)) {
-            return false;
-        } else {
-            this.discard();
-            return true;
+            //vanilla code---
         }
     }
 
@@ -208,21 +197,21 @@ public class EntityObsidianHook extends FishingHook
                         return event.getRodDamage();
                     }
                     CriteriaTriggers.FISHING_ROD_HOOKED.trigger((ServerPlayer) player, pStack, this, list);
-
+                    //vanilla code---
                     for (ItemStack itemstack : list) {
                         ItemEntity itementity = new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), itemstack);
                         double d0 = player.getX() - this.getX();
                         double d1 = player.getY() - this.getY();
                         double d2 = player.getZ() - this.getZ();
-                        double d3 = 0.1D;
-                        itementity.setDeltaMovement(d0 * 0.1D, d1 * 0.1D + Math.sqrt(Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2)) * 0.08D, d2 * 0.1D);
+                        double d3 = 0.3D;//change to retrieve strength multiplier
+                        itementity.setDeltaMovement(d0 * d3, d1 * d3 + Math.sqrt(Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2)) * 0.08D, d2 * d3);
                         this.level().addFreshEntity(itementity);
                         player.level().addFreshEntity(new ExperienceOrb(player.level(), player.getX(), player.getY() + 0.5D, player.getZ() + 0.5D, this.random.nextInt(6) + 1));
                         if (itemstack.is(ItemTags.FISHES)) {
                             player.awardStat(Stats.FISH_CAUGHT, 1);
                         }
                     }
-
+                    //---vanilla code
                     i = 1;
                 }
 
@@ -242,6 +231,11 @@ public class EntityObsidianHook extends FishingHook
     }
 
     protected void lavaCatchingFish(BlockPos pPos) {
+        Block _BLOCK_STATE_IN_RANDOM_GENERATE_PARTICLE = Blocks.LAVA;
+        SimpleParticleType _BUBBLE_PARTICLE = ParticleTypes.SMOKE;
+        SimpleParticleType _FISHING_PARTICLE = ParticleTypes.ASH;
+        SimpleParticleType _SPLASH_PARTICLE = ParticleTypes.LAVA;
+
         //---vanilla code
         ServerLevel serverlevel = (ServerLevel) this.level();
         int i = 1;
@@ -272,28 +266,25 @@ public class EntityObsidianHook extends FishingHook
                 double d1 = (double) ((float) Mth.floor(this.getY()) + 1.0F);
                 double d2 = this.getZ() + (double) (f2 * (float) this.timeUntilHooked * 0.1F);
                 BlockState blockstate = serverlevel.getBlockState(new BlockPos((int) d0, (int) (d1 - 1.0D), (int) d2));
-                //vanilla code---
                 if (serverlevel.getBlockState(new BlockPos((int) d0, (int) d1 - 1, (int) d2)).is(Blocks.LAVA)) {
                     if (this.random.nextFloat() < 0.15F) {
-                        serverlevel.sendParticles(ParticleTypes.SMOKE, d0, d1 - (double) 0.1F, d2, 1, (double) f1, 0.1D, (double) f2, 0.0D);
+                        serverlevel.sendParticles(_BUBBLE_PARTICLE, d0, d1 - (double) 0.1F, d2, 1, (double) f1, 0.1D, (double) f2, 0.0D);
                     }
 
                     float f3 = f1 * 0.04F;
                     float f4 = f2 * 0.04F;
-                    serverlevel.sendParticles(ParticleTypes.ASH, d0, d1, d2, 5, (double) f4, 0.01D, (double) (-f3), 1.0D);
-                    serverlevel.sendParticles(ParticleTypes.ASH, d0, d1, d2, 5, (double) (-f4), 0.01D, (double) f3, 1.0D);
+                    serverlevel.sendParticles(_FISHING_PARTICLE, d0, d1, d2, 5, (double) f4, 0.01D, (double) (-f3), 1.0D);
+                    serverlevel.sendParticles(_FISHING_PARTICLE, d0, d1, d2, 5, (double) (-f4), 0.01D, (double) f3, 1.0D);
                 }
             } else {
                 this.playSound(SoundEvents.FISHING_BOBBER_SPLASH, 0.25F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
                 double d3 = this.getY() + 0.5D;
-                serverlevel.sendParticles(ParticleTypes.SMOKE, this.getX(), d3, this.getZ(), (int) (1.0F + this.getBbWidth() * 20.0F), (double) this.getBbWidth(), 0.0D, (double) this.getBbWidth(), (double) 0.2F);
-                serverlevel.sendParticles(ParticleTypes.LAVA, this.getX(), d3, this.getZ(), (int) (1.0F + this.getBbWidth() * 50.0F), (double) this.getBbWidth(), 0.0D, (double) this.getBbWidth(), (double) 0.2F);
+                serverlevel.sendParticles(_BUBBLE_PARTICLE, this.getX(), d3, this.getZ(), (int) (1.0F + this.getBbWidth() * 20.0F), (double) this.getBbWidth(), 0.0D, (double) this.getBbWidth(), (double) 0.2F);
+                serverlevel.sendParticles(_SPLASH_PARTICLE, this.getX(), d3, this.getZ(), (int) (1.0F + this.getBbWidth() * 50.0F), (double) this.getBbWidth(), 0.0D, (double) this.getBbWidth(), (double) 0.2F);
                 this.nibble = Mth.nextInt(this.random, 20, 40);
                 this.getEntityData().set(DATA_BITING, true);
             }
-        }
-        //---vanilla code
-        else if (this.timeUntilLured > 0) {
+        } else if (this.timeUntilLured > 0) {
             this.timeUntilLured -= i;
             float f5 = 0.15F;
             if (this.timeUntilLured < 20) {
@@ -311,8 +302,8 @@ public class EntityObsidianHook extends FishingHook
                 double d5 = (double) ((float) Mth.floor(this.getY()) + 1.0F);
                 double d6 = this.getZ() + (double) (Mth.cos(f6) * f7) * 0.1D;
                 BlockState blockstate1 = serverlevel.getBlockState(BlockPos.containing(d4, d5 - 1.0D, d6));
-                if (blockstate1.is(Blocks.WATER)) {
-                    serverlevel.sendParticles(ParticleTypes.SPLASH, d4, d5, d6, 2 + this.random.nextInt(2), (double) 0.1F, 0.0D, (double) 0.1F, 0.0D);
+                if (blockstate1.is(_BLOCK_STATE_IN_RANDOM_GENERATE_PARTICLE)) {
+                    serverlevel.sendParticles(_SPLASH_PARTICLE, d4, d5, d6, 2 + this.random.nextInt(2), (double) 0.1F, 0.0D, (double) 0.1F, 0.0D);
                 }
             }
 
@@ -329,16 +320,23 @@ public class EntityObsidianHook extends FishingHook
 
     @Override
     protected void pullEntity(@NotNull Entity pulledEntity) {
-        Entity angler = this.getOwner();
-        if (angler != null) {
-            Vec3 vec3 = new Vec3(angler.getX() - this.getX(), angler.getY() - this.getY(), angler.getZ() - this.getZ());
-            if (pulledEntity instanceof ItemEntity && pulledEntity.isInLava()) {
+        BiFunction<Entity, Vec3, Void> _MULTIPLY_RETRIEVE_STRENGTH_FROM_LAVA = (_pulledEntity, vec3) -> {
+            if (_pulledEntity instanceof ItemEntity && _pulledEntity.isInLava()) {
                 vec3 = vec3.scale(1D);
             } else {
                 vec3 = vec3.scale(0.1D);
             }
+            return null;
+        };
+
+        //---vanilla code
+        Entity angler = this.getOwner();
+        if (angler != null) {
+            Vec3 vec3 = new Vec3(angler.getX() - this.getX(), angler.getY() - this.getY(), angler.getZ() - this.getZ());
+            _MULTIPLY_RETRIEVE_STRENGTH_FROM_LAVA.apply(pulledEntity, vec3);
             pulledEntity.setDeltaMovement(pulledEntity.getDeltaMovement().add(vec3));
         }
+        //vanilla code---
     }
 
     public static EntityType<EntityObsidianHook> BuildEntityType() {
