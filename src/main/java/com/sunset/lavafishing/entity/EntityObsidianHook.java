@@ -3,7 +3,7 @@ package com.sunset.lavafishing.entity;
 import com.sunset.lavafishing.item.ItemObsidianFishingRod;
 import com.sunset.lavafishing.loot.LootTableHandler;
 import com.sunset.lavafishing.util.Reference;
-import com.sunset.lavafishing.util.RegistryCollections.EntityTypeCollection;
+import com.sunset.lavafishing.util.RegistryCollection.EntityTypeCollection;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;

@@ -1,6 +1,6 @@
 package com.sunset.lavafishing.potion;
 
-import com.sunset.lavafishing.util.RegistryCollections.EffectCollection;
+import com.sunset.lavafishing.util.RegistryCollection.EffectCollection;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
 

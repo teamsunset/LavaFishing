@@ -1,7 +1,7 @@
 package com.sunset.lavafishing.effect;
 
-import com.sunset.lavafishing.util.RegistryCollections.EffectCollection;
-import com.sunset.lavafishing.util.RegistryCollections.ParticleTypeCollection;
+import com.sunset.lavafishing.util.RegistryCollection.EffectCollection;
+import com.sunset.lavafishing.util.RegistryCollection.ParticleTypeCollection;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;

@@ -1,4 +1,4 @@
-package com.sunset.lavafishing.util.RegistryCollections;
+package com.sunset.lavafishing.util.RegistryCollection;
 
 import com.sunset.lavafishing.item.ItemObsidianFishingRod;
 import com.sunset.lavafishing.item.fishes.*;
@@ -13,7 +13,7 @@ public class ItemCollection
 
     public static final DeferredRegister<Item> ITEM_DEFERRED_REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, Reference.MOD_ID);
 
-    public static final RegistryObject<Item> OBSIDIAN_FISHING_ROD = ITEM_DEFERRED_REGISTER.register("obsidian_fishing_rod", ItemObsidianFishingRod::new);
+    public static final RegistryObject<Item> ITEM_OBSIDIAN_FISHING_ROD = ITEM_DEFERRED_REGISTER.register("obsidian_fishing_rod", ItemObsidianFishingRod::new);
 
     public static final RegistryObject<Item> ITEM_QUARTZ_FISH = ITEM_DEFERRED_REGISTER.register("quartz_fish", ItemQuartzFish::new);
 

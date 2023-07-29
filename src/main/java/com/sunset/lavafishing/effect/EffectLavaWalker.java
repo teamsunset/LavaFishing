@@ -1,6 +1,6 @@
 package com.sunset.lavafishing.effect;
 
-import com.sunset.lavafishing.util.RegistryCollections.EffectCollection;
+import com.sunset.lavafishing.util.RegistryCollection.EffectCollection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
