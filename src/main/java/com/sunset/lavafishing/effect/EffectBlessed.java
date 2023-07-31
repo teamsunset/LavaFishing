@@ -1,6 +1,6 @@
 package com.sunset.lavafishing.effect;
 
-import com.sunset.lavafishing.util.RegistryCollection.EffectCollection;
+import com.sunset.lavafishing.util.RegistryCollection.MobEffectCollection;
 import com.sunset.lavafishing.util.RegistryCollection.ParticleTypeCollection;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -22,13 +22,13 @@ public class EffectBlessed extends MobEffect
     @Override
     public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
         pLivingEntity.setRemainingFireTicks(20);
-        pLivingEntity.heal(1f);
+        pLivingEntity.heal(0.4f);
         pLivingEntity.setSharedFlagOnFire(true);
         if (pLivingEntity.isInWaterOrRain()) {
             pLivingEntity.hurt(pLivingEntity.damageSources().onFire(), 0.2f);
 
         }
-        pLivingEntity.hurt(pLivingEntity.damageSources().onFire(), 5.0f);
+        pLivingEntity.hurt(pLivingEntity.damageSources().onFire(), 0.1f);
         super.applyEffectTick(pLivingEntity, pAmplifier);
     }
 
@@ -41,8 +41,8 @@ public class EffectBlessed extends MobEffect
         DamageSource source = event.getSource();
         LivingEntity target = event.getEntity();
         if (source.getEntity() instanceof LivingEntity sourceEntity) {
-            if (!source.is(DamageTypes.MOB_PROJECTILE) && !source.is(DamageTypes.MAGIC) && sourceEntity.getEffect(EffectCollection.EFFECT_BLESSED.get()) != null && sourceEntity.getMainHandItem().is(Items.AIR)) {
-                target.addEffect(new MobEffectInstance(EffectCollection.EFFECT_ENDLESS_FLAME.get(), 1200), sourceEntity);
+            if (!source.is(DamageTypes.MOB_PROJECTILE) && !source.is(DamageTypes.MAGIC) && sourceEntity.getEffect(MobEffectCollection.EFFECT_BLESSED.get()) != null && sourceEntity.getMainHandItem().is(Items.AIR)) {
+                target.addEffect(new MobEffectInstance(MobEffectCollection.EFFECT_ENDLESS_FLAME.get(), 1200), sourceEntity);
                 spawnHitParticle((ServerLevel) target.level(), target.position());
             }
         }
