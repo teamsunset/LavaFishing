@@ -1,6 +1,6 @@
 package com.sunset.lavafishing.effect;
 
-import com.sunset.lavafishing.util.RegistryCollection.EffectCollection;
+import com.sunset.lavafishing.util.RegistryCollection.MobEffectCollection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -50,7 +50,7 @@ public class EffectLavaWalker extends MobEffect
     }
 
     public static void onPlayerBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (event.getEntity().hasEffect(EffectCollection.EFFECT_LAVA_WALKER.get()) && event.getEntity().level().getFluidState(event.getEntity().getOnPos()).is(FluidTags.LAVA)) {
+        if (event.getEntity().hasEffect(MobEffectCollection.EFFECT_LAVA_WALKER.get()) && event.getEntity().level().getFluidState(event.getEntity().getOnPos()).is(FluidTags.LAVA)) {
             event.setNewSpeed(event.getNewSpeed() * 5);
         }
     }

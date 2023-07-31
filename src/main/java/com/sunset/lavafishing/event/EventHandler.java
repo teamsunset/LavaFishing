@@ -1,11 +1,25 @@
 package com.sunset.lavafishing.event;
 
+import com.sunset.lavafishing.client.particle.ParticleFirePunch;
+import com.sunset.lavafishing.client.renderer.BlockEntity.BlockEntityRendererPrometheusBounty;
 import com.sunset.lavafishing.effect.EffectBlessed;
 import com.sunset.lavafishing.effect.EffectLavaWalker;
+import com.sunset.lavafishing.item.PromethiumArmor;
+import com.sunset.lavafishing.loot.LootTableHandler;
+import com.sunset.lavafishing.util.Reference;
+import com.sunset.lavafishing.util.RegistryCollection.BlockEntityTypeCollection;
+import com.sunset.lavafishing.util.RegistryCollection.ParticleTypeCollection;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class EventHandler
 {
@@ -20,6 +34,42 @@ public class EventHandler
         @SubscribeEvent
         public static void onPlayerBreakSpeed(PlayerEvent.BreakSpeed event) {
             EffectLavaWalker.onPlayerBreakSpeed(event);
+        }
+
+        @SubscribeEvent
+        public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
+            PromethiumArmor.onPlayerTick(event);
+        }
+
+        @SubscribeEvent
+        public static void onLootTableLoad(LootTableLoadEvent event) {
+            LootTableHandler.onLootTableLoad(event);
+        }
+    }
+
+    @Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+    public class ModEventBoth
+    {
+
+    }
+
+    @Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    public class ModEventClient
+    {
+        @SubscribeEvent
+        public static void setupClient(FMLClientSetupEvent event) {
+//            ItemObsidianFishingRod.propertyOverrideRegistry(event);
+            BlockEntityRenderers.register(BlockEntityTypeCollection.BLOCK_ENTITY_PROMETHEUS_BOUNTY.get(), BlockEntityRendererPrometheusBounty::new);
+        }
+//
+//        @SubscribeEvent
+//        public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
+//            event.registerEntityRenderer(EntityTypeCollection.ENTITY_OBSIDIAN_HOOK.get(), EntityObsidianHookRenderer::new);
+//      }
+
+        @SubscribeEvent
+        public static void onParticleFactoriesRegistry(final RegisterParticleProvidersEvent event) {
+            Minecraft.getInstance().particleEngine.register(ParticleTypeCollection.PARTICLE_FIRE_PUNCH.get(), ParticleFirePunch.Provider::new);
         }
     }
 }

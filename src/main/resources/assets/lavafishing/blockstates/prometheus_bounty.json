@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "lavafishing:block/prometheus_bounty"
+    }
+  }
+}
