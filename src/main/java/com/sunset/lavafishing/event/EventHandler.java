@@ -2,16 +2,19 @@ package com.sunset.lavafishing.event;
 
 import com.sunset.lavafishing.client.particle.ParticleFirePunch;
 import com.sunset.lavafishing.client.renderer.BlockEntity.BlockEntityRendererPrometheusBounty;
+import com.sunset.lavafishing.client.renderer.entity.EntityObsidianHookRenderer;
 import com.sunset.lavafishing.effect.EffectBlessed;
 import com.sunset.lavafishing.effect.EffectLavaWalker;
+import com.sunset.lavafishing.item.ItemObsidianFishingRod;
 import com.sunset.lavafishing.item.PromethiumArmor;
 import com.sunset.lavafishing.loot.LootTableHandler;
 import com.sunset.lavafishing.util.Reference;
 import com.sunset.lavafishing.util.RegistryCollection.BlockEntityTypeCollection;
+import com.sunset.lavafishing.util.RegistryCollection.EntityTypeCollection;
 import com.sunset.lavafishing.util.RegistryCollection.ParticleTypeCollection;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.TickEvent;
@@ -58,14 +61,14 @@ public class EventHandler
     {
         @SubscribeEvent
         public static void setupClient(FMLClientSetupEvent event) {
-//            ItemObsidianFishingRod.propertyOverrideRegistry(event);
-            BlockEntityRenderers.register(BlockEntityTypeCollection.BLOCK_ENTITY_PROMETHEUS_BOUNTY.get(), BlockEntityRendererPrometheusBounty::new);
+            ItemObsidianFishingRod.propertyOverrideRegistry(event);
         }
-//
-//        @SubscribeEvent
-//        public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
-//            event.registerEntityRenderer(EntityTypeCollection.ENTITY_OBSIDIAN_HOOK.get(), EntityObsidianHookRenderer::new);
-//      }
+
+        @SubscribeEvent
+        public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
+            event.registerEntityRenderer(EntityTypeCollection.ENTITY_OBSIDIAN_HOOK.get(), EntityObsidianHookRenderer::new);
+            event.registerBlockEntityRenderer(BlockEntityTypeCollection.BLOCK_ENTITY_PROMETHEUS_BOUNTY.get(), BlockEntityRendererPrometheusBounty::new);
+        }
 
         @SubscribeEvent
         public static void onParticleFactoriesRegistry(final RegisterParticleProvidersEvent event) {
