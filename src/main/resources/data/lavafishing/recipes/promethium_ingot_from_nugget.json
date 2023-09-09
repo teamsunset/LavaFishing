@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "promethium_ingot",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "lavafishing:promethium_nugget"
+    }
+  },
+  "result": {
+    "item": "lavafishing:promethium_ingot"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "xxx",
+    "x x",
+    "x x"
+  ],
+  "key": {
+    "x": {
+      "item": "lavafishing:promethium_ingot"
+    }
+  },
+  "result": {
+    "item": "lavafishing:promethium_leggings"
+  }
+}
