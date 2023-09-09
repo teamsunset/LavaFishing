@@ -3,6 +3,7 @@ package com.sunset.lavafishing;
 import com.mojang.logging.LogUtils;
 import com.sunset.lavafishing.util.Reference;
 import com.sunset.lavafishing.util.RegistryCollection.*;
+import com.teammetallurgy.aquaculture.Aquaculture;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;

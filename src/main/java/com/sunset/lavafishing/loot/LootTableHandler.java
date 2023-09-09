@@ -33,19 +33,20 @@ public class LootTableHandler
         ResourceLocation name = event.getName();
 
         Map<ResourceLocation, ResourceLocation> LootTablesInjects = new HashMap<>();
-        LootTablesInjects.put(AquaLootTables.LAVA_FISHING, LAVA_FISHING);
-        LootTablesInjects.put(AquaLootTables.LAVA_FISH, LAVA_FISH);
-        LootTablesInjects.put(AquaLootTables.LAVA_JUNK, LAVA_JUNK);
-        LootTablesInjects.put(AquaLootTables.LAVA_TREASURE, LAVA_TREASURE);
-        LootTablesInjects.put(AquaLootTables.NETHER_FISHING, NETHER_FISHING);
-        LootTablesInjects.put(AquaLootTables.NETHER_FISH, NETHER_FISH);
-        LootTablesInjects.put(AquaLootTables.NETHER_JUNK, NETHER_JUNK);
-        LootTablesInjects.put(AquaLootTables.NETHER_TREASURE, NETHER_TREASURE);
-
+        LootTablesInjects.put(AquaLootTables.LAVA_FISHING, LootTableHandler.LAVA_FISHING);
+        LootTablesInjects.put(AquaLootTables.LAVA_FISH, LootTableHandler.LAVA_FISH);
+        LootTablesInjects.put(AquaLootTables.LAVA_JUNK, LootTableHandler.LAVA_JUNK);
+        LootTablesInjects.put(AquaLootTables.LAVA_TREASURE, LootTableHandler.LAVA_TREASURE);
+        LootTablesInjects.put(AquaLootTables.NETHER_FISHING, LootTableHandler.NETHER_FISHING);
+        LootTablesInjects.put(AquaLootTables.NETHER_FISH, LootTableHandler.NETHER_FISH);
+        LootTablesInjects.put(AquaLootTables.NETHER_JUNK, LootTableHandler.NETHER_JUNK);
+        LootTablesInjects.put(AquaLootTables.NETHER_TREASURE, LootTableHandler.NETHER_TREASURE);
 
         for (ResourceLocation i : LootTablesInjects.keySet()) {
             if (name.equals(i)) {
-                event.getTable().addPool(new LootPool.Builder()
+                event.getTable().removePool("main");
+                event.getTable().addPool(
+                        new LootPool.Builder()
                         .add(LootTableReference.lootTableReference(LootTablesInjects.get(i)))
                         .name(Reference.MOD_ID + "_inject")
                         .build());

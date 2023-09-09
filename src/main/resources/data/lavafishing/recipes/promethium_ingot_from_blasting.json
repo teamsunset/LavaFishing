@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": [
+    {
+      "item": "lavafishing:promethium_boots"
+    },
+    {
+      "item": "lavafishing:promethium_chestplate"
+    },
+    {
+      "item": "lavafishing:promethium_helmet"
+    },
+    {
+      "item": "lavafishing:promethium_leggings"
+    }
+  ],
+  "result": "lavafishing:promethium_ingot",
+  "experience": 0.5,
+  "cookingtime": 200
+}

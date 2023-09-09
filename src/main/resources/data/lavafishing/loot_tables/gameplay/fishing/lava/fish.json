@@ -6,29 +6,29 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "weight": 75,
+          "weight": 50,
           "name": "lavafishing:quartz_fish"
         },
         {
           "type": "minecraft:item",
-          "weight": 5,
+          "weight": 10,
           "name": "lavafishing:flame_squat_lobster"
         },
         {
           "type": "minecraft:item",
-          "weight": 5,
+          "weight": 10,
           "name": "lavafishing:obsidian_sword_fish"
         }, {
           "type": "minecraft:item",
-          "weight": 5,
+          "weight": 10,
           "name": "lavafishing:steam_flying_fish"
         }, {
           "type": "minecraft:item",
-          "weight": 5,
+          "weight": 10,
           "name": "lavafishing:arowana_fish"
         }, {
           "type": "minecraft:item",
-          "weight": 5,
+          "weight": 10,
           "name": "lavafishing:agni_fish"
         }
       ]
