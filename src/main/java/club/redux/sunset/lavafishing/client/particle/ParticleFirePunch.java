@@ -1,14 +1,17 @@
 package club.redux.sunset.lavafishing.client.particle;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.jetbrains.annotations.NotNull;
 
-public class ParticleFirePunch extends TextureSheetParticle
-{
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class ParticleFirePunch extends TextureSheetParticle {
 
     public ParticleFirePunch(ClientLevel level, double xCoord, double yCoord, double zCoord,
                              SpriteSet spriteSet, double xd, double yd, double zd) {
@@ -28,13 +31,12 @@ public class ParticleFirePunch extends TextureSheetParticle
     }
 
     @Override
-    public @NotNull ParticleRenderType getRenderType() {
+    public ParticleRenderType getRenderType() {
         return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static class Provider implements ParticleProvider<SimpleParticleType>
-    {
+    public static class Provider implements ParticleProvider<SimpleParticleType> {
         private SpriteSet sprites;
 
         public Provider(SpriteSet spriteSet) {

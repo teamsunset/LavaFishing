@@ -102,8 +102,13 @@ repositories {
 }
 
 dependencies {
+    // minecraft
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    // dependencies
     implementation fg.deobf("curse.maven:aquaculture-60028:4608454")
+    // lombok
+    implementation 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
 }
 
 def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
@@ -148,11 +153,11 @@ jar {
 jar.finalizedBy('reobfJar')
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
-    }
+//    publications {
+//        mavenJava(MavenPublication) {
+//            artifact jar
+//        }
+//    }
     repositories {
         maven {
             url "file://${project.projectDir}/mcmodsrepo"

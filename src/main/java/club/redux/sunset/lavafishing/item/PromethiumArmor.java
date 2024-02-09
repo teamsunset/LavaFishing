@@ -2,6 +2,7 @@ package club.redux.sunset.lavafishing.item;
 
 import club.redux.sunset.lavafishing.util.Reference;
 import club.redux.sunset.lavafishing.util.RegistryCollection.MobEffectCollection;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -16,10 +17,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.event.TickEvent;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
-public class PromethiumArmor extends ArmorItem
-{
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class PromethiumArmor extends ArmorItem {
     //    private static final AttributeModifier INCREASED_SWIM_SPEED = new AttributeModifier(UUID.fromString("d820cadc-2d19-421c-b19f-4c1f5b84a418"), "Neptunium Boots swim speed boost", 0.5D, AttributeModifier.Operation.ADDITION);
     private String texture;
 
@@ -91,7 +93,7 @@ public class PromethiumArmor extends ArmorItem
     }
 
     @Override
-    public String getArmorTexture(@Nonnull ItemStack stack, Entity entity, EquipmentSlot slot, String layer) {
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String layer) {
         return Reference.MOD_ID + ":textures/armor/" + this.texture + ".png";
     }
 }

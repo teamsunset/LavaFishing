@@ -1,9 +1,10 @@
 package club.redux.sunset.lavafishing.client.renderer.entity;
 
+import club.redux.sunset.lavafishing.entity.EntityObsidianHook;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import club.redux.sunset.lavafishing.entity.EntityObsidianHook;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -17,13 +18,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
-public class EntityObsidianHookRenderer extends EntityRenderer<EntityObsidianHook>
-{
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class EntityObsidianHookRenderer extends EntityRenderer<EntityObsidianHook> {
     private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/entity/fishing_hook.png");
     private static final RenderType RENDER_TYPE = RenderType.entityCutout(TEXTURE_LOCATION);
     private static final double VIEW_BOBBING_SCALE = 960.0D;
@@ -128,7 +131,7 @@ public class EntityObsidianHookRenderer extends EntityRenderer<EntityObsidianHoo
      * Returns the location of an entity's texture.
      */
     @Override
-    @Nonnull
+    @NotNull
     public ResourceLocation getTextureLocation(EntityObsidianHook pEntity) {
         return TEXTURE_LOCATION;
     }

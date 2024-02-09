@@ -1,10 +1,14 @@
 package club.redux.sunset.lavafishing.item.fishes;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 
-public class ItemQuartzFish extends Item
-{
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class ItemQuartzFish extends Item {
     public ItemQuartzFish() {
         super(GetProperties());
     }

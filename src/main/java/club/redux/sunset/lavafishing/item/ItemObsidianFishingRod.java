@@ -2,6 +2,7 @@ package club.redux.sunset.lavafishing.item;
 
 import club.redux.sunset.lavafishing.entity.EntityObsidianHook;
 import club.redux.sunset.lavafishing.util.RegistryCollection.ItemCollection;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -16,8 +17,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-public class ItemObsidianFishingRod extends FishingRodItem
-{
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class ItemObsidianFishingRod extends FishingRodItem {
     public ItemObsidianFishingRod() {
         super(GetProperties());
     }

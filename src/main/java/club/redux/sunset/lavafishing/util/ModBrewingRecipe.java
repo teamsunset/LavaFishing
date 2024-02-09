@@ -1,5 +1,6 @@
 package club.redux.sunset.lavafishing.util;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -7,8 +8,11 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
 
-public class ModBrewingRecipe implements IBrewingRecipe
-{
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class ModBrewingRecipe implements IBrewingRecipe {
     private final Potion input;
     private final Item ingredient;
     private final Potion output;
