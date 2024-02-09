@@ -2,17 +2,12 @@ package club.redux.sunset.lavafishing;
 
 import club.redux.sunset.lavafishing.util.Reference;
 import club.redux.sunset.lavafishing.util.RegistryCollection.*;
-import club.redux.sunset.lavafishing.util.RegistryCollection.*;
-import com.mojang.logging.LogUtils;
-import club.redux.sunset.lavafishing.util.RegistryCollection.*;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.slf4j.Logger;
 
 @Mod(Reference.MOD_ID)
 public class LavaFishing {
-    public static final Logger DEBUG_LOGGER = LogUtils.getLogger();
 
     public LavaFishing() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();

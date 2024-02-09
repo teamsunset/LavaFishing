@@ -2,6 +2,7 @@ package club.redux.sunset.lavafishing.util;
 
 import club.redux.sunset.lavafishing.util.RegistryCollection.ItemCollection;
 import com.teammetallurgy.aquaculture.api.AquaArmorMaterials;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -12,11 +13,13 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.EnumMap;
 import java.util.function.Supplier;
 
-public enum LavaArmorMaterials implements StringRepresentable, ArmorMaterial
-{
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public enum LavaArmorMaterials implements StringRepresentable, ArmorMaterial {
     PROMETHIUM("promethium", 38, Util.make(new EnumMap<>(ArmorItem.Type.class), (map) ->
     {
         map.put(ArmorItem.Type.BOOTS, 4);

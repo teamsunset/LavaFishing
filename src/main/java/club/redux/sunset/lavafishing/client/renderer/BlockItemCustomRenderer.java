@@ -1,9 +1,10 @@
 package club.redux.sunset.lavafishing.client.renderer;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import club.redux.sunset.lavafishing.block.BlockEntity.BlockEntityPrometheusBounty;
 import club.redux.sunset.lavafishing.block.BlockPrometheusBounty;
 import club.redux.sunset.lavafishing.util.RegistryCollection.BlockCollection;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -16,17 +17,18 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
-public class BlockItemCustomRenderer extends BlockEntityWithoutLevelRenderer
-{
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class BlockItemCustomRenderer extends BlockEntityWithoutLevelRenderer {
 
     public BlockItemCustomRenderer(BlockEntityRenderDispatcher pBlockEntityRenderDispatcher, EntityModelSet pEntityModelSet) {
         super(pBlockEntityRenderDispatcher, pEntityModelSet);
     }
 
     @Override
-    public void renderByItem(@Nonnull ItemStack stack, ItemDisplayContext itemDisplayContext, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int i, int i1) {
+    public void renderByItem(ItemStack stack, ItemDisplayContext itemDisplayContext, PoseStack matrixStack, MultiBufferSource buffer, int i, int i1) {
         Minecraft mc = Minecraft.getInstance();
         Item item = stack.getItem();
         if (item instanceof BlockItem) {

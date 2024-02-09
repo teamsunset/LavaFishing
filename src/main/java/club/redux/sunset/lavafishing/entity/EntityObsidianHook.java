@@ -3,6 +3,7 @@ package club.redux.sunset.lavafishing.entity;
 import club.redux.sunset.lavafishing.loot.LootTableHandler;
 import club.redux.sunset.lavafishing.util.Reference;
 import club.redux.sunset.lavafishing.util.RegistryCollection.EntityTypeCollection;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -31,15 +32,16 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.function.BiFunction;
 
-public class EntityObsidianHook extends FishingHook
-{
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class EntityObsidianHook extends FishingHook {
     private final Random lavaTickRand = new Random();
 
     public EntityObsidianHook(EntityType<? extends FishingHook> entityType, Level pLevel) {
@@ -171,7 +173,7 @@ public class EntityObsidianHook extends FishingHook
     }
 
     @Override
-    public int retrieve(@NotNull ItemStack pStack) {
+    public int retrieve(ItemStack pStack) {
         if (isInLavaFishing()) {
             //---vanilla code
             Player player = this.getPlayerOwner();
@@ -319,7 +321,7 @@ public class EntityObsidianHook extends FishingHook
     }
 
     @Override
-    protected void pullEntity(@NotNull Entity pulledEntity) {
+    protected void pullEntity(Entity pulledEntity) {
         BiFunction<Entity, Vec3, Void> _MULTIPLY_RETRIEVE_STRENGTH_FROM_LAVA = (_pulledEntity, vec3) -> {
             if (_pulledEntity instanceof ItemEntity && _pulledEntity.isInLava()) {
                 vec3 = vec3.scale(1D);
@@ -352,7 +354,7 @@ public class EntityObsidianHook extends FishingHook
     }
 
     @Override
-    public @NotNull EntityType<?> getType() {
+    public EntityType<?> getType() {
         return EntityTypeCollection.ENTITY_OBSIDIAN_HOOK.get();
     }
 

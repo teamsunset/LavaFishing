@@ -3,6 +3,7 @@ package club.redux.sunset.lavafishing.block;
 import club.redux.sunset.lavafishing.block.BlockEntity.BlockEntityPrometheusBounty;
 import club.redux.sunset.lavafishing.util.RegistryCollection.BlockEntityTypeCollection;
 import net.minecraft.ChatFormatting;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -24,18 +25,19 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
-public class BlockPrometheusBounty extends ChestBlock
-{
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class BlockPrometheusBounty extends ChestBlock {
     public BlockPrometheusBounty() {
         super(Block.Properties.of().mapColor(MapColor.METAL).strength(3.5F, 8.0F).sound(SoundType.METAL), BlockEntityTypeCollection.BLOCK_ENTITY_PROMETHEUS_BOUNTY::get);
     }
 
     @Override
-    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new BlockEntityPrometheusBounty(pos, state);
     }
 
@@ -46,8 +48,7 @@ public class BlockPrometheusBounty extends ChestBlock
     }
 
     @Override
-    @Nonnull
-    public BlockState updateShape(BlockState state, @Nonnull Direction direction, @Nonnull BlockState facingState, @Nonnull LevelAccessor world, @Nonnull BlockPos currentPos, @Nonnull BlockPos facingPos) {
+    public BlockState updateShape(BlockState state, Direction direction, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
         if (state.getValue(WATERLOGGED)) {
             world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
@@ -56,8 +57,8 @@ public class BlockPrometheusBounty extends ChestBlock
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable BlockGetter world, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flag) {
-        super.appendHoverText(stack, world, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter pLevel, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, pLevel, tooltip, flag);
         CompoundTag tag = stack.getTagElement("BlockEntityTag");
         if (tag != null) {
             if (tag.contains("Items", 9)) {

@@ -1,6 +1,7 @@
 package club.redux.sunset.lavafishing.item.fishes;
 
 import club.redux.sunset.lavafishing.util.RegistryCollection.ItemCollection;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -16,12 +17,13 @@ import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Supplier;
 
-public class ItemObsidianSwordFish extends SwordItem
-{
-    public enum ModItemTier implements Tier
-    {
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class ItemObsidianSwordFish extends SwordItem {
+    public enum ModItemTier implements Tier {
         FISH(0, 0, 2.0F, 0.0F, 15, () -> Ingredient.of(ItemCollection.ITEM_OBSIDIAN_SWORD_FISH.get()), null);
         private final int level;
         private final int maxUses;
@@ -43,19 +45,29 @@ public class ItemObsidianSwordFish extends SwordItem
 
 
         @Override
-        public int getUses() {return this.maxUses;}
+        public int getUses() {
+            return this.maxUses;
+        }
 
         @Override
-        public float getSpeed() {return this.speed;}
+        public float getSpeed() {
+            return this.speed;
+        }
 
         @Override
-        public float getAttackDamageBonus() {return this.attackDamage;}
+        public float getAttackDamageBonus() {
+            return this.attackDamage;
+        }
 
         @Override
-        public int getLevel() {return this.level;}
+        public int getLevel() {
+            return this.level;
+        }
 
         @Override
-        public int getEnchantmentValue() {return this.enchantmentValue;}
+        public int getEnchantmentValue() {
+            return this.enchantmentValue;
+        }
 
         @NotNull
         @Override
@@ -66,7 +78,9 @@ public class ItemObsidianSwordFish extends SwordItem
 
         @Nullable
         @Override
-        public TagKey<Block> getTag() {return this.tag;}
+        public TagKey<Block> getTag() {
+            return this.tag;
+        }
     }
 
     public ItemObsidianSwordFish() {
@@ -84,8 +98,7 @@ public class ItemObsidianSwordFish extends SwordItem
                 .nutrition(3)
                 .saturationMod(0.6F)
                 .build();
-        return new Properties()
-        {
+        return new Properties() {
             @Override
             public Item.Properties durability(int pMaxDamage) {
                 super.durability(pMaxDamage);

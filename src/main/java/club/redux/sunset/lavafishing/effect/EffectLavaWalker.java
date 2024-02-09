@@ -1,6 +1,7 @@
 package club.redux.sunset.lavafishing.effect;
 
 import club.redux.sunset.lavafishing.util.RegistryCollection.MobEffectCollection;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -12,8 +13,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
-public class EffectLavaWalker extends MobEffect
-{
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class EffectLavaWalker extends MobEffect {
     public EffectLavaWalker() {
         super(MobEffectCategory.BENEFICIAL, 0xCC3300);
     }

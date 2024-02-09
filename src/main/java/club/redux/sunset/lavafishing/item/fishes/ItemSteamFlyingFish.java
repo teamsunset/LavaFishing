@@ -1,6 +1,7 @@
 package club.redux.sunset.lavafishing.item.fishes;
 
 import club.redux.sunset.lavafishing.util.RegistryCollection.MobEffectCollection;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
@@ -8,8 +9,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class ItemSteamFlyingFish extends Item
-{
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class ItemSteamFlyingFish extends Item {
     public ItemSteamFlyingFish() {
         super(GetProperties());
     }

@@ -1,10 +1,10 @@
 package club.redux.sunset.lavafishing.event;
 
+import club.redux.sunset.lavafishing.client.particle.ParticleFirePunch;
 import club.redux.sunset.lavafishing.client.renderer.BlockEntity.BlockEntityRendererPrometheusBounty;
 import club.redux.sunset.lavafishing.client.renderer.entity.EntityObsidianHookRenderer;
 import club.redux.sunset.lavafishing.effect.EffectBlessed;
 import club.redux.sunset.lavafishing.effect.EffectLavaWalker;
-import club.redux.sunset.lavafishing.client.particle.ParticleFirePunch;
 import club.redux.sunset.lavafishing.item.ItemObsidianFishingRod;
 import club.redux.sunset.lavafishing.item.PromethiumArmor;
 import club.redux.sunset.lavafishing.loot.LootTableHandler;
@@ -24,11 +24,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-public class EventHandler
-{
+public class EventHandler {
     @Mod.EventBusSubscriber
-    public class ForgeEvent
-    {
+    public static class ForgeEvent {
         @SubscribeEvent
         public static void onEntityDamage(LivingDamageEvent event) {
             EffectBlessed.onEntityDamaged(event);
@@ -51,14 +49,12 @@ public class EventHandler
     }
 
     @Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-    public class ModEventBoth
-    {
+    public static class ModEventBoth {
 
     }
 
     @Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public class ModEventClient
-    {
+    public static class ModEventClient {
         @SubscribeEvent
         public static void setupClient(FMLClientSetupEvent event) {
             ItemObsidianFishingRod.propertyOverrideRegistry(event);

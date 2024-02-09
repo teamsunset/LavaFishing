@@ -2,6 +2,7 @@ package club.redux.sunset.lavafishing.effect;
 
 import club.redux.sunset.lavafishing.util.RegistryCollection.MobEffectCollection;
 import club.redux.sunset.lavafishing.util.RegistryCollection.ParticleTypeCollection;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -13,8 +14,11 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
-public class EffectBlessed extends MobEffect
-{
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class EffectBlessed extends MobEffect {
     public EffectBlessed() {
         super(MobEffectCategory.NEUTRAL, 0xCC3300);
     }
