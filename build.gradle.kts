@@ -89,9 +89,7 @@ base {
 }
 
 java {
-    toolchain {
-        languageVersion.set(javaVersion)
-    }
+    toolchain.languageVersion.set(javaVersion)
 }
 
 kapt {
