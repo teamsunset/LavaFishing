@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.item;
 
-import club.redux.sunset.lavafishing.util.Reference;
+import club.asynclab.web.BuildConstants;
 import club.redux.sunset.lavafishing.util.RegistryCollection.MobEffectCollection;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.effect.MobEffect;
@@ -94,6 +94,6 @@ public class PromethiumArmor extends ArmorItem {
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String layer) {
-        return Reference.MOD_ID + ":textures/armor/" + this.texture + ".png";
+        return BuildConstants.MOD_ID + ":textures/armor/" + this.texture + ".png";
     }
 }

@@ -1,14 +1,13 @@
 package club.redux.sunset.lavafishing.util.RegistryCollection;
 
-import club.redux.sunset.lavafishing.util.Reference;
+import club.asynclab.web.BuildConstants;
 import com.teammetallurgy.aquaculture.api.fishing.Hook;
 import net.minecraft.ChatFormatting;
 import net.minecraft.tags.FluidTags;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = Reference.MOD_ID)
-public class HookCollection
-{
+@Mod.EventBusSubscriber(modid = BuildConstants.MOD_ID)
+public class HookCollection {
 
     public static final Hook OBSIDIAN = new Hook.HookBuilder("obsidian").setColor(ChatFormatting.DARK_PURPLE).setFluid(FluidTags.LAVA).build();
     public static final Hook DOUBLE_OBSIDIAN = new Hook.HookBuilder("double_obsidian").setFluid(FluidTags.LAVA).setDoubleCatchChance(0.15).build();

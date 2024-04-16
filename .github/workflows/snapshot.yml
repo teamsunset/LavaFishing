@@ -1,0 +1,39 @@
+name: snapshot
+
+on:
+  push:
+    branches:
+      - '^mc.*\/dev$'
+
+jobs:
+  publish:
+    concurrency:
+      group: snapshot
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Extract version
+        run: echo "VERSION=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version://g')" >> $GITHUB_ENV
+
+      - name: shadowJar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x ./gradlew
+          ./gradlew build
+
+      - name: Update Snapshot Release
+        uses: andelf/nightly-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: 'snapshot-${{VERSION}}'
+          name: 'snapshot-${{VERSION}}-$$-${{ github.run_id }}'
+          prerelease: false
+          body: 'snapshot version'
+          files: |
+            ./build/libs/*-all.jar

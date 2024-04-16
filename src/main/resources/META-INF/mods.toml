@@ -1,5 +1,5 @@
-modLoader = "javafml"
-loaderVersion = "${loader_version_range}"
+modLoader = "${mod_loader}"
+loaderVersion = "${mod_loader_version_range}"
 license = "${mod_license}"
 
 [[mods]]
@@ -29,5 +29,11 @@ side = "BOTH"
 modId = "aquaculture"
 mandatory = true
 versionRange = "${aquaculture_version_range}"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.${ mod_id }]]
+modId = "kotlinforforge"
+mandatory = true
+versionRange = "${mod_loader_version_range}"
 ordering = "NONE"
 side = "BOTH"

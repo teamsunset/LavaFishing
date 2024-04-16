@@ -1,13 +1,11 @@
 package club.redux.sunset.lavafishing.util.RegistryCollection;
 
+import club.asynclab.web.BuildConstants;
 import club.redux.sunset.lavafishing.item.BlockItemWithoutLevelRenderer;
 import club.redux.sunset.lavafishing.item.ItemObsidianFishingRod;
 import club.redux.sunset.lavafishing.item.PromethiumArmor;
 import club.redux.sunset.lavafishing.item.fishes.*;
-import club.redux.sunset.lavafishing.item.fishes.*;
-import club.redux.sunset.lavafishing.item.fishes.*;
 import club.redux.sunset.lavafishing.util.LavaArmorMaterials;
-import club.redux.sunset.lavafishing.util.Reference;
 import com.teammetallurgy.aquaculture.item.SimpleItem;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
@@ -17,10 +15,9 @@ import net.minecraftforge.registries.RegistryObject;
 
 import static com.teammetallurgy.aquaculture.api.AquacultureAPI.FISH_DATA;
 
-public class ItemCollection
-{
+public class ItemCollection {
 
-    public static final DeferredRegister<Item> ITEM_DEFERRED_REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, Reference.MOD_ID);
+    public static final DeferredRegister<Item> ITEM_DEFERRED_REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, BuildConstants.MOD_ID);
 
     public static final RegistryObject<Item> ITEM_OBSIDIAN_FISHING_ROD = ITEM_DEFERRED_REGISTER.register("obsidian_fishing_rod", ItemObsidianFishingRod::new);
 
