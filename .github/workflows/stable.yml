@@ -3,10 +3,7 @@ name: stable
 on:
   push:
     branches:
-      - '^mc.*\/release$'
-  pull_request:
-    branches:
-      - '^mc.*\/release$'
+      - mc*/release
 
 jobs:
   publish:
