@@ -22,7 +22,7 @@ jobs:
       - name: Extract version
         run: echo "VERSION=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version://g')" >> $GITHUB_ENV
 
-      - name: shadowJar
+      - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

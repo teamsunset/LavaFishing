@@ -19,7 +19,7 @@ jobs:
       - name: Extract version
         run: echo "VERSION=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version://g')" >> $GITHUB_ENV
 
-      - name: Build with Gradle Wrapper
+      - name: Build
         run: |
           chmod +x ./gradlew
           ./gradlew clean shadowJar
