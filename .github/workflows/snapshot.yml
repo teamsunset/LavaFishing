@@ -34,8 +34,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: 'snapshot-${{VERSION}}'
-          name: 'snapshot-${{VERSION}}-$$-${{ github.run_id }}'
+          tag_name: 'snapshot-${{ env.VERSION }}'
+          name: 'snapshot-${{ env.VERSION }}-$$-${{ github.run_id }}'
           prerelease: false
           body: 'snapshot version'
           files: |
