@@ -9,7 +9,8 @@ val minecraftVersion: String by project
 val minecraftVersionRange: String by project
 val forgeVersion: String by project
 val forgeVersionRange: String by project
-val loaderVersionRange: String by project
+val modLoader: String by project
+val modLoaderVersionRange: String by project
 val minecraftMappingChannel: String by project
 val minecraftMappingVersion: String by project
 val aquacultureVersionRange: String by project
@@ -33,6 +34,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
     kotlin("jvm") version "1.9.22"
     kotlin("kapt") version "1.9.22"
+    kotlin("plugin.serialization") version "1.9.22"
 }
 
 repositories {
@@ -41,6 +43,10 @@ repositories {
         content {
             includeGroup("curse.maven")
         }
+    }
+    maven {
+        name = "Kotlin for Forge"
+        setUrl("https://thedarkcolour.github.io/KotlinForForge/")
     }
     maven {
         url = uri("https://maven.aliyun.com/repository/public/")
@@ -69,15 +75,13 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.30")
     kapt("org.projectlombok:lombok:1.18.30")
 
-    // Kotlin
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.23")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.23")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.0")
+    // Kotlin For Forge
+    implementation("thedarkcolour:kotlinforforge:4.10.0")
 }
 
 val javaVersion = JavaLanguageVersion.of(17)
 
-version = modVersion
+version = "$minecraftVersion-$modVersion"
 group = modGroupId
 
 base {
@@ -142,7 +146,8 @@ val props = mapOf(
     "minecraft_version_range" to minecraftVersionRange,
     "forge_version" to forgeVersion,
     "forge_version_range" to forgeVersionRange,
-    "loader_version_range" to loaderVersionRange,
+    "mod_loader" to modLoader,
+    "mod_loader_version_range" to modLoaderVersionRange,
     "mod_id" to modId,
     "mod_name" to modName,
     "mod_license" to modLicense,

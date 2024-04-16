@@ -1,7 +1,7 @@
 package club.redux.sunset.lavafishing.client.renderer.BlockEntity;
 
+import club.asynclab.web.BuildConstants;
 import club.redux.sunset.lavafishing.block.BlockEntity.BlockEntityPrometheusBounty;
-import club.redux.sunset.lavafishing.util.Reference;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -24,6 +24,6 @@ public class BlockEntityRendererPrometheusBounty extends ChestRenderer<BlockEnti
 
     @Override
     protected Material getMaterial(BlockEntityPrometheusBounty blockEntity, ChestType chestType) {
-        return new Material(Sheets.CHEST_SHEET, new ResourceLocation(Reference.MOD_ID, "entity/chest/prometheus_bounty"));
+        return new Material(Sheets.CHEST_SHEET, new ResourceLocation(BuildConstants.MOD_ID, "entity/chest/prometheus_bounty"));
     }
 }

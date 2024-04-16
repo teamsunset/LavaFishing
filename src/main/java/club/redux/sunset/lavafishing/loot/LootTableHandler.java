@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.loot;
 
-import club.redux.sunset.lavafishing.util.Reference;
+import club.asynclab.web.BuildConstants;
 import com.teammetallurgy.aquaculture.init.AquaLootTables;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
@@ -11,8 +11,7 @@ import net.minecraftforge.event.LootTableLoadEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LootTableHandler
-{
+public class LootTableHandler {
     public static final ResourceLocation FISH = register("gameplay/fishing/fish");
 
     //
@@ -26,7 +25,7 @@ public class LootTableHandler
     public static final ResourceLocation NETHER_TREASURE = register("gameplay/fishing/nether/treasure");
 
     private static ResourceLocation register(String path) {
-        return BuiltInLootTables.register(new ResourceLocation(Reference.MOD_ID, path));
+        return BuiltInLootTables.register(new ResourceLocation(BuildConstants.MOD_ID, path));
     }
 
     public static void onLootTableLoad(LootTableLoadEvent event) {
@@ -47,9 +46,9 @@ public class LootTableHandler
                 event.getTable().removePool("main");
                 event.getTable().addPool(
                         new LootPool.Builder()
-                        .add(LootTableReference.lootTableReference(LootTablesInjects.get(i)))
-                        .name(Reference.MOD_ID + "_inject")
-                        .build());
+                                .add(LootTableReference.lootTableReference(LootTablesInjects.get(i)))
+                                .name(BuildConstants.MOD_ID + "_inject")
+                                .build());
             }
         }
 

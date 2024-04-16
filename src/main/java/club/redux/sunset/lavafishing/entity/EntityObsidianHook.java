@@ -1,7 +1,7 @@
 package club.redux.sunset.lavafishing.entity;
 
+import club.asynclab.web.BuildConstants;
 import club.redux.sunset.lavafishing.loot.LootTableHandler;
-import club.redux.sunset.lavafishing.util.Reference;
 import club.redux.sunset.lavafishing.util.RegistryCollection.EntityTypeCollection;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -350,7 +350,7 @@ public class EntityObsidianHook extends FishingHook {
                 .sized(0.25F, 0.25F)
                 .setTrackingRange(4)
                 .setUpdateInterval(5)
-                .build(new ResourceLocation(Reference.MOD_ID, "obsidian_hook").toString());
+                .build(new ResourceLocation(BuildConstants.MOD_ID, "obsidian_hook").toString());
     }
 
     @Override
