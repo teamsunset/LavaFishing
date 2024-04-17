@@ -15,6 +15,6 @@ class BlockEntityPrometheusBounty(
     state
 ) {
     public override fun getDefaultName(): Component {
-        return Component.translatable(blockState.block.descriptionId)
+        return Component.translatable(this.blockState.block.descriptionId)
     }
 }

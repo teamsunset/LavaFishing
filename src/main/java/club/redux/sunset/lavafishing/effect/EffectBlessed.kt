@@ -14,13 +14,16 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent
 
 class EffectBlessed : MobEffect(MobEffectCategory.NEUTRAL, 0xCC3300) {
     override fun applyEffectTick(pLivingEntity: LivingEntity, pAmplifier: Int) {
-        pLivingEntity.remainingFireTicks = 20
-        pLivingEntity.heal(0.4f)
-        pLivingEntity.setSharedFlagOnFire(true)
-        if (pLivingEntity.isInWaterOrRain) {
-            pLivingEntity.hurt(pLivingEntity.damageSources().onFire(), 0.2f)
+        pLivingEntity.apply {
+            remainingFireTicks = 20
+            heal(0.4f)
+            setSharedFlagOnFire(true)
+            if (isInWaterOrRain) {
+                hurt(damageSources().onFire(), 0.2f)
+            }
+            hurt(damageSources().onFire(), 0.1f)
         }
-        pLivingEntity.hurt(pLivingEntity.damageSources().onFire(), 0.1f)
+
         super.applyEffectTick(pLivingEntity, pAmplifier)
     }
 
@@ -33,7 +36,11 @@ class EffectBlessed : MobEffect(MobEffectCategory.NEUTRAL, 0xCC3300) {
         fun onEntityDamaged(event: LivingDamageEvent) {
             val source = event.source
             val target = event.entity
-            val sourceEntity = (source.entity as? LivingEntity) ?: return
+            val sourceEntity = source.entity
+
+            if (sourceEntity !is LivingEntity) {
+                return
+            }
 
             if (
                 !source.`is`(DamageTypes.MOB_PROJECTILE) &&

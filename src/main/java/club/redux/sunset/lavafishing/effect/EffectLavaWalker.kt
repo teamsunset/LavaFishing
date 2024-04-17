@@ -1,61 +1,81 @@
-package club.redux.sunset.lavafishing.effect;
+package club.redux.sunset.lavafishing.effect
 
-import club.redux.sunset.lavafishing.util.RegistryCollection.MobEffectCollection;
-import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.player.PlayerEvent;
+import club.redux.sunset.lavafishing.util.RegistryCollection.MobEffectCollection
+import net.minecraft.core.BlockPos
+import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.tags.FluidTags
+import net.minecraft.world.effect.MobEffect
+import net.minecraft.world.effect.MobEffectCategory
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.player.Player
+import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
+import kotlin.math.max
 
-import javax.annotation.ParametersAreNonnullByDefault;
+class EffectLavaWalker : MobEffect(MobEffectCategory.BENEFICIAL, 0xCC3300) {
+    override fun applyEffectTick(pLivingEntity: LivingEntity, pAmplifier: Int) {
+        if (!(pLivingEntity is Player && pLivingEntity.isSpectator())) {
+            val pos = pLivingEntity.position()
+            val movement = pLivingEntity.deltaMovement
+            val futurePos = pos.add(movement)
+            val onPos = pLivingEntity.onPos
+            val futureBlockPos = BlockPos(futurePos.x.toInt(), futurePos.y.toInt(), futurePos.z.toInt())
+            val level = pLivingEntity.level()
 
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
-public class EffectLavaWalker extends MobEffect {
-    public EffectLavaWalker() {
-        super(MobEffectCategory.BENEFICIAL, 0xCC3300);
-    }
-
-    @Override
-    public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
-        if (!(pLivingEntity instanceof Player player && player.isSpectator())) {
-            Vec3 pos = pLivingEntity.position();
-            Vec3 movement = pLivingEntity.getDeltaMovement();
-            Vec3 futurePos = pos.add(movement);
-            BlockPos onPos = pLivingEntity.getOnPos();
-            BlockPos futureBlockPos = new BlockPos((int) futurePos.x, (int) futurePos.y, (int) futurePos.z);
-            if (pLivingEntity.isInLava()) {
-                pLivingEntity.setDeltaMovement(movement.add(0, 0.1, 0));
-            } else if (pLivingEntity.level().getFluidState(onPos).is(FluidTags.LAVA)) {
-                if (pLivingEntity.level() instanceof ServerLevel level) {
-                    level.sendParticles(ParticleTypes.WHITE_ASH, pos.x(), pos.y() + 0.1D, pos.z(), 10, 0.2, 0.1, 0.2, 1.5);
+            if (pLivingEntity.isInLava) {
+                pLivingEntity.deltaMovement = movement.add(0.0, 0.1, 0.0)
+            } else if (level.getFluidState(onPos).`is`(FluidTags.LAVA)) {
+                if (level is ServerLevel) {
+                    level.sendParticles(
+                        ParticleTypes.WHITE_ASH,
+                        pos.x(),
+                        pos.y() + 0.1,
+                        pos.z(),
+                        10,
+                        0.2,
+                        0.1,
+                        0.2,
+                        1.5
+                    )
                 }
-                pLivingEntity.setDeltaMovement(movement.x(), Math.max(movement.y(), 0D), movement.z());
-                pLivingEntity.setOnGround(true);
-            } else if (pLivingEntity.level().getFluidState(futureBlockPos).is(FluidTags.LAVA) && movement.y() > -0.8) {
-                if (pLivingEntity.level() instanceof ServerLevel level) {
-                    level.sendParticles(ParticleTypes.WHITE_ASH, pos.x(), pos.y() + 0.1D, pos.z(), 10, 0.2, 0.1, 0.2, 1.5);
+
+                pLivingEntity.setDeltaMovement(movement.x(), max(movement.y(), 0.0), movement.z())
+                pLivingEntity.setOnGround(true)
+            } else if (pLivingEntity.level().getFluidState(futureBlockPos)
+                    .`is`(FluidTags.LAVA) && movement.y() > -0.8
+            ) {
+                if (level is ServerLevel) {
+                    level.sendParticles(
+                        ParticleTypes.WHITE_ASH,
+                        pos.x(),
+                        pos.y() + 0.1,
+                        pos.z(),
+                        10,
+                        0.2,
+                        0.1,
+                        0.2,
+                        1.5
+                    )
                 }
-                pLivingEntity.setDeltaMovement(movement.x(), Math.max(movement.y(), movement.y() * 0.5), movement.z());
+
+                pLivingEntity.setDeltaMovement(movement.x(), max(movement.y(), movement.y() * 0.5), movement.z())
             }
-            super.applyEffectTick(pLivingEntity, pAmplifier);
+            super.applyEffectTick(pLivingEntity, pAmplifier)
         }
     }
 
-    @Override
-    public boolean isDurationEffectTick(int pDuration, int pAmplifier) {
-        return true;
+    override fun isDurationEffectTick(pDuration: Int, pAmplifier: Int): Boolean {
+        return true
     }
 
-    public static void onPlayerBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (event.getEntity().hasEffect(MobEffectCollection.EFFECT_LAVA_WALKER.get()) && event.getEntity().level().getFluidState(event.getEntity().getOnPos()).is(FluidTags.LAVA)) {
-            event.setNewSpeed(event.getNewSpeed() * 5);
+    companion object {
+        @JvmStatic
+        fun onPlayerBreakSpeed(event: BreakSpeed) {
+            if (event.entity.hasEffect(MobEffectCollection.EFFECT_LAVA_WALKER.get()) && event.entity.level()
+                    .getFluidState(event.entity.onPos).`is`(FluidTags.LAVA)
+            ) {
+                event.newSpeed *= 5
+            }
         }
     }
 }
