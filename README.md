@@ -7,5 +7,7 @@ A mod which allows you to fish in the lava.
 
 # License
 
-Lava Fishing is licensed under the MIT license. You may use it in modpacks, reviews, or any other form as long as you
-abide by the terms.
+Lava Fishing is licensed under the AGPLv3.0 license. You may incorporate it into modpacks, utilize it for review
+purposes, or engage with it in any other manner, provided that you strictly adhere to the terms and conditions outlined
+in the Affero General Public License version 3.0.
+
