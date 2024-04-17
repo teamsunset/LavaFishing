@@ -36,7 +36,7 @@ jobs:
         with:
           tag_name: 'snapshot-${{ env.VERSION }}'
           name: 'snapshot-${{ env.VERSION }}-$$-${{ github.run_id }}'
-          prerelease: false
+          prerelease: true
           body: 'snapshot version'
           files: |
             ./build/libs/*-all.jar

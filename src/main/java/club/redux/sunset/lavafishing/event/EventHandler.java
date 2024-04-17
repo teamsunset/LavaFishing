@@ -2,7 +2,7 @@ package club.redux.sunset.lavafishing.event;
 
 import club.asynclab.web.BuildConstants;
 import club.redux.sunset.lavafishing.client.particle.ParticleFirePunch;
-import club.redux.sunset.lavafishing.client.renderer.BlockEntity.BlockEntityRendererPrometheusBounty;
+import club.redux.sunset.lavafishing.client.renderer.blockentity.BlockEntityRendererPrometheusBounty;
 import club.redux.sunset.lavafishing.client.renderer.entity.EntityObsidianHookRenderer;
 import club.redux.sunset.lavafishing.effect.EffectBlessed;
 import club.redux.sunset.lavafishing.effect.EffectLavaWalker;
