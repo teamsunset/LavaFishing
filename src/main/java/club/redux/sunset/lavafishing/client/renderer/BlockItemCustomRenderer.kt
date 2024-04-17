@@ -28,16 +28,15 @@ class BlockItemCustomRenderer(
     ) {
         val mc = Minecraft.getInstance()
         val item = stack.item
-        if (item is BlockItem) {
-            val block = item.block
-            if (block is BlockPrometheusBounty) {
-                mc.blockEntityRenderDispatcher.renderItem(
-                    BlockEntityPrometheusBounty(
-                        BlockPos.ZERO,
-                        BlockCollection.BLOCK_PROMETHEUS_BOUNTY.get().defaultBlockState()
-                    ), matrixStack, buffer, i, i1
-                )
-            }
+        if ((item as? BlockItem)?.block !is BlockPrometheusBounty) {
+            return
         }
+
+        mc.blockEntityRenderDispatcher.renderItem(
+            BlockEntityPrometheusBounty(
+                BlockPos.ZERO,
+                BlockCollection.BLOCK_PROMETHEUS_BOUNTY.get().defaultBlockState()
+            ), matrixStack, buffer, i, i1
+        )
     }
 }

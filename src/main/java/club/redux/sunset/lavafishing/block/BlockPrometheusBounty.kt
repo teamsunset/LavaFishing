@@ -26,7 +26,7 @@ import java.util.function.Supplier
 
 class BlockPrometheusBounty : ChestBlock(
     Properties.of().mapColor(MapColor.DIAMOND).strength(2.5f).sound(SoundType.METAL),
-    Supplier<BlockEntityType<out ChestBlockEntity?>> { BlockEntityTypeCollection.BLOCK_ENTITY_PROMETHEUS_BOUNTY.get() }
+    Supplier<BlockEntityType<out ChestBlockEntity>> { BlockEntityTypeCollection.BLOCK_ENTITY_PROMETHEUS_BOUNTY.get() }
 ) {
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {
@@ -35,10 +35,10 @@ class BlockPrometheusBounty : ChestBlock(
 
     override fun getStateForPlacement(context: BlockPlaceContext): BlockState? {
         val fluidState = context.level.getFluidState(context.clickedPos)
-        return defaultBlockState().setValue(TYPE, ChestType.SINGLE)
-            .setValue(FACING, context.horizontalDirection.opposite).setValue(
-                WATERLOGGED, fluidState.type === Fluids.WATER
-            )
+        return defaultBlockState()
+            .setValue(TYPE, ChestType.SINGLE)
+            .setValue(FACING, context.horizontalDirection.opposite)
+            .setValue(WATERLOGGED, fluidState.type === Fluids.WATER)
     }
 
     @Deprecated("Deprecated in Java")
