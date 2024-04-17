@@ -16,13 +16,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Chmod
+        run: chmod +x ./gradlew
+
       - name: Extract version
         run: echo "VERSION=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version://g')" >> $GITHUB_ENV
 
       - name: Build
-        run: |
-          chmod +x ./gradlew
-          ./gradlew clean shadowJar
+        run: ./gradlew clean shadowJar
 
       - name: Create GitHub Release
         uses: andelf/nightly-release@main
