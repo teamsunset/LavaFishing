@@ -1,42 +1,43 @@
-package club.redux.sunset.lavafishing.client.renderer;
+package club.redux.sunset.lavafishing.client.renderer
 
-import club.redux.sunset.lavafishing.block.BlockEntity.BlockEntityPrometheusBounty;
-import club.redux.sunset.lavafishing.block.BlockPrometheusBounty;
-import club.redux.sunset.lavafishing.util.RegistryCollection.BlockCollection;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
+import club.redux.sunset.lavafishing.block.BlockPrometheusBounty
+import club.redux.sunset.lavafishing.block.blockentity.BlockEntityPrometheusBounty
+import club.redux.sunset.lavafishing.util.RegistryCollection.BlockCollection
+import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.client.Minecraft
+import net.minecraft.client.model.geom.EntityModelSet
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer
+import net.minecraft.client.renderer.MultiBufferSource
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher
+import net.minecraft.core.BlockPos
+import net.minecraft.world.item.BlockItem
+import net.minecraft.world.item.ItemDisplayContext
+import net.minecraft.world.item.ItemStack
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
-public class BlockItemCustomRenderer extends BlockEntityWithoutLevelRenderer {
-
-    public BlockItemCustomRenderer(BlockEntityRenderDispatcher pBlockEntityRenderDispatcher, EntityModelSet pEntityModelSet) {
-        super(pBlockEntityRenderDispatcher, pEntityModelSet);
-    }
-
-    @Override
-    public void renderByItem(ItemStack stack, ItemDisplayContext itemDisplayContext, PoseStack matrixStack, MultiBufferSource buffer, int i, int i1) {
-        Minecraft mc = Minecraft.getInstance();
-        Item item = stack.getItem();
-        if (item instanceof BlockItem) {
-            Block block = ((BlockItem) item).getBlock();
-            if (block instanceof BlockPrometheusBounty) {
-                mc.getBlockEntityRenderDispatcher().renderItem(new BlockEntityPrometheusBounty(BlockPos.ZERO, BlockCollection.BLOCK_PROMETHEUS_BOUNTY.get().defaultBlockState()), matrixStack, buffer, i, i1);
+class BlockItemCustomRenderer(
+    pBlockEntityRenderDispatcher: BlockEntityRenderDispatcher,
+    pEntityModelSet: EntityModelSet,
+) : BlockEntityWithoutLevelRenderer(pBlockEntityRenderDispatcher, pEntityModelSet) {
+    override fun renderByItem(
+        stack: ItemStack,
+        itemDisplayContext: ItemDisplayContext,
+        matrixStack: PoseStack,
+        buffer: MultiBufferSource,
+        i: Int,
+        i1: Int,
+    ) {
+        val mc = Minecraft.getInstance()
+        val item = stack.item
+        if (item is BlockItem) {
+            val block = item.block
+            if (block is BlockPrometheusBounty) {
+                mc.blockEntityRenderDispatcher.renderItem(
+                    BlockEntityPrometheusBounty(
+                        BlockPos.ZERO,
+                        BlockCollection.BLOCK_PROMETHEUS_BOUNTY.get().defaultBlockState()
+                    ), matrixStack, buffer, i, i1
+                )
             }
         }
     }
 }
-

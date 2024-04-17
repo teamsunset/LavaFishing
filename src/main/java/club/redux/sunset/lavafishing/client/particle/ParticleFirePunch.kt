@@ -1,50 +1,53 @@
-package club.redux.sunset.lavafishing.client.particle;
+package club.redux.sunset.lavafishing.client.particle
 
-import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.*;
-import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.client.multiplayer.ClientLevel
+import net.minecraft.client.particle.*
+import net.minecraft.core.particles.SimpleParticleType
+import net.minecraftforge.api.distmarker.Dist
+import net.minecraftforge.api.distmarker.OnlyIn
 
-import javax.annotation.ParametersAreNonnullByDefault;
+class ParticleFirePunch(
+    level: ClientLevel,
+    xCoord: Double,
+    yCoord: Double,
+    zCoord: Double,
+    spriteSet: SpriteSet,
+    xd: Double,
+    yd: Double,
+    zd: Double,
+) : TextureSheetParticle(level, xCoord, yCoord, zCoord, xd, yd, zd) {
+    init {
+        this.gravity = 0.9f
+        this.friction = 0.85f
+        this.xd = 0.2
+        this.yd = 0.35
+        this.zd = 0.2
+        this.quadSize *= 4f
+        this.lifetime = 20
+        this.setSpriteFromAge(spriteSet)
 
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
-public class ParticleFirePunch extends TextureSheetParticle {
-
-    public ParticleFirePunch(ClientLevel level, double xCoord, double yCoord, double zCoord,
-                             SpriteSet spriteSet, double xd, double yd, double zd) {
-        super(level, xCoord, yCoord, zCoord, xd, yd, zd);
-        this.gravity = 0.9F;
-        this.friction = 0.85F;
-        this.xd = 0.2F;
-        this.yd = 0.35F;
-        this.zd = 0.2F;
-        this.quadSize *= 4F;
-        this.lifetime = 20;
-        this.setSpriteFromAge(spriteSet);
-
-        this.rCol = 1f;
-        this.gCol = 1f;
-        this.bCol = 1f;
+        this.rCol = 1f
+        this.gCol = 1f
+        this.bCol = 1f
     }
 
-    @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+    override fun getRenderType(): ParticleRenderType {
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static class Provider implements ParticleProvider<SimpleParticleType> {
-        private SpriteSet sprites;
-
-        public Provider(SpriteSet spriteSet) {
-            this.sprites = spriteSet;
-        }
-
-        public Particle createParticle(SimpleParticleType particleType, ClientLevel level, double x, double y, double z, double dx, double dy, double dz) {
-            return new ParticleFirePunch(level, x, y, z, this.sprites, dx, dy, dz);
+    class Provider(private val sprites: SpriteSet) : ParticleProvider<SimpleParticleType> {
+        override fun createParticle(
+            pType: SimpleParticleType,
+            pLevel: ClientLevel,
+            x: Double,
+            y: Double,
+            z: Double,
+            dx: Double,
+            dy: Double,
+            dz: Double,
+        ): Particle {
+            return ParticleFirePunch(pLevel, x, y, z, this.sprites, dx, dy, dz)
         }
     }
 }

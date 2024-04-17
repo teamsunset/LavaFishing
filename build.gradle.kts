@@ -23,6 +23,8 @@ val modAuthors: String by project
 val modCredits: String by project
 val modDescription: String by project
 
+val shade: Configuration by configurations.creating
+
 plugins {
     java
     eclipse
@@ -45,10 +47,6 @@ repositories {
         }
     }
     maven {
-        name = "Kotlin for Forge"
-        setUrl("https://thedarkcolour.github.io/KotlinForForge/")
-    }
-    maven {
         url = uri("https://maven.aliyun.com/repository/public/")
     }
     maven {
@@ -60,8 +58,6 @@ repositories {
     mavenLocal()
     mavenCentral()
 }
-
-val shade: Configuration by configurations.creating
 
 dependencies {
     // Minecraft
@@ -75,8 +71,17 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.30")
     kapt("org.projectlombok:lombok:1.18.30")
 
-    // Kotlin For Forge
-    implementation("thedarkcolour:kotlinforforge:4.10.0")
+    // Jable
+    minecraftLibrary("com.github.dsx137:jable:1.0.5")
+    shade("com.github.dsx137:jable:1.0.5")
+
+    // Kotlin
+    minecraftLibrary("org.jetbrains.kotlin:kotlin-stdlib:1.9.22")
+    minecraftLibrary("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
+    minecraftLibrary("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+    shade("org.jetbrains.kotlin:kotlin-stdlib:1.9.22")
+    shade("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
+    shade("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
 }
 
 val javaVersion = JavaLanguageVersion.of(17)
@@ -202,12 +207,13 @@ tasks.jar {
 tasks.shadowJar {
     minimize()
     configurations = listOf(shade)
+    relocate("org.jetbrains", "${modGroupId}.shadowed.org.jetbrains")
+    relocate("club.asynclab", "${modGroupId}.shadowed.club.asynclab")
 }
 
-reobf.create("shadowJar") {
+val reobfShadowJar = reobf.create("shadowJar") {
 }
 
 tasks.build {
     dependsOn("reobfShadowJar")
 }
-

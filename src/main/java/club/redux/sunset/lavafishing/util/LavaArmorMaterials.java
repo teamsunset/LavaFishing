@@ -54,6 +54,7 @@ public enum LavaArmorMaterials implements StringRepresentable, ArmorMaterial {
         this.toughness = toughness;
         this.knockbackResistance = knockbackResistance;
         this.repairIngredient = new LazyLoadedValue<>(repairIngredient);
+
     }
 
     @Override
