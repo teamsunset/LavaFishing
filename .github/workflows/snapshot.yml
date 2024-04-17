@@ -19,16 +19,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Chmod
-        run: chmod +x ./gradlew
-
-      - name: Extract version
-        run: echo "VERSION=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version://g')" >> $GITHUB_ENV
-
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew build
+        run: |
+          chmod +x ./gradlew
+          ./gradlew build
+
+      - name: Extract version
+        run: echo "VERSION=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')" >> $GITHUB_ENV
 
       - name: Update Snapshot Release
         uses: andelf/nightly-release@main
