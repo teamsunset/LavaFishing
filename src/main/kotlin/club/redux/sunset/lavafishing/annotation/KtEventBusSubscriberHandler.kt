@@ -11,87 +11,58 @@ import net.minecraftforge.fml.loading.moddiscovery.ModAnnotation
 import org.objectweb.asm.Type
 
 object KtEventBusSubscriberHandler {
-    private val EVENT_BUS_SUBSCRIBER: Type = Type.getType(Mod.EventBusSubscriber::class.java)
-
     fun inject() {
         log4j.debug(Logging.LOADING, "Injecting @EventBusSubscriber kotlin objects in to the event bus......")
 
-        val data = ModList.get()
+        ModList.get()
             .getModFileById(BuildConstants.MOD_ID)
             .file.scanResult.annotations.filter { annotationData ->
-                EVENT_BUS_SUBSCRIBER == annotationData.annotationType
-            }
+                Type.getType(Mod.EventBusSubscriber::class.java) == annotationData.annotationType
+            }.forEach { annotationData ->
+                val annotationMap = annotationData.annotationData
+                val sides = getSides(annotationMap)
+                val busTarget = getBusTarget(annotationMap)
+                val clazzName = annotationData.clazz.className
 
-        for (annotationData in data) {
-            val annotationMap = annotationData.annotationData
-            val sides = getSides(annotationMap)
-            val busTarget = getBusTarget(annotationMap)
+                if (FMLEnvironment.dist in sides) {
+                    val kClass = Class.forName(clazzName, true, javaClass.classLoader).kotlin
 
-            if (FMLEnvironment.dist in sides) {
-                val kClass = Class.forName(annotationData.clazz.className, true, javaClass.classLoader).kotlin
+                    val kObject = try {
+                        kClass.objectInstance
+                    } catch (e: UnsupportedOperationException) {
+                        if (e.message?.contains("file facades") == false) {
+                            throw e
+                        } else {
+                            log4j.debug(Logging.LOADING, "Auto-subscribing kotlin class {} to {}", clazzName, busTarget)
+                            busTarget.bus().get().register(kClass.java) // 注册类
+                            return
+                        }
+                    }
 
-                val kObject: Any?
+                    if (kObject == null) {
+                        return
+                    }
 
-                try {
-                    kObject = kClass.objectInstance
-                } catch (unsupported: UnsupportedOperationException) {
-                    if (unsupported.message?.contains("file facades") == false) {
-                        throw unsupported
-                    } else {
-                        log4j.debug(
-                            Logging.LOADING,
-                            "Auto-subscribing kotlin class {} to {}",
-                            annotationData.clazz.className,
-                            busTarget
-                        )
-                        busTarget.bus().get().register(kClass.java)
-                        continue
+                    log4j.debug(Logging.LOADING, "Auto-subscribing kotlin object {} to {}", clazzName, busTarget)
+
+                    try {
+                        busTarget.bus().get().register(kObject) // 注册对象
+                    } catch (e: Throwable) {
+                        log4j.fatal(Logging.LOADING, "Failed to load $clazzName for @EventBusSubscriber annotation", e)
+                        throw RuntimeException(e)
                     }
                 }
-
-                if (kObject == null) {
-                    continue
-                }
-
-                try {
-                    log4j.debug(
-                        Logging.LOADING,
-                        "Auto-subscribing kotlin object {} to {}",
-                        annotationData.clazz.className,
-                        busTarget
-                    )
-
-                    busTarget.bus().get().register(kObject)
-                } catch (e: Throwable) {
-                    log4j.fatal(
-                        Logging.LOADING,
-                        "Failed to load mod class ${annotationData.clazz.className} for @EventBusSubscriber annotation",
-                        e
-                    )
-                    throw RuntimeException(e)
-                }
-
             }
-        }
     }
 
-    private fun getSides(annotationMap: Map<String, Any>): List<Dist> {
-        val sidesHolders = annotationMap["value"]
+    private fun getSides(annotationMap: Map<String, Any>): List<Dist> =
+        (annotationMap["value"] as? List<*>)
+            ?.filterIsInstance<ModAnnotation.EnumHolder>()
+            ?.map { Dist.valueOf(it.value) }
+            ?: listOf(Dist.CLIENT, Dist.DEDICATED_SERVER)
 
-        return if (sidesHolders != null) {
-            (sidesHolders as List<*>).map { data -> Dist.valueOf((data as ModAnnotation.EnumHolder).value) }
-        } else {
-            listOf(Dist.CLIENT, Dist.DEDICATED_SERVER)
-        }
-    }
-
-    private fun getBusTarget(annotationMap: Map<String, Any>): Mod.EventBusSubscriber.Bus {
-        val busTargetHolder = annotationMap["bus"]
-
-        return if (busTargetHolder != null) {
-            Mod.EventBusSubscriber.Bus.valueOf((busTargetHolder as ModAnnotation.EnumHolder).value)
-        } else {
-            Mod.EventBusSubscriber.Bus.FORGE
-        }
-    }
+    private fun getBusTarget(annotationMap: Map<String, Any>): Mod.EventBusSubscriber.Bus =
+        (annotationMap["bus"] as? ModAnnotation.EnumHolder)
+            ?.let { Mod.EventBusSubscriber.Bus.valueOf(it.value) }
+            ?: Mod.EventBusSubscriber.Bus.FORGE
 }
