@@ -1,7 +1,7 @@
 package club.redux.sunset.lavafishing
 
 import club.asynclab.web.BuildConstants
-import club.redux.sunset.lavafishing.annotation.KtEventBusSubscriberHandler
+import club.redux.sunset.lavafishing.annotation.KtObjectEventBusSubscriberHandler
 import club.redux.sunset.lavafishing.util.RegistryCollection.*
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext
@@ -19,6 +19,6 @@ class LavaFishing {
         ParticleTypeCollection.PARTICLE_TYPE_DEFERRED_REGISTER.register(eventBus)
         PotionCollection.POTION_DEFERRED_REGISTER.register(eventBus)
 
-        KtEventBusSubscriberHandler.inject()
+        KtObjectEventBusSubscriberHandler.inject(BuildConstants.MOD_ID)
     }
 }

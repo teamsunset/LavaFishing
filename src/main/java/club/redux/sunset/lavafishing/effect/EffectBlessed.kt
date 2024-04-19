@@ -13,6 +13,7 @@ import net.minecraft.world.phys.Vec3
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 
 class EffectBlessed : MobEffect(MobEffectCategory.NEUTRAL, 0xCC3300) {
+    
     override fun applyEffectTick(pLivingEntity: LivingEntity, pAmplifier: Int) {
         pLivingEntity.apply {
             remainingFireTicks = 20
