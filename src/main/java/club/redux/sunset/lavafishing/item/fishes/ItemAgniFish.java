@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.item.fishes;
 
-import club.redux.sunset.lavafishing.util.RegistryCollection.MobEffectCollection;
+import club.redux.sunset.lavafishing.registry.RegistryMobEffect;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,7 +20,7 @@ public class ItemAgniFish extends Item {
 
     @Override
     public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
-        pLivingEntity.addEffect(new MobEffectInstance(MobEffectCollection.EFFECT_BLESSED.get(), 2400));
+        pLivingEntity.addEffect(new MobEffectInstance(RegistryMobEffect.BLESSED.get(), 2400));
         return super.finishUsingItem(pStack, pLevel, pLivingEntity);
     }
 

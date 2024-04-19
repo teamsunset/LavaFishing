@@ -1,4 +1,4 @@
-package club.redux.sunset.lavafishing.util;
+package club.redux.sunset.lavafishing.misc;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.CompoundTag;

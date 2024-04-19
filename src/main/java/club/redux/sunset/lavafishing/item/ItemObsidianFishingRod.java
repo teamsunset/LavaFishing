@@ -1,7 +1,7 @@
 package club.redux.sunset.lavafishing.item;
 
 import club.redux.sunset.lavafishing.entity.EntityObsidianHook;
-import club.redux.sunset.lavafishing.util.RegistryCollection.ItemCollection;
+import club.redux.sunset.lavafishing.registry.RegistryItem;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -66,7 +66,7 @@ public class ItemObsidianFishingRod extends FishingRodItem {
 
     public static void propertyOverrideRegistry(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            ItemProperties.register(ItemCollection.ITEM_OBSIDIAN_FISHING_ROD.get(), new ResourceLocation("cast"), (pStack, pLevel, pEntity, pSeed) -> {
+            ItemProperties.register(RegistryItem.OBSIDIAN_FISHING_ROD.get(), new ResourceLocation("cast"), (pStack, pLevel, pEntity, pSeed) -> {
                 if (pEntity instanceof Player player) {
                     if (player.getMainHandItem() == pStack) {
                         if (player.fishing != null)

@@ -1,6 +1,6 @@
-package club.redux.sunset.lavafishing.util
+package club.redux.sunset.lavafishing.misc
 
-import club.redux.sunset.lavafishing.util.RegistryCollection.ItemCollection
+import club.redux.sunset.lavafishing.registry.RegistryItem
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.StringRepresentable
@@ -40,7 +40,7 @@ enum class LavaArmorMaterials(
         SoundEvents.ARMOR_EQUIP_DIAMOND,
         2.5f,
         0.1f,
-        Ingredient.of(ItemCollection.PROMETHIUM_INGOT.get())
+        Ingredient.of(RegistryItem.PROMETHIUM_INGOT.get())
     );
 
     override fun getDurabilityForType(type: ArmorItem.Type): Int = durabilityForType[type]!! * this.durabilityMultiplier
