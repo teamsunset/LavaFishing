@@ -72,7 +72,7 @@ dependencies {
     kapt("org.projectlombok:lombok:1.18.30")
 
     // Jable
-    minecraftLibrary("com.github.dsx137:jable:1.0.7")
+    minecraftLibrary("com.github.dsx137:jable:1.0.8")
     shade("com.github.dsx137:jable:1.0.6")
 
     // Kotlin
