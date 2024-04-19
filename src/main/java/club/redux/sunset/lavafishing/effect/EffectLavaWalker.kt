@@ -13,8 +13,9 @@ import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
 import kotlin.math.max
 
 class EffectLavaWalker : MobEffect(MobEffectCategory.BENEFICIAL, 0xCC3300) {
+
     override fun applyEffectTick(pLivingEntity: LivingEntity, pAmplifier: Int) {
-        if (!(pLivingEntity is Player && pLivingEntity.isSpectator())) {
+        if (!pLivingEntity.isSpectator) {
             val pos = pLivingEntity.position()
             val movement = pLivingEntity.deltaMovement
             val futurePos = pos.add(movement)

@@ -44,13 +44,13 @@ class EventHandler {
         }
 
         @SubscribeEvent
-        fun onLootTableLoad(event: LootTableLoadEvent?) {
+        fun onLootTableLoad(event: LootTableLoadEvent) {
             LootTableHandler.onLootTableLoad(event)
         }
     }
 
     @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
-    class ModEventBoth
+    object ModEventBoth
 
     @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = [Dist.CLIENT])
     object ModEventClient {
