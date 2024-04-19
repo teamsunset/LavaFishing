@@ -49,9 +49,6 @@ repositories {
     maven {
         url = uri("https://maven.aliyun.com/repository/public/")
     }
-    maven {
-        url = uri("https://maven.aliyun.com/repository/spring/")
-    }
     maven("jitpack") {
         url = uri("https://jitpack.io")
     }

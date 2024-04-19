@@ -2,7 +2,7 @@ package club.redux.sunset.lavafishing.client.renderer
 
 import club.redux.sunset.lavafishing.block.BlockPrometheusBounty
 import club.redux.sunset.lavafishing.block.blockentity.BlockEntityPrometheusBounty
-import club.redux.sunset.lavafishing.util.RegistryCollection.BlockCollection
+import club.redux.sunset.lavafishing.registry.RegistryBlock
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.model.geom.EntityModelSet
@@ -35,7 +35,7 @@ class BlockItemCustomRenderer(
         mc.blockEntityRenderDispatcher.renderItem(
             BlockEntityPrometheusBounty(
                 BlockPos.ZERO,
-                BlockCollection.BLOCK_PROMETHEUS_BOUNTY.get().defaultBlockState()
+                RegistryBlock.PROMETHEUS_BOUNTY.get().defaultBlockState()
             ), matrixStack, buffer, i, i1
         )
     }

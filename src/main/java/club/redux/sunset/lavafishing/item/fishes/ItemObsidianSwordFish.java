@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.item.fishes;
 
-import club.redux.sunset.lavafishing.util.RegistryCollection.ItemCollection;
+import club.redux.sunset.lavafishing.registry.RegistryItem;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 @ParametersAreNonnullByDefault
 public class ItemObsidianSwordFish extends SwordItem {
     public enum ModItemTier implements Tier {
-        FISH(0, 0, 2.0F, 0.0F, 15, () -> Ingredient.of(ItemCollection.ITEM_OBSIDIAN_SWORD_FISH.get()), null);
+        FISH(0, 0, 2.0F, 0.0F, 15, () -> Ingredient.of(RegistryItem.OBSIDIAN_SWORD_FISH.get()), null);
         private final int level;
         private final int maxUses;
         private final float speed;

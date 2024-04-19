@@ -2,7 +2,7 @@ package club.redux.sunset.lavafishing.entity;
 
 import club.asynclab.web.BuildConstants;
 import club.redux.sunset.lavafishing.loot.LootTableHandler;
-import club.redux.sunset.lavafishing.util.RegistryCollection.EntityTypeCollection;
+import club.redux.sunset.lavafishing.registry.RegistryEntityType;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -355,7 +355,7 @@ public class EntityObsidianHook extends FishingHook {
 
     @Override
     public EntityType<?> getType() {
-        return EntityTypeCollection.ENTITY_OBSIDIAN_HOOK.get();
+        return RegistryEntityType.OBSIDIAN_HOOK.get();
     }
 
 }

@@ -1,7 +1,7 @@
 package club.redux.sunset.lavafishing.item;
 
 import club.asynclab.web.BuildConstants;
-import club.redux.sunset.lavafishing.util.RegistryCollection.MobEffectCollection;
+import club.redux.sunset.lavafishing.registry.RegistryMobEffect;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -26,44 +26,8 @@ public class PromethiumArmor extends ArmorItem {
     private String texture;
 
     public PromethiumArmor(ArmorMaterial armorMaterial, ArmorItem.Type type) {
-        super(armorMaterial, type, new Properties()
-                .fireResistant());
+        super(armorMaterial, type, new Properties().fireResistant());
     }
-
-//    @Override
-//    public void onArmorTick(@Nonnull ItemStack stack, Level world, Player player) {
-//        if (player.isOnFire()) {
-//            if (this.type == Type.CHESTPLATE) {
-//                player.addEffect(new MobEffectInstance(MobEffects.HEAL, 10, 0, false, false, false));
-//            }
-//        }
-//        if (player.isInLava() || world.getBlockState(new BlockPos(player.getBlockX(), player.getBlockY() - 1, player.getBlockZ())).is(Blocks.LAVA)) {
-//            if (this.type == Type.LEGGINGS) {
-//                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20, 0, false, false, false));
-//            } else if (this.type == Type.BOOTS) {
-//                player.addEffect(new MobEffectInstance(MobEffectCollection.EFFECT_LAVA_WALKER.get(), 20, 0, false, false, false));
-//            }
-//        }
-//    }
-
-//    @Override
-//    public void onInventoryTick(ItemStack stack, Level level, Player player, int slotIndex, int selectedIndex) {
-//        super.onInventoryTick(stack, level, player, slotIndex, selectedIndex);
-//        if (stack.getItem() instanceof PromethiumArmor item) {
-//            if (player.isOnFire()) {
-//                if (item.type == Type.CHESTPLATE) {
-//                    player.addEffect(new MobEffectInstance(MobEffects.HEAL, 10, 0, false, false, false));
-//                }
-//            }
-//            if (player.isInLava() || level.getBlockState(new BlockPos(player.getBlockX(), player.getBlockY() - 1, player.getBlockZ())).is(Blocks.LAVA)) {
-//                if (item.type == Type.LEGGINGS) {
-//                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20, 0, false, false, false));
-//                } else if (item.type == Type.BOOTS) {
-//                    player.addEffect(new MobEffectInstance(MobEffectCollection.EFFECT_LAVA_WALKER.get(), 20, 0, false, false, false));
-//                }
-//            }
-//        }
-//    }
 
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
@@ -79,8 +43,8 @@ public class PromethiumArmor extends ArmorItem {
                     if (item.type == Type.LEGGINGS) {
                         player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20, 0, false, false, false));
                     } else if (item.type == Type.BOOTS) {
-                        MobEffect lavaWalker = MobEffectCollection.EFFECT_LAVA_WALKER.get();
-                        player.addEffect(new MobEffectInstance(MobEffectCollection.EFFECT_LAVA_WALKER.get(), 20, 0, false, false, false));
+                        MobEffect lavaWalker = RegistryMobEffect.LAVA_WALKER.get();
+                        player.addEffect(new MobEffectInstance(RegistryMobEffect.LAVA_WALKER.get(), 20, 0, false, false, false));
                     }
                 }
             }

@@ -9,9 +9,9 @@ import club.redux.sunset.lavafishing.effect.EffectLavaWalker
 import club.redux.sunset.lavafishing.item.ItemObsidianFishingRod
 import club.redux.sunset.lavafishing.item.PromethiumArmor
 import club.redux.sunset.lavafishing.loot.LootTableHandler
-import club.redux.sunset.lavafishing.util.RegistryCollection.BlockEntityTypeCollection
-import club.redux.sunset.lavafishing.util.RegistryCollection.EntityTypeCollection
-import club.redux.sunset.lavafishing.util.RegistryCollection.ParticleTypeCollection
+import club.redux.sunset.lavafishing.registry.RegistryBlockEntityType
+import club.redux.sunset.lavafishing.registry.RegistryEntityType
+import club.redux.sunset.lavafishing.registry.RegistryParticleType
 import net.minecraft.client.Minecraft
 import net.minecraft.client.particle.SpriteSet
 import net.minecraftforge.api.distmarker.Dist
@@ -61,10 +61,10 @@ class EventHandler {
 
         @SubscribeEvent
         fun registerEntityRenders(event: RegisterRenderers) {
-            event.registerEntityRenderer(EntityTypeCollection.ENTITY_OBSIDIAN_HOOK.get()) { context ->
+            event.registerEntityRenderer(RegistryEntityType.OBSIDIAN_HOOK.get()) { context ->
                 EntityObsidianHookRenderer(context)
             }
-            event.registerBlockEntityRenderer(BlockEntityTypeCollection.BLOCK_ENTITY_PROMETHEUS_BOUNTY.get()) { context ->
+            event.registerBlockEntityRenderer(RegistryBlockEntityType.PROMETHEUS_BOUNTY.get()) { context ->
                 BlockEntityRendererPrometheusBounty(context)
             }
         }
@@ -72,7 +72,7 @@ class EventHandler {
         @SubscribeEvent
         fun onParticleFactoriesRegistry(event: RegisterParticleProvidersEvent?) {
             Minecraft.getInstance().particleEngine.register(
-                ParticleTypeCollection.PARTICLE_FIRE_PUNCH.get()
+                RegistryParticleType.FIRE_PUNCH.get()
             ) { sprites: SpriteSet? -> ParticleFirePunch.Provider(sprites!!) }
         }
     }
