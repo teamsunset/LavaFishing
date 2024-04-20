@@ -3,14 +3,11 @@ package club.redux.sunset.lavafishing.event
 import club.asynclab.web.BuildConstants
 import club.redux.sunset.lavafishing.client.particle.ParticleFirePunch
 import club.redux.sunset.lavafishing.client.renderer.blockentity.BlockEntityRendererPrometheusBounty
-import club.redux.sunset.lavafishing.client.renderer.entity.EntityObsidianHookRenderer
 import club.redux.sunset.lavafishing.effect.EffectBlessed.Companion.onEntityDamaged
 import club.redux.sunset.lavafishing.effect.EffectLavaWalker
-import club.redux.sunset.lavafishing.item.ItemObsidianFishingRod
 import club.redux.sunset.lavafishing.item.PromethiumArmor
 import club.redux.sunset.lavafishing.loot.LootTableHandler
 import club.redux.sunset.lavafishing.registry.RegistryBlockEntityType
-import club.redux.sunset.lavafishing.registry.RegistryEntityType
 import club.redux.sunset.lavafishing.registry.RegistryParticleType
 import net.minecraft.client.Minecraft
 import net.minecraft.client.particle.SpriteSet
@@ -56,14 +53,10 @@ class EventHandler {
     object ModEventClient {
         @SubscribeEvent
         fun setupClient(event: FMLClientSetupEvent) {
-            ItemObsidianFishingRod.propertyOverrideRegistry(event)
         }
 
         @SubscribeEvent
         fun registerEntityRenders(event: RegisterRenderers) {
-            event.registerEntityRenderer(RegistryEntityType.OBSIDIAN_HOOK.get()) { context ->
-                EntityObsidianHookRenderer(context)
-            }
             event.registerBlockEntityRenderer(RegistryBlockEntityType.PROMETHEUS_BOUNTY.get()) { context ->
                 BlockEntityRendererPrometheusBounty(context)
             }

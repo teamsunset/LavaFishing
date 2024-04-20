@@ -3,7 +3,7 @@
   "pattern": [
     "  y",
     " yx",
-    "y x"
+    "z x"
   ],
   "key": {
     "x": {
@@ -11,6 +11,9 @@
     },
     "y": {
       "item": "minecraft:obsidian"
+    },
+    "z": {
+      "item": "minecraft:stick"
     }
   },
   "result": {

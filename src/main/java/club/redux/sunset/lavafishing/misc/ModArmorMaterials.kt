@@ -9,7 +9,7 @@ import net.minecraft.world.item.ArmorMaterial
 import net.minecraft.world.item.crafting.Ingredient
 import java.util.*
 
-enum class LavaArmorMaterials(
+enum class ModArmorMaterials(
     private val materialName: String,
     private val durabilityMultiplier: Int,
     private val defenseForType: EnumMap<ArmorItem.Type, Int>,
@@ -18,7 +18,7 @@ enum class LavaArmorMaterials(
     private val sound: SoundEvent,
     private val toughness: Float,
     private val knockbackResistance: Float,
-    private val repairIngredient: Ingredient,
+    private val repairIngredientSupplier: () -> Ingredient,
 ) : StringRepresentable, ArmorMaterial {
 
     PROMETHIUM(
@@ -40,14 +40,14 @@ enum class LavaArmorMaterials(
         SoundEvents.ARMOR_EQUIP_DIAMOND,
         2.5f,
         0.1f,
-        Ingredient.of(RegistryItem.PROMETHIUM_INGOT.get())
+        { Ingredient.of(RegistryItem.PROMETHIUM_INGOT.get()) }
     );
 
     override fun getDurabilityForType(type: ArmorItem.Type): Int = durabilityForType[type]!! * this.durabilityMultiplier
     override fun getDefenseForType(type: ArmorItem.Type): Int = defenseForType[type]!!
     override fun getEnchantmentValue(): Int = this.enchantmentValue
     override fun getEquipSound(): SoundEvent = this.sound
-    override fun getRepairIngredient(): Ingredient = repairIngredient
+    override fun getRepairIngredient(): Ingredient = repairIngredientSupplier()
     override fun getName(): String = this.materialName
     override fun getToughness(): Float = this.toughness
     override fun getKnockbackResistance(): Float = this.knockbackResistance

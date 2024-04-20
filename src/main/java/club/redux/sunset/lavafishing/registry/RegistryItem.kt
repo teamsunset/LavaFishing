@@ -5,7 +5,7 @@ import club.redux.sunset.lavafishing.item.BlockItemWithoutLevelRenderer
 import club.redux.sunset.lavafishing.item.ItemObsidianFishingRod
 import club.redux.sunset.lavafishing.item.PromethiumArmor
 import club.redux.sunset.lavafishing.item.fishes.*
-import club.redux.sunset.lavafishing.misc.LavaArmorMaterials
+import club.redux.sunset.lavafishing.misc.ModArmorMaterials
 import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt
 import com.teammetallurgy.aquaculture.api.AquacultureAPI
@@ -46,16 +46,16 @@ object RegistryItem {
         SimpleItem(Item.Properties().fireResistant())
     }
     @JvmField val PROMETHIUM_HELMET = REGISTER.registerKt("promethium_helmet") {
-        PromethiumArmor(LavaArmorMaterials.PROMETHIUM, ArmorItem.Type.HELMET).setArmorTexture("promethium_layer_1")
+        PromethiumArmor(ModArmorMaterials.PROMETHIUM, ArmorItem.Type.HELMET).setArmorTexture("promethium_layer_1")
     }
     @JvmField val PROMETHIUM_CHESTPLATE = REGISTER.registerKt("promethium_chestplate") {
-        PromethiumArmor(LavaArmorMaterials.PROMETHIUM, ArmorItem.Type.CHESTPLATE).setArmorTexture("promethium_layer_1")
+        PromethiumArmor(ModArmorMaterials.PROMETHIUM, ArmorItem.Type.CHESTPLATE).setArmorTexture("promethium_layer_1")
     }
     @JvmField val PROMETHIUM_LEGGINGS = REGISTER.registerKt("promethium_leggings") {
-        PromethiumArmor(LavaArmorMaterials.PROMETHIUM, ArmorItem.Type.LEGGINGS).setArmorTexture("promethium_layer_2")
+        PromethiumArmor(ModArmorMaterials.PROMETHIUM, ArmorItem.Type.LEGGINGS).setArmorTexture("promethium_layer_2")
     }
     @JvmField val PROMETHIUM_BOOTS = REGISTER.registerKt("promethium_boots") {
-        PromethiumArmor(LavaArmorMaterials.PROMETHIUM, ArmorItem.Type.BOOTS).setArmorTexture("promethium_layer_1")
+        PromethiumArmor(ModArmorMaterials.PROMETHIUM, ArmorItem.Type.BOOTS).setArmorTexture("promethium_layer_1")
     }
 
     // other

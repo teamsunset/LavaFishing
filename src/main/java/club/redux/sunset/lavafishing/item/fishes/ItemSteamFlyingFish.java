@@ -15,7 +15,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class ItemSteamFlyingFish extends Item {
     public ItemSteamFlyingFish() {
-        super(GetProperties());
+        super(new Properties()
+                .food(new FoodProperties.Builder()
+                        .nutrition(3)
+                        .saturationMod(0.6F)
+                        .build())
+                .fireResistant()
+        );
     }
 
     @Override
@@ -24,13 +30,4 @@ public class ItemSteamFlyingFish extends Item {
         return super.finishUsingItem(pStack, pLevel, pLivingEntity);
     }
 
-    public static Properties GetProperties() {
-        FoodProperties foodProperties = new FoodProperties.Builder()
-                .nutrition(3)
-                .saturationMod(0.6F)
-                .build();
-        return new Properties()
-                .food(foodProperties)
-                .fireResistant();
-    }
 }
