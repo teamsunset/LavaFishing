@@ -10,16 +10,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class ItemQuartzFish extends Item {
     public ItemQuartzFish() {
-        super(GetProperties());
+        super(new Properties()
+                .food(new FoodProperties.Builder()
+                        .nutrition(4)
+                        .saturationMod(0.8F)
+                        .build())
+                .fireResistant()
+        );
     }
 
-    public static Item.Properties GetProperties() {
-        FoodProperties foodProperties = new FoodProperties.Builder()
-                .nutrition(4)
-                .saturationMod(0.8F)
-                .build();
-        return new Properties()
-                .food(foodProperties)
-                .fireResistant();
-    }
+
 }

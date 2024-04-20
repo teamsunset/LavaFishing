@@ -15,7 +15,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class ItemFlameSquatLobster extends Item {
     public ItemFlameSquatLobster() {
-        super(GetProperties());
+        super(new Properties()
+                .food(new FoodProperties.Builder()
+                        .nutrition(1)
+                        .saturationMod(0.8F)
+                        .build())
+                .fireResistant()
+        );
     }
 
     @Override
@@ -25,13 +31,4 @@ public class ItemFlameSquatLobster extends Item {
         return super.finishUsingItem(pStack, pLevel, pLivingEntity);
     }
 
-    public static Properties GetProperties() {
-        FoodProperties foodProperties = new FoodProperties.Builder()
-                .nutrition(1)
-                .saturationMod(0.8F)
-                .build();
-        return new Properties()
-                .food(foodProperties)
-                .fireResistant();
-    }
 }

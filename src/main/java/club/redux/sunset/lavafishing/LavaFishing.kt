@@ -13,7 +13,6 @@ class LavaFishing {
         RegistryBlock.REGISTER.register(eventBus)
         RegistryBlockEntityType.REGISTER.register(eventBus)
         RegistryCreativeModeTab.REGISTER.register(eventBus)
-        RegistryEntityType.REGISTER.register(eventBus)
         RegistryItem.REGISTER.register(eventBus)
         RegistryMobEffect.REGISTER.register(eventBus)
         RegistryParticleType.REGISTER.register(eventBus)
