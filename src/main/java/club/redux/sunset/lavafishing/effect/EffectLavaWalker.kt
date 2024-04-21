@@ -70,7 +70,7 @@ class EffectLavaWalker : MobEffect(MobEffectCategory.BENEFICIAL, 0xCC3300) {
 
     companion object {
         @JvmStatic
-        fun onPlayerBreakSpeed(event: BreakSpeed) {
+        fun onBreakSpeed(event: BreakSpeed) {
             if (event.entity.hasEffect(RegistryMobEffect.LAVA_WALKER.get()) && event.entity.level()
                     .getFluidState(event.entity.onPos).`is`(FluidTags.LAVA)
             ) {
