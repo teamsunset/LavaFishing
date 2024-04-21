@@ -38,6 +38,11 @@ object RegistryItem {
         AquacultureAPI.FISH_DATA.add(AGNI_FISH.get(), 100.0, 200.0, 6)
     }
 
+    // Tools
+    @JvmField val PROMETHIUM_BOW = REGISTER.registerKt("promethium_bow") {
+        club.redux.sunset.lavafishing.item.ItemPromethiumBow()
+    }
+
     // Armor
     @JvmField val PROMETHIUM_INGOT = REGISTER.registerKt("promethium_ingot") {
         SimpleItem(Item.Properties().fireResistant())
