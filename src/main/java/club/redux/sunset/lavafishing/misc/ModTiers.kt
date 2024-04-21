@@ -18,16 +18,7 @@ enum class ModTiers(
 ) : Tier {
 
     OBSIDIAN(0, 1500, 7.0f, 3.0f, 9, { Ingredient.of(Items.OBSIDIAN) }, null),
-    PROMETHIUM(
-        4,
-        2,
-        10.0f,
-        9.0f,
-        15,
-        { Ingredient.of(ModItems.PROMETHIUM_INGOT.get()) },
-        null
-    )
-    ;
+    PROMETHIUM(4, 2, 10.0f, 9.0f, 15, { Ingredient.of(ModItems.PROMETHIUM_INGOT.get()) }, null);
 
     override fun getUses() = this.maxUses
     override fun getSpeed() = this.speed
