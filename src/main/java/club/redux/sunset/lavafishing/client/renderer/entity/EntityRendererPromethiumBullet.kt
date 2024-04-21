@@ -1,7 +1,7 @@
 package club.redux.sunset.lavafishing.client.renderer.entity
 
 import club.redux.sunset.lavafishing.entity.EntityPromethiumBullet
-import club.redux.sunset.lavafishing.registry.RegistryEntity
+import club.redux.sunset.lavafishing.registry.RegistryEntityType
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.resources.ResourceLocation
@@ -20,7 +20,7 @@ class EntityRendererPromethiumBullet(
     companion object {
         @JvmStatic
         fun onRegisterRenderers(event: RegisterRenderers) {
-            event.registerEntityRenderer(RegistryEntity.PROMETHIUM_BULLET.get()) { EntityRendererPromethiumBullet(it) }
+            event.registerEntityRenderer(RegistryEntityType.PROMETHIUM_BULLET.get()) { EntityRendererPromethiumBullet(it) }
         }
     }
 }
