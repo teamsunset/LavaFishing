@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.block.blockentity
 
-import club.redux.sunset.lavafishing.registry.RegistryBlockEntityType
+import club.redux.sunset.lavafishing.registry.ModBlockEntityTypes
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.world.level.block.entity.ChestBlockEntity
@@ -10,7 +10,7 @@ class BlockEntityPrometheusBounty(
     pos: BlockPos,
     state: BlockState,
 ) : ChestBlockEntity(
-    RegistryBlockEntityType.PROMETHEUS_BOUNTY.get(),
+    ModBlockEntityTypes.PROMETHEUS_BOUNTY.get(),
     pos,
     state
 ) {

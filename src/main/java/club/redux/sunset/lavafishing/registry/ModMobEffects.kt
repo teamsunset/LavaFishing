@@ -8,7 +8,7 @@ import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt
 import net.minecraftforge.registries.ForgeRegistries
 
-object RegistryMobEffect {
+object ModMobEffects {
     @JvmField val REGISTER = UtilRegister.create(ForgeRegistries.MOB_EFFECTS, BuildConstants.MOD_ID)
 
     @JvmField val BLESSED = REGISTER.registerKt("blessed") { EffectBlessed() }

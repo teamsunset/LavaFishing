@@ -1,7 +1,7 @@
 package club.redux.sunset.lavafishing.block
 
 import club.redux.sunset.lavafishing.block.blockentity.BlockEntityPrometheusBounty
-import club.redux.sunset.lavafishing.registry.RegistryBlockEntityType
+import club.redux.sunset.lavafishing.registry.ModBlockEntityTypes
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -26,7 +26,7 @@ import java.util.function.Supplier
 
 class BlockPrometheusBounty : ChestBlock(
     Properties.of().mapColor(MapColor.DIAMOND).strength(2.5f).sound(SoundType.METAL),
-    Supplier<BlockEntityType<out ChestBlockEntity>> { RegistryBlockEntityType.PROMETHEUS_BOUNTY.get() }
+    Supplier<BlockEntityType<out ChestBlockEntity>> { ModBlockEntityTypes.PROMETHEUS_BOUNTY.get() }
 ) {
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {

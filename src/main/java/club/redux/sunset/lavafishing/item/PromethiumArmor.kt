@@ -1,7 +1,7 @@
 package club.redux.sunset.lavafishing.item
 
 import club.asynclab.web.BuildConstants
-import club.redux.sunset.lavafishing.registry.RegistryMobEffect
+import club.redux.sunset.lavafishing.registry.ModMobEffects
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectInstance
@@ -34,6 +34,10 @@ class PromethiumArmor(
         return BuildConstants.MOD_ID + ":textures/armor/" + this.texture + ".png"
     }
 
+    override fun getXpRepairRatio(stack: ItemStack?): Float {
+        return super.getXpRepairRatio(stack)
+    }
+
     companion object {
         private val damageSources = listOf(
             DamageTypes.LAVA,
@@ -64,7 +68,7 @@ class PromethiumArmor(
                         if (item.type == Type.LEGGINGS) {
                             applyEffect(MobEffects.MOVEMENT_SPEED)
                         } else if (item.type == Type.BOOTS) {
-                            applyEffect(RegistryMobEffect.LAVA_WALKER.get())
+                            applyEffect(ModMobEffects.LAVA_WALKER.get())
                         }
                     }
                 }

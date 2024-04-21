@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.item.fishes
 
-import club.redux.sunset.lavafishing.registry.RegistryMobEffect
+import club.redux.sunset.lavafishing.registry.ModMobEffects
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.food.FoodProperties
@@ -19,7 +19,7 @@ class ItemAgniFish : Item(
         .fireResistant()
 ) {
     override fun finishUsingItem(pStack: ItemStack, pLevel: Level, pLivingEntity: LivingEntity): ItemStack {
-        pLivingEntity.addEffect(MobEffectInstance(RegistryMobEffect.BLESSED.get(), 2400))
+        pLivingEntity.addEffect(MobEffectInstance(ModMobEffects.BLESSED.get(), 2400))
         return super.finishUsingItem(pStack, pLevel, pLivingEntity)
     }
 }

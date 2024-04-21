@@ -6,7 +6,7 @@ import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt
 import net.minecraftforge.registries.ForgeRegistries
 
-object RegistryBlock {
+object ModBlocks {
     @JvmField val REGISTER = UtilRegister.create(ForgeRegistries.BLOCKS, BuildConstants.MOD_ID)
 
     @JvmField val PROMETHEUS_BOUNTY = REGISTER.registerKt("prometheus_bounty") { BlockPrometheusBounty() }

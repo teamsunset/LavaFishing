@@ -10,14 +10,14 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext
 class LavaFishing {
     init {
         val eventBus = FMLJavaModLoadingContext.get().modEventBus
-        RegistryBlock.REGISTER.register(eventBus)
-        RegistryBlockEntityType.REGISTER.register(eventBus)
-        RegistryCreativeModeTab.REGISTER.register(eventBus)
-        RegistryItem.REGISTER.register(eventBus)
-        RegistryEntityType.REGISTER.register(eventBus)
-        RegistryMobEffect.REGISTER.register(eventBus)
-        RegistryParticleType.REGISTER.register(eventBus)
-        RegistryPotion.REGISTER.register(eventBus)
+        ModBlocks.REGISTER.register(eventBus)
+        ModBlockEntityTypes.REGISTER.register(eventBus)
+        ModCreativeModeTabs.REGISTER.register(eventBus)
+        ModItems.REGISTER.register(eventBus)
+        ModEntityTypes.REGISTER.register(eventBus)
+        ModMobEffects.REGISTER.register(eventBus)
+        ModParticleTypes.REGISTER.register(eventBus)
+        ModPotions.REGISTER.register(eventBus)
 
         KtObjectEventBusSubscriberHandler.inject(BuildConstants.MOD_ID)
     }

@@ -1,7 +1,7 @@
 package club.redux.sunset.lavafishing.effect
 
-import club.redux.sunset.lavafishing.registry.RegistryMobEffect
-import club.redux.sunset.lavafishing.registry.RegistryParticleType
+import club.redux.sunset.lavafishing.registry.ModMobEffects
+import club.redux.sunset.lavafishing.registry.ModParticleTypes
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffect
@@ -46,11 +46,11 @@ class EffectBlessed : MobEffect(MobEffectCategory.NEUTRAL, 0xCC3300) {
             if (
                 !source.`is`(DamageTypes.MOB_PROJECTILE) &&
                 !source.`is`(DamageTypes.MAGIC) &&
-                sourceEntity.getEffect(RegistryMobEffect.BLESSED.get()) != null &&
+                sourceEntity.getEffect(ModMobEffects.BLESSED.get()) != null &&
                 sourceEntity.mainHandItem.`is`(Items.AIR)
             ) {
                 target.addEffect(
-                    MobEffectInstance(RegistryMobEffect.ENDLESS_FLAME.get(), 1200),
+                    MobEffectInstance(ModMobEffects.ENDLESS_FLAME.get(), 1200),
                     sourceEntity
                 )
                 spawnHitParticle(target.level() as ServerLevel, target.position())
@@ -59,7 +59,7 @@ class EffectBlessed : MobEffect(MobEffectCategory.NEUTRAL, 0xCC3300) {
 
         private fun spawnHitParticle(level: ServerLevel, pos: Vec3) {
             level.sendParticles(
-                RegistryParticleType.FIRE_PUNCH.get(), pos.x(), pos.y() + 1.3f, pos.z(),
+                ModParticleTypes.FIRE_PUNCH.get(), pos.x(), pos.y() + 1.3f, pos.z(),
                 1, 0.3, 0.3, 0.3, 1.0
             )
         }

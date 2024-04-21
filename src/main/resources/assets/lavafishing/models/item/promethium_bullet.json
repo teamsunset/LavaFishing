@@ -1,3 +1,6 @@
 {
-  "parent": "minecraft:item/egg"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "lavafishing:item/promethium_bullet"
+  }
 }

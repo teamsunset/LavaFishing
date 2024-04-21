@@ -141,6 +141,8 @@ minecraft {
     }
 }
 
+sourceSets["main"].resources.srcDirs("src/generated/resources")
+
 val props = mapOf(
     "minecraft_version" to minecraftVersion,
     "minecraft_version_range" to minecraftVersionRange,
@@ -182,7 +184,6 @@ tasks.processResources {
         expand(props)
     }
 }
-sourceSets["main"].resources.srcDirs("src/generated/resources")
 
 tasks.jar {
     manifest {
@@ -212,5 +213,17 @@ val reobfShadowJar = reobf.create("shadowJar") {
 }
 
 tasks.build {
-    dependsOn("reobfShadowJar")
+    dependsOn("runData")
 }
+
+val runDataAny = { name: String ->
+    tasks.create("runData$name") {
+        group = "forgegradle runs"
+        dependsOn("runData")
+        finalizedBy("run$name")
+    }
+}
+
+val runDataClient = runDataAny("Client")
+val runDataServer = runDataAny("Server")
+val runDataGameTestServer = runDataAny("GameTestServer")

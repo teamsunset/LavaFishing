@@ -1,19 +1,25 @@
 package club.redux.sunset.lavafishing.util
 
-import kotlin.random.Random
+import java.security.SecureRandom
 
 object Utils {
     @JvmStatic
-    fun generateArchimedianScrew(numPoints: Int, a: Double = 0.0, b: Double = 1.0): List<Pair<Double, Double>> {
-        val random = Random(System.currentTimeMillis())
-        val multiplier = random.nextDouble(0.5, 2.0)
-        val scale = random.nextDouble(0.2, 0.4)
+    fun generateArchimedianScrew(numPoints: Int, b: Double = 1.0): List<Pair<Double, Double>> {
+        val a = 0.0
+
+        val random = SecureRandom()
+        val randomOffset = 1.0
+        val randomMultiplierMax = randomOffset + 1.0
+        val randomMultiplierMin = 1.0 / randomMultiplierMax
+        val randomMultiplier = random.nextDouble(randomMultiplierMin, randomMultiplierMax)
+        val rotScale = 2.0 * randomMultiplier
+        val sizeScale = 0.1 * (randomMultiplierMax - randomMultiplier)
         val points = mutableListOf<Pair<Double, Double>>()
-        val maxTheta = numPoints * multiplier // 控制螺旋增长的角度，可以根据需要调整系数
+        val maxTheta = numPoints * rotScale
 
         for (i in 0 until numPoints) {
             val theta = i * maxTheta / numPoints // 将 i 映射到角度范围
-            val r = a + b * theta * scale // 计算当前点的半径
+            val r = a + b * theta * sizeScale // 计算当前点的半径
 
             val x = r * kotlin.math.cos(theta)
             val y = r * kotlin.math.sin(theta)

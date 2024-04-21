@@ -2,7 +2,7 @@ package club.redux.sunset.lavafishing.client.renderer.blockentity
 
 import club.asynclab.web.BuildConstants
 import club.redux.sunset.lavafishing.block.blockentity.BlockEntityPrometheusBounty
-import club.redux.sunset.lavafishing.registry.RegistryBlockEntityType
+import club.redux.sunset.lavafishing.registry.ModBlockEntityTypes
 import net.minecraft.client.renderer.Sheets
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.blockentity.ChestRenderer
@@ -21,7 +21,7 @@ class BlockEntityRendererPrometheusBounty(
     companion object {
         @JvmStatic
         fun onRegisterRenderers(event: EntityRenderersEvent.RegisterRenderers) {
-            event.registerBlockEntityRenderer(RegistryBlockEntityType.PROMETHEUS_BOUNTY.get()) {
+            event.registerBlockEntityRenderer(ModBlockEntityTypes.PROMETHEUS_BOUNTY.get()) {
                 BlockEntityRendererPrometheusBounty(
                     it
                 )
