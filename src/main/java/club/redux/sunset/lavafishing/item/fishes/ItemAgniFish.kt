@@ -1,36 +1,25 @@
-package club.redux.sunset.lavafishing.item.fishes;
+package club.redux.sunset.lavafishing.item.fishes
 
-import club.redux.sunset.lavafishing.registry.RegistryMobEffect;
-import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
+import club.redux.sunset.lavafishing.registry.RegistryMobEffect
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.food.FoodProperties
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
-public class ItemAgniFish extends Item {
-    public ItemAgniFish() {
-        super(GetProperties());
-    }
-
-    @Override
-    public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
-        pLivingEntity.addEffect(new MobEffectInstance(RegistryMobEffect.BLESSED.get(), 2400));
-        return super.finishUsingItem(pStack, pLevel, pLivingEntity);
-    }
-
-    public static Properties GetProperties() {
-        FoodProperties foodProperties = new FoodProperties.Builder()
+class ItemAgniFish : Item(
+    Properties()
+        .food(
+            FoodProperties.Builder()
                 .nutrition(1)
-                .saturationMod(0.5F)
-                .build();
-        return new Properties()
-                .food(foodProperties)
-                .fireResistant();
+                .saturationMod(0.5f)
+                .build()
+        )
+        .fireResistant()
+) {
+    override fun finishUsingItem(pStack: ItemStack, pLevel: Level, pLivingEntity: LivingEntity): ItemStack {
+        pLivingEntity.addEffect(MobEffectInstance(RegistryMobEffect.BLESSED.get(), 2400))
+        return super.finishUsingItem(pStack, pLevel, pLivingEntity)
     }
 }
