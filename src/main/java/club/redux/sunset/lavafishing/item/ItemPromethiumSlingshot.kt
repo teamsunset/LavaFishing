@@ -19,25 +19,13 @@ import net.minecraftforge.event.ForgeEventFactory
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 import java.util.function.Predicate
 
-class ItemPromethiumSlingshot(val tier: Tier) : BowItem(Properties().durability(3000)) {
+class ItemPromethiumSlingshot(private val tier: Tier) : BowItem(Properties().durability(3000)) {
     override fun customArrow(arrowEntity: AbstractArrow): AbstractArrow {
         if (arrowEntity.owner is LivingEntity) {
             return EntityPromethiumBullet(arrowEntity.level(), arrowEntity.owner as LivingEntity, true, 1)
         }
 
         return super.customArrow(arrowEntity)
-    }
-
-    override fun canApplyAtEnchantingTable(stack: ItemStack?, enchantment: Enchantment?): Boolean {
-        return super.canApplyAtEnchantingTable(stack, enchantment) || enchantment == Enchantments.MULTISHOT
-    }
-
-    override fun getAllSupportedProjectiles(): Predicate<ItemStack> {
-        return Predicate { pStack -> pStack.`is`(ModItems.PROMETHIUM_BULLET.get()) }
-    }
-
-    override fun isValidRepairItem(pStack: ItemStack, pRepairCandidate: ItemStack): Boolean {
-        return this.tier.repairIngredient.test(pRepairCandidate)
     }
 
     /**
@@ -142,6 +130,20 @@ class ItemPromethiumSlingshot(val tier: Tier) : BowItem(Properties().durability(
             }
         }
     }
+
+    override fun canApplyAtEnchantingTable(stack: ItemStack?, enchantment: Enchantment?): Boolean {
+        return super.canApplyAtEnchantingTable(stack, enchantment) || enchantment == Enchantments.MULTISHOT
+    }
+
+    override fun getAllSupportedProjectiles(): Predicate<ItemStack> {
+        return Predicate { pStack -> pStack.`is`(ModItems.PROMETHIUM_BULLET.get()) }
+    }
+
+    override fun isValidRepairItem(pStack: ItemStack, pRepairCandidate: ItemStack): Boolean =
+        this.tier.repairIngredient.test(pRepairCandidate)
+
+    override fun getEnchantmentValue(stack: ItemStack): Int = this.tier.enchantmentValue
+
 
     companion object {
         @JvmStatic
