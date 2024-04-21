@@ -1,7 +1,7 @@
 package club.redux.sunset.lavafishing.registry
 
 import club.asynclab.web.BuildConstants
-import club.redux.sunset.lavafishing.entity.EntityPromethiumBowArrow
+import club.redux.sunset.lavafishing.entity.EntityPromethiumBullet
 import club.redux.sunset.lavafishing.entity.EntitySpectralPromethiumBowArrow
 import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt
@@ -13,7 +13,7 @@ object RegistryEntity {
     @JvmField val REGISTER = UtilRegister.create(ForgeRegistries.ENTITY_TYPES, BuildConstants.MOD_ID)
 
     @JvmField val PROMETHIUM_BOW_ARROW = REGISTER.registerKt("promethium_bow_arrow") {
-        EntityType.Builder.of({ type, world -> EntityPromethiumBowArrow(type, world) }, MobCategory.MISC)
+        EntityType.Builder.of({ type, world -> EntityPromethiumBullet(type, world) }, MobCategory.MISC)
             .sized(0.5f, 0.5f)
             .clientTrackingRange(4)
             .updateInterval(10)

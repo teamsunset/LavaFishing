@@ -11,13 +11,13 @@ import net.minecraft.world.phys.Vec3
 import kotlin.math.abs
 import kotlin.math.sqrt
 
-class EntityPromethiumBowArrow : Arrow {
+class EntityPromethiumBullet : Arrow {
     private val divisionNum = 3
     private val explode = { radius: Float ->
         this.level().explode(this.owner, this.x, this.y, this.z, radius, false, Level.ExplosionInteraction.NONE)
     }
     private val newArrow = { division: Boolean, divisionCount: Int ->
-        EntityPromethiumBowArrow(
+        EntityPromethiumBullet(
             this.level(),
             this.x,
             this.y,

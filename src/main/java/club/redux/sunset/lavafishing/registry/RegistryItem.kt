@@ -70,4 +70,7 @@ object RegistryItem {
             Item.Properties().fireResistant()
         )
     }
+
+    @JvmField val PROMETHIUM_BULLET =
+        REGISTER.registerKt("promethium_bullet") { SimpleItem(Item.Properties().fireResistant()) }
 }
