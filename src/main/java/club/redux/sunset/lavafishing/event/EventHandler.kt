@@ -3,12 +3,12 @@ package club.redux.sunset.lavafishing.event
 import club.asynclab.web.BuildConstants
 import club.redux.sunset.lavafishing.client.particle.ParticleFirePunch
 import club.redux.sunset.lavafishing.client.renderer.blockentity.BlockEntityRendererPrometheusBounty
+import club.redux.sunset.lavafishing.client.renderer.entity.EntityRendererPromethiumBullet
 import club.redux.sunset.lavafishing.effect.EffectBlessed
 import club.redux.sunset.lavafishing.effect.EffectLavaWalker
 import club.redux.sunset.lavafishing.item.ItemPromethiumBow
 import club.redux.sunset.lavafishing.item.PromethiumArmor
 import club.redux.sunset.lavafishing.loot.LootTableHandler
-import club.redux.sunset.lavafishing.registry.RegistryBlockEntityType
 import club.redux.sunset.lavafishing.registry.RegistryParticleType
 import net.minecraft.client.Minecraft
 import net.minecraft.client.particle.SpriteSet
@@ -67,10 +67,9 @@ class EventHandler {
         }
 
         @SubscribeEvent
-        fun registerEntityRenders(event: RegisterRenderers) {
-            event.registerBlockEntityRenderer(RegistryBlockEntityType.PROMETHEUS_BOUNTY.get()) { context ->
-                BlockEntityRendererPrometheusBounty(context)
-            }
+        fun onRegisterRenderers(event: RegisterRenderers) {
+            BlockEntityRendererPrometheusBounty.onRegisterRenderers(event)
+            EntityRendererPromethiumBullet.onRegisterRenderers(event)
         }
 
         @SubscribeEvent
