@@ -8,7 +8,7 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
 import net.minecraftforge.registries.ForgeRegistries
 
-object RegistryEntity {
+object RegistryEntityType {
     @JvmField val REGISTER = UtilRegister.create(ForgeRegistries.ENTITY_TYPES, BuildConstants.MOD_ID)
 
     @JvmField val PROMETHIUM_BULLET = REGISTER.registerKt("promethium_bullet") {
