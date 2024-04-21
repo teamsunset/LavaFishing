@@ -46,17 +46,8 @@ class PromethiumArmor(
             for (itemStack in event.entity.armorSlots) {
                 val item = itemStack.item
                 if (item is PromethiumArmor) {
-                    val applyEffect = { effect: MobEffect, duration: Int, amplifier: Int ->
-                        event.entity.addEffect(
-                            MobEffectInstance(
-                                effect,
-                                duration,
-                                amplifier,
-                                false,
-                                false,
-                                false
-                            )
-                        )
+                    val applyEffect = { effect: MobEffect ->
+                        event.entity.addEffect(MobEffectInstance(effect, 20, 0, false, false, false))
                     }
 
                     if (item.type == Type.CHESTPLATE) {
@@ -71,9 +62,9 @@ class PromethiumArmor(
 
                     if (event.entity.isInLava || level.getBlockState(event.entity.onPos).`is`(Blocks.LAVA)) {
                         if (item.type == Type.LEGGINGS) {
-                            applyEffect(MobEffects.MOVEMENT_SPEED, 20, 0)
+                            applyEffect(MobEffects.MOVEMENT_SPEED)
                         } else if (item.type == Type.BOOTS) {
-                            applyEffect(RegistryMobEffect.LAVA_WALKER.get(), 20, 0)
+                            applyEffect(RegistryMobEffect.LAVA_WALKER.get())
                         }
                     }
                 }
