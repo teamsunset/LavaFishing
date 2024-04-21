@@ -34,7 +34,7 @@ class EffectBlessed : MobEffect(MobEffectCategory.NEUTRAL, 0xCC3300) {
 
     companion object {
         @JvmStatic
-        fun onEntityDamaged(event: LivingDamageEvent) {
+        fun onEntityDamage(event: LivingDamageEvent) {
             val source = event.source
             val target = event.entity
             val sourceEntity = source.entity

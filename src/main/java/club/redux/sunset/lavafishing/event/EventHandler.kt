@@ -3,7 +3,7 @@ package club.redux.sunset.lavafishing.event
 import club.asynclab.web.BuildConstants
 import club.redux.sunset.lavafishing.client.particle.ParticleFirePunch
 import club.redux.sunset.lavafishing.client.renderer.blockentity.BlockEntityRendererPrometheusBounty
-import club.redux.sunset.lavafishing.effect.EffectBlessed.Companion.onEntityDamaged
+import club.redux.sunset.lavafishing.effect.EffectBlessed
 import club.redux.sunset.lavafishing.effect.EffectLavaWalker
 import club.redux.sunset.lavafishing.item.PromethiumArmor
 import club.redux.sunset.lavafishing.loot.LootTableHandler
@@ -16,7 +16,9 @@ import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent
 import net.minecraftforge.event.LootTableLoadEvent
 import net.minecraftforge.event.TickEvent.PlayerTickEvent
+import net.minecraftforge.event.entity.living.LivingAttackEvent
 import net.minecraftforge.event.entity.living.LivingDamageEvent
+import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
@@ -27,7 +29,8 @@ class EventHandler {
     object ForgeEvent {
         @SubscribeEvent
         fun onEntityDamage(event: LivingDamageEvent) {
-            onEntityDamaged(event)
+            EffectBlessed.onEntityDamage(event)
+            PromethiumArmor.onEntityDamage(event)
         }
 
         @SubscribeEvent
@@ -37,7 +40,16 @@ class EventHandler {
 
         @SubscribeEvent
         fun onPlayerTick(event: PlayerTickEvent) {
-            PromethiumArmor.onPlayerTick(event)
+        }
+
+        @SubscribeEvent
+        fun onEntityTick(event: LivingTickEvent) {
+            PromethiumArmor.onLivingTick(event)
+        }
+
+        @SubscribeEvent
+        fun onEntityAttack(event: LivingAttackEvent) {
+            PromethiumArmor.onEntityAttack(event)
         }
 
         @SubscribeEvent

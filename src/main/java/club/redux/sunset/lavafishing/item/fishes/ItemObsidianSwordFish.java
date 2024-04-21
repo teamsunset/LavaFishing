@@ -6,7 +6,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.Level;
@@ -22,14 +21,16 @@ public class ItemObsidianSwordFish extends SwordItem {
                 ModTiers.OBSIDIAN,
                 2,
                 2,
-                new Properties() {
-                    @Override
-                    public Item.Properties durability(int pMaxDamage) {
-                        super.durability(pMaxDamage);
-                        stacksTo(64);
-                        return this;
-                    }
-                }
+//                new Properties() {
+//                    @Override
+//                    public Item.Properties durability(int pMaxDamage) {
+//                        super.durability(pMaxDamage);
+//                        stacksTo(64);
+//                        return this;
+//                    }
+//                }
+                new Properties()
+                        .stacksTo(64)
                         .food(new FoodProperties.Builder()
                                 .nutrition(3)
                                 .saturationMod(0.6F)
