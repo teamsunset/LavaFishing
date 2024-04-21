@@ -15,7 +15,7 @@ class ItemObsidianSwordFish : SwordItem(
     2f,
     object : Properties() {
         override fun durability(pMaxDamage: Int): Properties {
-            super.durability(pMaxDamage)
+            super.durability(0)
             stacksTo(64)
             return this
         }

@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.effect
 
-import club.redux.sunset.lavafishing.registry.RegistryMobEffect
+import club.redux.sunset.lavafishing.registry.ModMobEffects
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
@@ -71,7 +71,7 @@ class EffectLavaWalker : MobEffect(MobEffectCategory.BENEFICIAL, 0xCC3300) {
     companion object {
         @JvmStatic
         fun onBreakSpeed(event: BreakSpeed) {
-            if (event.entity.hasEffect(RegistryMobEffect.LAVA_WALKER.get()) && event.entity.level()
+            if (event.entity.hasEffect(ModMobEffects.LAVA_WALKER.get()) && event.entity.level()
                     .getFluidState(event.entity.onPos).`is`(FluidTags.LAVA)
             ) {
                 event.newSpeed *= 5

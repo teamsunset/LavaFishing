@@ -3,9 +3,11 @@ package club.redux.sunset.lavafishing.registry
 import club.asynclab.web.BuildConstants
 import club.redux.sunset.lavafishing.item.BlockItemWithoutLevelRenderer
 import club.redux.sunset.lavafishing.item.ItemObsidianFishingRod
+import club.redux.sunset.lavafishing.item.ItemPromethiumSlingshot
 import club.redux.sunset.lavafishing.item.PromethiumArmor
 import club.redux.sunset.lavafishing.item.fishes.*
 import club.redux.sunset.lavafishing.misc.ModArmorMaterials
+import club.redux.sunset.lavafishing.misc.ModTiers
 import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt
 import com.teammetallurgy.aquaculture.api.AquacultureAPI
@@ -14,7 +16,7 @@ import net.minecraft.world.item.ArmorItem
 import net.minecraft.world.item.Item
 import net.minecraftforge.registries.ForgeRegistries
 
-object RegistryItem {
+object ModItems {
     @JvmField val REGISTER = UtilRegister.create(ForgeRegistries.ITEMS, BuildConstants.MOD_ID)
 
     @JvmField val OBSIDIAN_FISHING_ROD = REGISTER.registerKt("obsidian_fishing_rod") { ItemObsidianFishingRod() }
@@ -39,8 +41,8 @@ object RegistryItem {
     }
 
     // Tools
-    @JvmField val PROMETHIUM_BOW = REGISTER.registerKt("promethium_bow") {
-        club.redux.sunset.lavafishing.item.ItemPromethiumBow()
+    @JvmField val PROMETHIUM_SLINGSHOT = REGISTER.registerKt("promethium_slingshot") {
+        ItemPromethiumSlingshot(ModTiers.PROMETHIUM)
     }
 
     // Armor
@@ -66,7 +68,7 @@ object RegistryItem {
     // other
     @JvmField val BLOCK_PROMETHEUS_BOUNTY = REGISTER.registerKt("prometheus_bounty") {
         BlockItemWithoutLevelRenderer(
-            RegistryBlock.PROMETHEUS_BOUNTY.get(),
+            ModBlocks.PROMETHEUS_BOUNTY.get(),
             Item.Properties().fireResistant()
         )
     }

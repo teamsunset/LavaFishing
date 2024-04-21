@@ -10,13 +10,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraftforge.registries.ForgeRegistries
 
-object RegistryBlockEntityType {
+object ModBlockEntityTypes {
     @JvmField val REGISTER = UtilRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, BuildConstants.MOD_ID)
 
     @JvmField val PROMETHEUS_BOUNTY = REGISTER.registerKt("prometheus_bounty") {
         BlockEntityType.Builder.of(
             { pos: BlockPos, state: BlockState -> BlockEntityPrometheusBounty(pos, state) },
-            RegistryBlock.PROMETHEUS_BOUNTY.get()
+            ModBlocks.PROMETHEUS_BOUNTY.get()
         ).build()
     }
 

@@ -1,7 +1,8 @@
 package club.redux.sunset.lavafishing.misc
 
-import club.redux.sunset.lavafishing.registry.RegistryItem
+import club.redux.sunset.lavafishing.registry.ModItems
 import net.minecraft.tags.TagKey
+import net.minecraft.world.item.Items
 import net.minecraft.world.item.Tier
 import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.level.block.Block
@@ -16,7 +17,16 @@ enum class ModTiers(
     private val tag: TagKey<Block>?,
 ) : Tier {
 
-    OBSIDIAN(0, 0, 2.0f, 0.0f, 15, { Ingredient.of(RegistryItem.OBSIDIAN_SWORD_FISH.get()) }, null),
+    OBSIDIAN(0, 1500, 7.0f, 3.0f, 9, { Ingredient.of(Items.OBSIDIAN) }, null),
+    PROMETHIUM(
+        4,
+        2,
+        10.0f,
+        9.0f,
+        15,
+        { Ingredient.of(ModItems.PROMETHIUM_INGOT.get()) },
+        null
+    )
     ;
 
     override fun getUses() = this.maxUses

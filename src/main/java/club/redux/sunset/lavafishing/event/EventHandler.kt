@@ -1,20 +1,24 @@
 package club.redux.sunset.lavafishing.event
 
 import club.asynclab.web.BuildConstants
+import club.redux.sunset.lavafishing.client.model.ModelPromethiumBullet
 import club.redux.sunset.lavafishing.client.particle.ParticleFirePunch
 import club.redux.sunset.lavafishing.client.renderer.blockentity.BlockEntityRendererPrometheusBounty
 import club.redux.sunset.lavafishing.client.renderer.entity.EntityRendererPromethiumBullet
+import club.redux.sunset.lavafishing.datagenerator.ModRecipeProvider
 import club.redux.sunset.lavafishing.effect.EffectBlessed
 import club.redux.sunset.lavafishing.effect.EffectLavaWalker
-import club.redux.sunset.lavafishing.item.ItemPromethiumBow
+import club.redux.sunset.lavafishing.item.ItemPromethiumSlingshot
 import club.redux.sunset.lavafishing.item.PromethiumArmor
 import club.redux.sunset.lavafishing.loot.LootTableHandler
-import club.redux.sunset.lavafishing.registry.RegistryParticleType
+import club.redux.sunset.lavafishing.registry.ModParticleTypes
 import net.minecraft.client.Minecraft
 import net.minecraft.client.particle.SpriteSet
 import net.minecraftforge.api.distmarker.Dist
+import net.minecraftforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent
+import net.minecraftforge.data.event.GatherDataEvent
 import net.minecraftforge.event.LootTableLoadEvent
 import net.minecraftforge.event.entity.living.LivingAttackEvent
 import net.minecraftforge.event.entity.living.LivingDamageEvent
@@ -56,14 +60,17 @@ class EventHandler {
 
     @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
     object ModEventBoth {
-
+        @SubscribeEvent
+        fun onGatherDataEvent(event: GatherDataEvent) {
+            event.generator.apply { addProvider(true, ModRecipeProvider(this.packOutput)) }
+        }
     }
 
     @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = [Dist.CLIENT])
     object ModEventClient {
         @SubscribeEvent
         fun setupClient(event: FMLClientSetupEvent) {
-            ItemPromethiumBow.setupClient(event)
+            ItemPromethiumSlingshot.setupClient(event)
         }
 
         @SubscribeEvent
@@ -75,8 +82,13 @@ class EventHandler {
         @SubscribeEvent
         fun onParticleFactoriesRegistry(event: RegisterParticleProvidersEvent?) {
             Minecraft.getInstance().particleEngine.register(
-                RegistryParticleType.FIRE_PUNCH.get()
+                ModParticleTypes.FIRE_PUNCH.get()
             ) { sprites: SpriteSet? -> ParticleFirePunch.Provider(sprites!!) }
+        }
+
+        @SubscribeEvent
+        fun onRegisterLayers(event: RegisterLayerDefinitions) {
+            event.registerLayerDefinition(ModelPromethiumBullet.LAYER_LOCATION, ModelPromethiumBullet::createBodyLayer)
         }
     }
 }

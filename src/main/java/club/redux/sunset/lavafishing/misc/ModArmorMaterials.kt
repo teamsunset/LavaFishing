@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.misc
 
-import club.redux.sunset.lavafishing.registry.RegistryItem
+import club.redux.sunset.lavafishing.registry.ModItems
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.StringRepresentable
@@ -40,7 +40,7 @@ enum class ModArmorMaterials(
         SoundEvents.ARMOR_EQUIP_DIAMOND,
         2.5f,
         0.1f,
-        { Ingredient.of(RegistryItem.PROMETHIUM_INGOT.get()) }
+        { Ingredient.of(ModItems.PROMETHIUM_INGOT.get()) }
     );
 
     override fun getDurabilityForType(type: ArmorItem.Type): Int = durabilityForType[type]!! * this.durabilityMultiplier
