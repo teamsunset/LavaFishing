@@ -245,10 +245,10 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
+            artifactId = project.archivesName.get()
+            groupId = project.group.toString()
+            version = project.version.toString()
             pom {
-                artifactId = project.archivesName.get()
-                groupId = project.group.toString()
-                version = project.version.toString()
                 name.set(modName)
                 licenses {
                     license {
