@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing
 
-import club.redux.sunset.lavafishing.annotation.KtObjectEventBusSubscriberHandler
+//import club.redux.sunset.lavafishing.annotation.KtObjectEventBusSubscriberHandler
 import club.redux.sunset.lavafishing.registry.*
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext
@@ -18,6 +18,6 @@ class LavaFishing {
         ModParticleTypes.REGISTER.register(eventBus)
         ModPotions.REGISTER.register(eventBus)
 
-        KtObjectEventBusSubscriberHandler.inject(BuildConstants.MOD_ID)
+//        KtObjectEventBusSubscriberHandler.inject(BuildConstants.MOD_ID)
     }
 }
