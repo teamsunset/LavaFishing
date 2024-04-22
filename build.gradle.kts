@@ -239,3 +239,21 @@ val reobfShadowJar = reobf.create("shadowJar") {
 tasks.jar {
     dependsOn("runData")
 }
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+            artifactId = modId
+            pom {
+                name.set(modName)
+                groupId = modGroupId
+                licenses {
+                    license {
+                        name.set(modLicense)
+                    }
+                }
+            }
+        }
+    }
+}
