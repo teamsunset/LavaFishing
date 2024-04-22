@@ -79,6 +79,7 @@ class EntityPromethiumBullet : AbstractArrow {
         } else {
             this.explode(1.5f)
         }
+        this.remove(RemovalReason.DISCARDED)
     }
 
     override fun onHitBlock(pResult: BlockHitResult) {
@@ -101,11 +102,15 @@ class EntityPromethiumBullet : AbstractArrow {
         if (this.dividable && this.divisionTimes <= 0) {
             this.remove(RemovalReason.DISCARDED)
         }
-        if (this.dividable && this.divisionTimes > 0 && velocity < 2 && (this.deltaMovement.y in (-1.0..-0.3) || (this.inGround && this.xRot > 0))) {
+        if (this.dividable && this.divisionTimes > 0 && ((!this.inGround && velocity < 2 && this.deltaMovement.y in (-1.0..-0.3)) || (this.inGround && this.xRot > 0))) {
             this.explode(1f)
             this.divide(this.divisionNum, this.velocity)
             this.deltaMovement = Vec3(this.deltaMovement.x, 0.5, this.deltaMovement.z)
             this.divisionTimes--
+        }
+        if (!this.dividable && this.inGround) {
+            this.explode(1.5f)
+            this.remove(RemovalReason.DISCARDED)
         }
     }
 
@@ -120,7 +125,7 @@ class EntityPromethiumBullet : AbstractArrow {
     private fun hitDivide() {
         if (this.divisionTimes <= 1) {
             this.explode(1f)
-            this.divide(this.divisionNum, -0.3, 0.2)
+            this.divide(this.divisionNum, -0.3, 0.5)
         } else {
             this.explode(2f)
             this.level().addFreshEntity(newArrow(true, this.divisionNum, this.divisionTimes - 1).apply {
