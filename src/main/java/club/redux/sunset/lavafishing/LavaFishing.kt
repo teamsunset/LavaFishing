@@ -1,6 +1,5 @@
 package club.redux.sunset.lavafishing
 
-import club.asynclab.web.BuildConstants
 import club.redux.sunset.lavafishing.annotation.KtObjectEventBusSubscriberHandler
 import club.redux.sunset.lavafishing.registry.*
 import net.minecraftforge.fml.common.Mod

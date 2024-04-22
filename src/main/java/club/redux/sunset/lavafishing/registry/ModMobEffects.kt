@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.registry
 
-import club.asynclab.web.BuildConstants
+import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.effect.EffectBlessed
 import club.redux.sunset.lavafishing.effect.EffectEndlessFlame
 import club.redux.sunset.lavafishing.effect.EffectLavaWalker

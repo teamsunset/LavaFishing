@@ -24,6 +24,7 @@ val modCredits: String by project
 val modDescription: String by project
 
 val shade: Configuration by configurations.creating
+val fullShade: Configuration by configurations.creating
 
 plugins {
     java
@@ -57,6 +58,12 @@ repositories {
 }
 
 dependencies {
+    val jable = "com.github.dsx137:jable:1.0.8"
+    val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:1.9.23"
+    val kotlinReflect = "org.jetbrains.kotlin:kotlin-reflect:1.9.23"
+    val kotlinxCoroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0"
+    val lombok = "org.projectlombok:lombok:1.18.30"
+
     // Minecraft
     minecraft("net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}")
 
@@ -64,21 +71,20 @@ dependencies {
     implementation(fg.deobf("curse.maven:aquaculture-60028:4921323"))
 
     // Lombok
-    compileOnly("org.projectlombok:lombok:1.18.30")
-    annotationProcessor("org.projectlombok:lombok:1.18.30")
-    kapt("org.projectlombok:lombok:1.18.30")
+    compileOnly(lombok)
+    annotationProcessor(lombok)
+    kapt(lombok)
 
     // Jable
-    minecraftLibrary("com.github.dsx137:jable:1.0.8")
-    shade("com.github.dsx137:jable:1.0.6")
+
+    minecraftLibrary(jable)
+    fullShade(jable)
 
     // Kotlin
-    minecraftLibrary("org.jetbrains.kotlin:kotlin-stdlib:1.9.22")
-    minecraftLibrary("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
-    minecraftLibrary("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
-    shade("org.jetbrains.kotlin:kotlin-stdlib:1.9.22")
-    shade("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
-    shade("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+    minecraftLibrary(kotlinStdLib)
+    minecraftLibrary(kotlinReflect)
+    fullShade(kotlinStdLib)
+    fullShade(kotlinReflect)
 }
 
 val javaVersion = JavaLanguageVersion.of(17)
@@ -203,16 +209,25 @@ tasks.jar {
 }
 
 tasks.shadowJar {
+    mergeServiceFiles()
     minimize()
-    configurations = listOf(shade)
+    minimize {
+        fullShade.dependencies.forEach {
+            exclude(dependency(it))
+        }
+    }
+
+    configurations = listOf(shade, fullShade)
+
     relocate("org.jetbrains", "${modGroupId}.shadowed.org.jetbrains")
-    relocate("club.asynclab", "${modGroupId}.shadowed.club.asynclab")
+    relocate("com.github", "${modGroupId}.shadowed.com.github")
+    relocate("kotlin", "${modGroupId}.shadowed.kotlin")
 }
 
 val reobfShadowJar = reobf.create("shadowJar") {
 }
 
-tasks.build {
+tasks.jar {
     dependsOn("runData")
 }
 

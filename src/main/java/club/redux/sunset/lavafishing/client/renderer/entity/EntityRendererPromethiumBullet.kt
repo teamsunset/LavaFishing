@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.client.renderer.entity
 
-import club.asynclab.web.BuildConstants
+import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.client.model.ModelPromethiumBullet
 import club.redux.sunset.lavafishing.entity.EntityPromethiumBullet
 import club.redux.sunset.lavafishing.registry.ModEntityTypes

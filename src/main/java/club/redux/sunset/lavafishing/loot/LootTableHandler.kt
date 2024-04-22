@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.loot
 
-import club.asynclab.web.BuildConstants
+import club.redux.sunset.lavafishing.BuildConstants
 import com.teammetallurgy.aquaculture.init.AquaLootTables
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.storage.loot.BuiltInLootTables

@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.client.renderer.blockentity
 
-import club.asynclab.web.BuildConstants
+import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.block.blockentity.BlockEntityPrometheusBounty
 import club.redux.sunset.lavafishing.registry.ModBlockEntityTypes
 import net.minecraft.client.renderer.Sheets
