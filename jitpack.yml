@@ -1,4 +1,0 @@
-install:
-  - chmod +x ./gradlew
-  - rm -rf HOME_DIR/.gradle/caches
-  - ./gradlew clean publishToMavenLocal
