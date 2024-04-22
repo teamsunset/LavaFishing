@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.client.model
 
-import club.asynclab.web.BuildConstants
+import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.entity.EntityPromethiumBullet
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer

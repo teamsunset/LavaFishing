@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.registry
 
-import club.asynclab.web.BuildConstants
+import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.block.BlockPrometheusBounty
 import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt

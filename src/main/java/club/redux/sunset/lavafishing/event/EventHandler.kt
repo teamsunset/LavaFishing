@@ -1,6 +1,7 @@
 package club.redux.sunset.lavafishing.event
 
-import club.asynclab.web.BuildConstants
+
+import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.client.model.ModelPromethiumBullet
 import club.redux.sunset.lavafishing.client.particle.ParticleFirePunch
 import club.redux.sunset.lavafishing.client.renderer.blockentity.BlockEntityRendererPrometheusBounty

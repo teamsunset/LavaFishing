@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.entity
 
-import club.asynclab.web.BuildConstants
+import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.loot.LootTableHandler
 import club.redux.sunset.lavafishing.registry.RegistryEntityType
 import net.minecraft.advancements.CriteriaTriggers

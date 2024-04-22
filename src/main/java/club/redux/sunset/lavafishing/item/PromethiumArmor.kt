@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.item
 
-import club.asynclab.web.BuildConstants
+import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.registry.ModMobEffects
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffect

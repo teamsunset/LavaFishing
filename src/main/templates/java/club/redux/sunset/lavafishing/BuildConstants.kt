@@ -1,4 +1,4 @@
-package club.asynclab.web
+package club.redux.sunset.lavafishing
 
 object BuildConstants {
     const val MINECRAFT_VERSION = "${minecraft_version}"

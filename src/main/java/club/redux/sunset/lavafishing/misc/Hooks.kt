@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.misc
 
-import club.asynclab.web.BuildConstants
+import club.redux.sunset.lavafishing.BuildConstants
 import com.teammetallurgy.aquaculture.api.fishing.Hook
 import com.teammetallurgy.aquaculture.api.fishing.Hook.HookBuilder
 import net.minecraft.ChatFormatting
