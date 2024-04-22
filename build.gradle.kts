@@ -1,6 +1,7 @@
 import net.minecraftforge.gradle.common.util.RunConfig
 import org.jetbrains.gradle.ext.settings
 import org.jetbrains.gradle.ext.taskTriggers
+import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -244,10 +245,11 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
-            artifactId = modId
             pom {
+                artifactId = project.archivesName.get()
+                groupId = project.group.toString()
+                version = project.version.toString()
                 name.set(modName)
-                groupId = modGroupId
                 licenses {
                     license {
                         name.set(modLicense)
