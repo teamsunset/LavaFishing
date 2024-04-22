@@ -2,6 +2,7 @@ package club.redux.sunset.lavafishing.event
 
 
 import club.redux.sunset.lavafishing.BuildConstants
+import club.redux.sunset.lavafishing.behavior.BehaviorDispenserPromethiumBullet
 import club.redux.sunset.lavafishing.client.model.ModelPromethiumBullet
 import club.redux.sunset.lavafishing.client.particle.ParticleFirePunch
 import club.redux.sunset.lavafishing.client.renderer.blockentity.BlockEntityRendererPrometheusBounty
@@ -12,9 +13,11 @@ import club.redux.sunset.lavafishing.effect.EffectLavaWalker
 import club.redux.sunset.lavafishing.item.ItemPromethiumSlingshot
 import club.redux.sunset.lavafishing.item.PromethiumArmor
 import club.redux.sunset.lavafishing.loot.LootTableHandler
+import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModParticleTypes
 import net.minecraft.client.Minecraft
 import net.minecraft.client.particle.SpriteSet
+import net.minecraft.world.level.block.DispenserBlock
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers
@@ -28,6 +31,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
 
 class EventHandler {
     @EventBusSubscriber
@@ -62,6 +66,11 @@ class EventHandler {
     @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
     object ModEventBoth {
         @SubscribeEvent
+        fun onSetup(event: FMLCommonSetupEvent) {
+            DispenserBlock.registerBehavior(ModItems.PROMETHIUM_BULLET.get(), BehaviorDispenserPromethiumBullet())
+        }
+
+        @SubscribeEvent
         fun onGatherDataEvent(event: GatherDataEvent) {
             event.generator.apply { addProvider(true, ModRecipeProvider(this.packOutput)) }
         }
@@ -70,8 +79,8 @@ class EventHandler {
     @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = [Dist.CLIENT])
     object ModEventClient {
         @SubscribeEvent
-        fun setupClient(event: FMLClientSetupEvent) {
-            ItemPromethiumSlingshot.setupClient(event)
+        fun onClientSetup(event: FMLClientSetupEvent) {
+            ItemPromethiumSlingshot.onClientSetup(event)
         }
 
         @SubscribeEvent

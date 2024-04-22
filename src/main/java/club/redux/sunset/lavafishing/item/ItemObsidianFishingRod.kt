@@ -5,6 +5,6 @@ import com.teammetallurgy.aquaculture.item.AquaFishingRodItem
 
 class ItemObsidianFishingRod : AquaFishingRodItem(
     ModTiers.OBSIDIAN,
-    Properties().durability(128)
+    Properties().fireResistant().durability(128)
 ) {
 }

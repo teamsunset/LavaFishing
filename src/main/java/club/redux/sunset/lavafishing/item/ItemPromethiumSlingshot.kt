@@ -19,7 +19,7 @@ import net.minecraftforge.event.ForgeEventFactory
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 import java.util.function.Predicate
 
-class ItemPromethiumSlingshot(private val tier: Tier) : BowItem(Properties().durability(3000)) {
+class ItemPromethiumSlingshot(private val tier: Tier) : BowItem(Properties().fireResistant().durability(3000)) {
     override fun customArrow(arrowEntity: AbstractArrow): AbstractArrow {
         if (arrowEntity.owner is LivingEntity) {
             return EntityPromethiumBullet(arrowEntity.level(), arrowEntity.owner as LivingEntity, true, 1)
@@ -147,7 +147,7 @@ class ItemPromethiumSlingshot(private val tier: Tier) : BowItem(Properties().dur
 
     companion object {
         @JvmStatic
-        fun setupClient(event: FMLClientSetupEvent) {
+        fun onClientSetup(event: FMLClientSetupEvent) {
             event.enqueueWork {
                 ItemProperties.register(
                     ModItems.PROMETHIUM_SLINGSHOT.get(),
