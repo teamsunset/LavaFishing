@@ -14,6 +14,7 @@ val modLoaderVersionRange: String by project
 val minecraftMappingChannel: String by project
 val minecraftMappingVersion: String by project
 val aquacultureVersionRange: String by project
+val kotlinForForgeVersionRange: String by project
 val modId: String by project
 val modName: String by project
 val modLicense: String by project
@@ -35,9 +36,9 @@ plugins {
     id("org.parchmentmc.librarian.forgegradle") version "1.+"
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    kotlin("jvm") version "1.9.22"
-    kotlin("kapt") version "1.9.22"
-    kotlin("plugin.serialization") version "1.9.22"
+    kotlin("jvm") version "1.9.23"
+    kotlin("kapt") version "1.9.23"
+    kotlin("plugin.serialization") version "1.9.23"
 }
 
 repositories {
@@ -46,6 +47,10 @@ repositories {
         content {
             includeGroup("curse.maven")
         }
+    }
+    maven {
+        name = "Kotlin for Forge"
+        setUrl("https://thedarkcolour.github.io/KotlinForForge/")
     }
     maven {
         url = uri("https://maven.aliyun.com/repository/public/")
@@ -58,10 +63,7 @@ repositories {
 }
 
 dependencies {
-    val jable = "com.github.dsx137:jable:1.0.8"
-    val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:1.9.23"
-    val kotlinReflect = "org.jetbrains.kotlin:kotlin-reflect:1.9.23"
-    val kotlinxCoroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0"
+    val jable = "com.github.dsx137:jable:1.0.10"
     val lombok = "org.projectlombok:lombok:1.18.30"
 
     // Minecraft
@@ -70,21 +72,17 @@ dependencies {
     // Aquaculture2
     implementation(fg.deobf("curse.maven:aquaculture-60028:4921323"))
 
+    // Kotlin for Forge
+    implementation("thedarkcolour:kotlinforforge:4.10.0")
+
     // Lombok
     compileOnly(lombok)
     annotationProcessor(lombok)
     kapt(lombok)
 
     // Jable
-
     minecraftLibrary(jable)
-    fullShade(jable)
-
-    // Kotlin
-    minecraftLibrary(kotlinStdLib)
-    minecraftLibrary(kotlinReflect)
-    fullShade(kotlinStdLib)
-    fullShade(kotlinReflect)
+    shade(jable)
 }
 
 val javaVersion = JavaLanguageVersion.of(17)
@@ -149,6 +147,18 @@ minecraft {
 
 sourceSets["main"].resources.srcDirs("src/generated/resources")
 
+val runDataAny = { name: String ->
+    tasks.create("runData$name") {
+        group = "forgegradle runs"
+        dependsOn("runData")
+        finalizedBy("run$name")
+    }
+}
+
+val runDataClient = runDataAny("Client")
+val runDataServer = runDataAny("Server")
+val runDataGameTestServer = runDataAny("GameTestServer")
+
 val props = mapOf(
     "minecraft_version" to minecraftVersion,
     "minecraft_version_range" to minecraftVersionRange,
@@ -163,6 +173,7 @@ val props = mapOf(
     "mod_authors" to modAuthors,
     "mod_description" to modDescription,
     "aquaculture_version_range" to aquacultureVersionRange,
+    "kotlin_for_forge_version_range" to kotlinForForgeVersionRange,
     "mod_credits" to modCredits
 )
 
@@ -219,9 +230,7 @@ tasks.shadowJar {
 
     configurations = listOf(shade, fullShade)
 
-    relocate("org.jetbrains", "${modGroupId}.shadowed.org.jetbrains")
     relocate("com.github", "${modGroupId}.shadowed.com.github")
-    relocate("kotlin", "${modGroupId}.shadowed.kotlin")
 }
 
 val reobfShadowJar = reobf.create("shadowJar") {
@@ -230,15 +239,3 @@ val reobfShadowJar = reobf.create("shadowJar") {
 tasks.jar {
     dependsOn("runData")
 }
-
-val runDataAny = { name: String ->
-    tasks.create("runData$name") {
-        group = "forgegradle runs"
-        dependsOn("runData")
-        finalizedBy("run$name")
-    }
-}
-
-val runDataClient = runDataAny("Client")
-val runDataServer = runDataAny("Server")
-val runDataGameTestServer = runDataAny("GameTestServer")

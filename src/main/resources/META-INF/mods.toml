@@ -31,3 +31,9 @@ mandatory = true
 versionRange = "${aquaculture_version_range}"
 ordering = "NONE"
 side = "BOTH"
+[[dependencies.${ mod_id }]]
+modId = "kotlinforforge"
+mandatory = true
+versionRange = "${kotlin_for_forge_version_range}"
+ordering = "NONE"
+side = "BOTH"
