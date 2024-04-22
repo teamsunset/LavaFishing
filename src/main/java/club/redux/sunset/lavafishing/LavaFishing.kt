@@ -1,23 +1,20 @@
 package club.redux.sunset.lavafishing
 
-import club.redux.sunset.lavafishing.annotation.KtObjectEventBusSubscriberHandler
 import club.redux.sunset.lavafishing.registry.*
 import net.minecraftforge.fml.common.Mod
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext
+import thedarkcolour.kotlinforforge.forge.MOD_BUS
 
 @Mod(BuildConstants.MOD_ID)
 class LavaFishing {
     init {
-        val eventBus = FMLJavaModLoadingContext.get().modEventBus
-        ModBlocks.REGISTER.register(eventBus)
-        ModBlockEntityTypes.REGISTER.register(eventBus)
-        ModCreativeModeTabs.REGISTER.register(eventBus)
-        ModItems.REGISTER.register(eventBus)
-        ModEntityTypes.REGISTER.register(eventBus)
-        ModMobEffects.REGISTER.register(eventBus)
-        ModParticleTypes.REGISTER.register(eventBus)
-        ModPotions.REGISTER.register(eventBus)
-
-        KtObjectEventBusSubscriberHandler.inject(BuildConstants.MOD_ID)
+//        val eventBus = FMLJavaModLoadingContext.get().modEventBus
+        ModBlocks.REGISTER.register(MOD_BUS)
+        ModBlockEntityTypes.REGISTER.register(MOD_BUS)
+        ModCreativeModeTabs.REGISTER.register(MOD_BUS)
+        ModItems.REGISTER.register(MOD_BUS)
+        ModEntityTypes.REGISTER.register(MOD_BUS)
+        ModMobEffects.REGISTER.register(MOD_BUS)
+        ModParticleTypes.REGISTER.register(MOD_BUS)
+        ModPotions.REGISTER.register(MOD_BUS)
     }
 }
