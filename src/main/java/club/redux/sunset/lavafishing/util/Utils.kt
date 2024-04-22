@@ -12,12 +12,13 @@ object Utils {
         val randomMultiplierMax = randomOffset + 1.0
         val randomMultiplierMin = 1.0 / randomMultiplierMax
         val randomMultiplier = random.nextDouble(randomMultiplierMin, randomMultiplierMax)
-        val rotScale = 2.0 * randomMultiplier
-        val sizeScale = 0.1 * (randomMultiplierMax - randomMultiplier)
         val points = mutableListOf<Pair<Double, Double>>()
-        val maxTheta = numPoints * rotScale
 
         for (i in 0 until numPoints) {
+            val rotScale = 2.0 * randomMultiplier
+            val sizeScale = 0.1 * (randomMultiplierMax - randomMultiplier)
+            val maxTheta = numPoints * rotScale
+
             val theta = i * maxTheta / numPoints // 将 i 映射到角度范围
             val r = a + b * theta * sizeScale // 计算当前点的半径
 
