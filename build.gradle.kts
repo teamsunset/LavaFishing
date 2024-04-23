@@ -32,7 +32,7 @@ plugins {
     java
     eclipse
     idea
-    id("maven-publish")
+    `maven-publish`
     id("net.minecraftforge.gradle") version "[6.0,6.2)"
     id("org.parchmentmc.librarian.forgegradle") version "1.+"
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
