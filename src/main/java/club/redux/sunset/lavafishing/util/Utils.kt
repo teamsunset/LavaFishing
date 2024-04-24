@@ -11,10 +11,10 @@ object Utils {
         val randomOffset = 1.0
         val randomMultiplierMax = randomOffset + 1.0
         val randomMultiplierMin = 1.0 / randomMultiplierMax
-        val randomMultiplier = random.nextDouble(randomMultiplierMin, randomMultiplierMax)
         val points = mutableListOf<Pair<Double, Double>>()
 
         for (i in 0 until numPoints) {
+            val randomMultiplier = random.nextDouble(randomMultiplierMin, randomMultiplierMax)
             val rotScale = 2.0 * randomMultiplier
             val sizeScale = 0.1 * (randomMultiplierMax - randomMultiplier)
             val maxTheta = numPoints * rotScale

@@ -1,0 +1,8 @@
+{
+  "slingshot": {
+    "subtitle": "sounds.lavafishing.item.slingshot",
+    "sounds": [
+      "lavafishing:item/slingshot"
+    ]
+  }
+}
