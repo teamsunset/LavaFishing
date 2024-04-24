@@ -1,7 +1,7 @@
 package club.redux.sunset.lavafishing.client.model
 
 import club.redux.sunset.lavafishing.BuildConstants
-import club.redux.sunset.lavafishing.entity.EntityPromethiumBullet
+import club.redux.sunset.lavafishing.entity.bullet.EntityPromethiumBullet
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import net.minecraft.client.model.EntityModel
@@ -15,7 +15,7 @@ import net.minecraft.client.model.geom.builders.MeshDefinition
 import net.minecraft.resources.ResourceLocation
 
 
-class ModelPromethiumBullet(
+class ModelBullet(
     root: ModelPart,
 ) : EntityModel<EntityPromethiumBullet>() {
     private var whole: ModelPart = root.getChild("whole")
@@ -45,7 +45,7 @@ class ModelPromethiumBullet(
 
     companion object {
         @JvmField val LAYER_LOCATION: ModelLayerLocation =
-            ModelLayerLocation(ResourceLocation(BuildConstants.MOD_ID, "promethium_bullet"), "main")
+            ModelLayerLocation(ResourceLocation(BuildConstants.MOD_ID, "bullet"), "main")
 
         fun createBodyLayer(): LayerDefinition {
             val meshdefinition = MeshDefinition()

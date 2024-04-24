@@ -3,9 +3,10 @@ package club.redux.sunset.lavafishing.registry
 import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.item.BlockItemWithoutLevelRenderer
 import club.redux.sunset.lavafishing.item.ItemObsidianFishingRod
-import club.redux.sunset.lavafishing.item.ItemPromethiumSlingshot
 import club.redux.sunset.lavafishing.item.PromethiumArmor
+import club.redux.sunset.lavafishing.item.bullet.ItemPromethiumBullet
 import club.redux.sunset.lavafishing.item.fishes.*
+import club.redux.sunset.lavafishing.item.slingshot.ItemPromethiumSlingshot
 import club.redux.sunset.lavafishing.misc.ModArmorMaterials
 import club.redux.sunset.lavafishing.misc.ModTiers
 import club.redux.sunset.lavafishing.util.UtilRegister
@@ -67,12 +68,8 @@ object ModItems {
 
     // other
     @JvmField val BLOCK_PROMETHEUS_BOUNTY = REGISTER.registerKt("prometheus_bounty") {
-        BlockItemWithoutLevelRenderer(
-            ModBlocks.PROMETHEUS_BOUNTY.get(),
-            Item.Properties().fireResistant()
-        )
+        BlockItemWithoutLevelRenderer(ModBlocks.PROMETHEUS_BOUNTY.get(), Item.Properties().fireResistant())
     }
 
-    @JvmField val PROMETHIUM_BULLET =
-        REGISTER.registerKt("promethium_bullet") { SimpleItem(Item.Properties().fireResistant()) }
+    @JvmField val PROMETHIUM_BULLET = REGISTER.registerKt("promethium_bullet") { ItemPromethiumBullet() }
 }

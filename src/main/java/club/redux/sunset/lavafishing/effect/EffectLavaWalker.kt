@@ -14,7 +14,7 @@ import kotlin.math.max
 class EffectLavaWalker : MobEffect(MobEffectCategory.BENEFICIAL, 0xCC3300) {
 
     override fun applyEffectTick(pLivingEntity: LivingEntity, pAmplifier: Int) {
-        if (!pLivingEntity.isSpectator) {
+        if (!pLivingEntity.isSpectator && !pLivingEntity.isShiftKeyDown) {
             val pos = pLivingEntity.position()
             val movement = pLivingEntity.deltaMovement
             val futurePos = pos.add(movement)

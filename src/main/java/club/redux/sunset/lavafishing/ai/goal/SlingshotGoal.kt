@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.ai.goal
 
-import club.redux.sunset.lavafishing.registry.ModItems
+import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
 import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal
 import net.minecraft.world.entity.monster.Skeleton
 import net.minecraftforge.event.entity.EntityJoinLevelEvent
@@ -13,7 +13,7 @@ class SlingshotGoal(
 ) : RangedBowAttackGoal<Skeleton>(skeleton, pSpeedModifier, pAttackIntervalMin, pAttackRadius) {
 
     override fun isHoldingBow(): Boolean {
-        return this.skeleton.isHolding(ModItems.PROMETHIUM_SLINGSHOT.get())
+        return this.skeleton.isHolding { it.item is ItemSlingshot }
     }
 
     companion object {

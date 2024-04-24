@@ -1,36 +1,21 @@
-package club.redux.sunset.lavafishing.entity
+package club.redux.sunset.lavafishing.entity.bullet
 
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import club.redux.sunset.lavafishing.util.Utils
-import net.minecraft.sounds.SoundEvent
-import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.projectile.AbstractArrow
-import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.Vec3
-import kotlin.math.pow
-import kotlin.math.sqrt
 
-class EntityPromethiumBullet : AbstractArrow {
+class EntityPromethiumBullet : EntityBullet {
     var isCarriedFire = false
     var dividable: Boolean = false
     var divisionNum = 3
     var divisionTimes = 3
     val velocity: Double
-        get() = sqrt(
-            this.deltaMovement.x.pow(2.0) +
-                    this.deltaMovement.y.pow(2.0) +
-                    this.deltaMovement.z.pow(2.0)
-        )
-
-    init {
-        this.setSoundEvent(SoundEvents.ALLAY_HURT)
-    }
-
+        get() = this.deltaMovement.length()
 
     constructor(
         world: Level,
@@ -52,25 +37,24 @@ class EntityPromethiumBullet : AbstractArrow {
 
     constructor(
         world: Level,
-        livingEntity: LivingEntity,
+        owner: LivingEntity,
         division: Boolean = false,
         divisionTimes: Int = 3,
-    ) : super(ModEntityTypes.PROMETHIUM_BULLET.get(), livingEntity, world) {
+    ) : super(ModEntityTypes.PROMETHIUM_BULLET.get(), owner, world) {
         this.dividable = division
         this.divisionTimes = divisionTimes
     }
 
     private val explode = { radius: Float ->
-        this.level()
-            .explode(
-                this.owner,
-                this.x,
-                this.y,
-                this.z,
-                radius,
-                this.isCarriedFire,
-                Level.ExplosionInteraction.NONE
-            )
+        this.level().explode(
+            this.owner,
+            this.x,
+            this.y,
+            this.z,
+            radius,
+            this.isCarriedFire,
+            Level.ExplosionInteraction.NONE
+        )
     }
     private val newArrow = { division: Boolean, divisionNum: Int, divisionCount: Int ->
         EntityPromethiumBullet(
@@ -144,11 +128,4 @@ class EntityPromethiumBullet : AbstractArrow {
             })
         }
     }
-
-
-    override fun getDefaultHitGroundSoundEvent(): SoundEvent {
-        return super.getDefaultHitGroundSoundEvent()
-    }
-
-    override fun getPickupItem(): ItemStack = ItemStack.EMPTY
 }

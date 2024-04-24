@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.behavior
 
-import club.redux.sunset.lavafishing.entity.EntityPromethiumBullet
+import club.redux.sunset.lavafishing.entity.bullet.EntityPromethiumBullet
 import net.minecraft.core.Position
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior
 import net.minecraft.world.entity.projectile.Projectile

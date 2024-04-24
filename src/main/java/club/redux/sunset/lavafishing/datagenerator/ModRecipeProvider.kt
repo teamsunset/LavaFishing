@@ -101,7 +101,7 @@ class ModRecipeProvider(pOutput: PackOutput) : RecipeProvider(pOutput) {
             .requires(ModItems.PROMETHIUM_INGOT.get())
             .unlockedBy("has_item", has(ModItems.PROMETHIUM_INGOT.get()))
             .save(pWriter)
-        ShapelessRecipeBuilder.shapeless(category, ModItems.PROMETHIUM_BULLET.get(), 9)
+        ShapelessRecipeBuilder.shapeless(category, ModItems.PROMETHIUM_BULLET.get())
             .requires(ModItems.PROMETHIUM_NUGGET.get())
             .requires(Items.GUNPOWDER)
             .requires(Items.PAPER)
