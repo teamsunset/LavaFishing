@@ -4,20 +4,22 @@ package club.redux.sunset.lavafishing.event
 import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.ai.goal.SlingshotGoal
 import club.redux.sunset.lavafishing.behavior.BehaviorDispenserPromethiumBullet
-import club.redux.sunset.lavafishing.client.model.ModelPromethiumBullet
+import club.redux.sunset.lavafishing.client.model.ModelBullet
 import club.redux.sunset.lavafishing.client.particle.ParticleFirePunch
 import club.redux.sunset.lavafishing.client.renderer.blockentity.BlockEntityRendererPrometheusBounty
 import club.redux.sunset.lavafishing.client.renderer.entity.EntityRendererPromethiumBullet
+import club.redux.sunset.lavafishing.datagenerator.ModItemTagProvider
 import club.redux.sunset.lavafishing.datagenerator.ModRecipeProvider
 import club.redux.sunset.lavafishing.effect.EffectBlessed
 import club.redux.sunset.lavafishing.effect.EffectLavaWalker
-import club.redux.sunset.lavafishing.item.ItemPromethiumSlingshot
 import club.redux.sunset.lavafishing.item.PromethiumArmor
+import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
 import club.redux.sunset.lavafishing.loot.LootTableHandler
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModParticleTypes
 import net.minecraft.client.Minecraft
 import net.minecraft.client.particle.SpriteSet
+import net.minecraft.data.tags.TagsProvider
 import net.minecraft.world.level.block.DispenserBlock
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions
@@ -34,6 +36,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
+import java.util.concurrent.CompletableFuture
 
 class EventHandler {
     @EventBusSubscriber
@@ -79,7 +82,18 @@ class EventHandler {
 
         @SubscribeEvent
         fun onGatherDataEvent(event: GatherDataEvent) {
-            event.generator.apply { addProvider(true, ModRecipeProvider(this.packOutput)) }
+            event.generator.apply {
+                addProvider(true, ModRecipeProvider(this.packOutput))
+                addProvider(
+                    event.includeServer(),
+                    ModItemTagProvider(
+                        packOutput,
+                        event.lookupProvider,
+                        CompletableFuture.completedFuture(TagsProvider.TagLookup.empty()),
+                        event.existingFileHelper
+                    )
+                )
+            }
         }
     }
 
@@ -87,7 +101,7 @@ class EventHandler {
     object ModEventClient {
         @SubscribeEvent
         fun onClientSetup(event: FMLClientSetupEvent) {
-            ItemPromethiumSlingshot.onClientSetup(event)
+            ItemSlingshot.onClientSetup(event)
         }
 
         @SubscribeEvent
@@ -105,7 +119,7 @@ class EventHandler {
 
         @SubscribeEvent
         fun onRegisterLayers(event: RegisterLayerDefinitions) {
-            event.registerLayerDefinition(ModelPromethiumBullet.LAYER_LOCATION, ModelPromethiumBullet::createBodyLayer)
+            event.registerLayerDefinition(ModelBullet.LAYER_LOCATION, ModelBullet::createBodyLayer)
         }
     }
 }

@@ -1,8 +1,8 @@
 package club.redux.sunset.lavafishing.client.renderer.entity
 
 import club.redux.sunset.lavafishing.BuildConstants
-import club.redux.sunset.lavafishing.client.model.ModelPromethiumBullet
-import club.redux.sunset.lavafishing.entity.EntityPromethiumBullet
+import club.redux.sunset.lavafishing.client.model.ModelBullet
+import club.redux.sunset.lavafishing.entity.bullet.EntityPromethiumBullet
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.renderer.MultiBufferSource
@@ -17,8 +17,7 @@ class EntityRendererPromethiumBullet(
     context: EntityRendererProvider.Context,
 ) : EntityRenderer<EntityPromethiumBullet>(context) {
 
-    private var model: ModelPromethiumBullet =
-        ModelPromethiumBullet(context.bakeLayer(ModelPromethiumBullet.LAYER_LOCATION))
+    private var model: ModelBullet = ModelBullet(context.bakeLayer(ModelBullet.LAYER_LOCATION))
 
     private val textureLocation: ResourceLocation =
         ResourceLocation(BuildConstants.MOD_ID, "textures/entity/promethium_bullet.png")
