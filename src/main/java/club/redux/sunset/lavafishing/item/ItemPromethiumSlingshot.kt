@@ -2,9 +2,9 @@ package club.redux.sunset.lavafishing.item
 
 import club.redux.sunset.lavafishing.entity.EntityPromethiumBullet
 import club.redux.sunset.lavafishing.registry.ModItems
+import club.redux.sunset.lavafishing.registry.ModSoundEvents
 import net.minecraft.client.renderer.item.ItemProperties
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.stats.Stats
 import net.minecraft.world.entity.LivingEntity
@@ -21,12 +21,20 @@ import java.util.function.Predicate
 
 class ItemPromethiumSlingshot(private val tier: Tier) : BowItem(Properties().fireResistant().durability(3000)) {
     override fun customArrow(arrowEntity: AbstractArrow): AbstractArrow {
-        if (arrowEntity.owner is LivingEntity) {
-            return EntityPromethiumBullet(arrowEntity.level(), arrowEntity.owner as LivingEntity, true, 1)
+        val entity = arrowEntity.owner
+        val bullet = EntityPromethiumBullet(arrowEntity.level(), arrowEntity.owner as LivingEntity, true, 1)
+        if (entity is LivingEntity) {
+            if (entity !is Player) {
+                entity.handSlots.firstOrNull { it.item == ModItems.PROMETHIUM_SLINGSHOT.get() }?.let {
+                    attachEnchantmentToBullet(bullet, it)
+                }
+            }
+            return bullet
         }
 
         return super.customArrow(arrowEntity)
     }
+
 
     /**
      * # 释放
@@ -74,30 +82,11 @@ class ItemPromethiumSlingshot(private val tier: Tier) : BowItem(Properties().fir
                             arrow.isCritArrow = true
                         }
 
-                        val j = EnchantmentHelper.getTagEnchantmentLevel(Enchantments.POWER_ARROWS, pStack)
-                        if (j > 0) {
-                            arrow.baseDamage = arrow.baseDamage + j.toDouble() * 0.5 + 0.5
-                            arrow.divisionNum += j
-                        }
+                        attachEnchantmentToBullet(arrow, pStack)
 
-                        val k = EnchantmentHelper.getTagEnchantmentLevel(Enchantments.PUNCH_ARROWS, pStack)
-                        if (k > 0) {
-                            arrow.knockback = k
+                        pStack.hurtAndBreak(1, pEntityLiving) { player ->
+                            player.broadcastBreakEvent(pEntityLiving.getUsedItemHand())
                         }
-
-                        if (EnchantmentHelper.getTagEnchantmentLevel(Enchantments.FLAMING_ARROWS, pStack) > 0) {
-                            arrow.setSecondsOnFire(100)
-                            arrow.isCarriedFire = true
-                        }
-
-                        if (EnchantmentHelper.getTagEnchantmentLevel(Enchantments.MULTISHOT, pStack) > 0) {
-                            arrow.divisionTimes = 3
-                        }
-
-                        pStack.hurtAndBreak(
-                            1,
-                            pEntityLiving
-                        ) { player -> player.broadcastBreakEvent(pEntityLiving.getUsedItemHand()) }
                         if (flag1 || pEntityLiving.abilities.instabuild && (itemstack.`is`(Items.SPECTRAL_ARROW) || itemstack.`is`(
                                 Items.TIPPED_ARROW
                             ))
@@ -107,13 +96,12 @@ class ItemPromethiumSlingshot(private val tier: Tier) : BowItem(Properties().fir
 
                         pLevel.addFreshEntity(arrow)
                     }
-
                     pLevel.playSound(
                         null,
                         pEntityLiving.getX(),
                         pEntityLiving.getY(),
                         pEntityLiving.getZ(),
-                        SoundEvents.ARROW_SHOOT,
+                        ModSoundEvents.SLINGSHOT.get(),
                         SoundSource.PLAYERS,
                         1.0f,
                         1.0f / (pLevel.getRandom().nextFloat() * 0.4f + 1.2f) + f * 0.5f
@@ -169,6 +157,28 @@ class ItemPromethiumSlingshot(private val tier: Tier) : BowItem(Properties().fir
                         0f
                     }
                 }
+            }
+        }
+
+        @JvmStatic
+        fun attachEnchantmentToBullet(bullet: EntityPromethiumBullet, stack: ItemStack) {
+            val j = EnchantmentHelper.getTagEnchantmentLevel(Enchantments.POWER_ARROWS, stack)
+            if (j > 0) {
+                bullet.baseDamage += j.toDouble() * 0.5 + 0.5
+                bullet.divisionNum += j
+            }
+            val k = EnchantmentHelper.getTagEnchantmentLevel(Enchantments.PUNCH_ARROWS, stack)
+            if (k > 0) {
+                bullet.knockback = k
+            }
+
+            if (EnchantmentHelper.getTagEnchantmentLevel(Enchantments.FLAMING_ARROWS, stack) > 0) {
+                bullet.setSecondsOnFire(100)
+                bullet.isCarriedFire = true
+            }
+
+            if (EnchantmentHelper.getTagEnchantmentLevel(Enchantments.MULTISHOT, stack) > 0) {
+                bullet.divisionTimes = 3
             }
         }
     }

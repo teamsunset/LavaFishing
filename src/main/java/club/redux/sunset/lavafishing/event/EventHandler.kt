@@ -2,6 +2,7 @@ package club.redux.sunset.lavafishing.event
 
 
 import club.redux.sunset.lavafishing.BuildConstants
+import club.redux.sunset.lavafishing.ai.goal.SlingshotGoal
 import club.redux.sunset.lavafishing.behavior.BehaviorDispenserPromethiumBullet
 import club.redux.sunset.lavafishing.client.model.ModelPromethiumBullet
 import club.redux.sunset.lavafishing.client.particle.ParticleFirePunch
@@ -24,6 +25,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent
 import net.minecraftforge.data.event.GatherDataEvent
 import net.minecraftforge.event.LootTableLoadEvent
+import net.minecraftforge.event.entity.EntityJoinLevelEvent
 import net.minecraftforge.event.entity.living.LivingAttackEvent
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent
@@ -60,6 +62,11 @@ class EventHandler {
         @SubscribeEvent
         fun onLootTableLoad(event: LootTableLoadEvent) {
             LootTableHandler.onLootTableLoad(event)
+        }
+
+        @SubscribeEvent
+        fun onEntityJoinLevel(event: EntityJoinLevelEvent) {
+            SlingshotGoal.onEntityJoinLevel(event)
         }
     }
 

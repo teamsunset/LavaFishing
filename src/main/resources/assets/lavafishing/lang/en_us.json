@@ -15,9 +15,12 @@
   "item.lavafishing.promethium_chestplate": "Promethium Chestplate",
   "item.lavafishing.promethium_leggings": "Promethium Leggings",
   "item.lavafishing.promethium_boots": "Promethium Boots",
+  "item.lavafishing.promethium_slingshot": "Promethium Slingshot",
+  "item.lavafishing.promethium_bullet": "Promethium Bullet",
   "block.lavafishing.prometheus_bounty": "Prometheus Bounty",
   "item.minecraft.potion.effect.lava_walker": "Potion of Lava Walker",
   "item.minecraft.splash_potion.effect.lava_walker": "Splash Potion of Lava Walker",
   "item.minecraft.lingering_potion.effect.lava_walker": "Lingering Potion of Lava Walker",
+  "sounds.lavafishing.item.slingshot": "Slingshot",
   "itemGroup.lavafishing": "Lava Fishing"
 }

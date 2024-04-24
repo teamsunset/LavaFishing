@@ -16,5 +16,6 @@ class LavaFishing {
         ModMobEffects.REGISTER.register(MOD_BUS)
         ModParticleTypes.REGISTER.register(MOD_BUS)
         ModPotions.REGISTER.register(MOD_BUS)
+        ModSoundEvents.REGISTER.register(MOD_BUS)
     }
 }

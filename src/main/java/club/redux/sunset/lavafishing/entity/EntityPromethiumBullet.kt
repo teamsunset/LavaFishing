@@ -2,6 +2,8 @@ package club.redux.sunset.lavafishing.entity
 
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import club.redux.sunset.lavafishing.util.Utils
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.projectile.AbstractArrow
@@ -24,6 +26,11 @@ class EntityPromethiumBullet : AbstractArrow {
                     this.deltaMovement.y.pow(2.0) +
                     this.deltaMovement.z.pow(2.0)
         )
+
+    init {
+        this.setSoundEvent(SoundEvents.ALLAY_HURT)
+    }
+
 
     constructor(
         world: Level,
@@ -55,7 +62,15 @@ class EntityPromethiumBullet : AbstractArrow {
 
     private val explode = { radius: Float ->
         this.level()
-            .explode(this.owner, this.x, this.y, this.z, radius, this.isCarriedFire, Level.ExplosionInteraction.NONE)
+            .explode(
+                this.owner,
+                this.x,
+                this.y,
+                this.z,
+                radius,
+                this.isCarriedFire,
+                Level.ExplosionInteraction.NONE
+            )
     }
     private val newArrow = { division: Boolean, divisionNum: Int, divisionCount: Int ->
         EntityPromethiumBullet(
@@ -91,10 +106,6 @@ class EntityPromethiumBullet : AbstractArrow {
             this.hitDivide()
             this.remove(RemovalReason.DISCARDED)
         }
-    }
-
-    override fun getPickupItem(): ItemStack {
-        return ItemStack.EMPTY
     }
 
     override fun tick() {
@@ -133,4 +144,11 @@ class EntityPromethiumBullet : AbstractArrow {
             })
         }
     }
+
+
+    override fun getDefaultHitGroundSoundEvent(): SoundEvent {
+        return super.getDefaultHitGroundSoundEvent()
+    }
+
+    override fun getPickupItem(): ItemStack = ItemStack.EMPTY
 }
