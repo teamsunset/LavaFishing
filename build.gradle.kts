@@ -1,3 +1,5 @@
+import groovy.util.Node
+import groovy.util.NodeList
 import net.minecraftforge.gradle.common.util.RunConfig
 import org.jetbrains.gradle.ext.settings
 import org.jetbrains.gradle.ext.taskTriggers
@@ -27,6 +29,7 @@ val modDescription: String by project
 
 val shade: Configuration by configurations.creating
 val fullShade: Configuration by configurations.creating
+val maven: Configuration by configurations.creating
 
 plugins {
     java
@@ -56,7 +59,7 @@ repositories {
     maven {
         url = uri("https://maven.aliyun.com/repository/public/")
     }
-    maven{
+    maven {
         url = uri("https://maven.aliyun.com/repository/gradle-plugin")
     }
     maven("jitpack") {
@@ -257,6 +260,9 @@ publishing {
                     license {
                         name.set(modLicense)
                     }
+                }
+                withXml {
+                    asNode().remove((asNode().get("dependencies") as NodeList).first() as Node)
                 }
             }
         }
