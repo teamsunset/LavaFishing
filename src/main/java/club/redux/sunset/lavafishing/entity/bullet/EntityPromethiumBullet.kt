@@ -14,6 +14,10 @@ class EntityPromethiumBullet : EntityBullet {
     var divisionNum = 3
     var divisionTimes = 3
 
+    init {
+        this.textureLocation = ResourceLocation(BuildConstants.MOD_ID, "textures/entity/bullet/promethium_bullet.png")
+    }
+
     constructor(bullet: EntityBullet) : super(bullet)
 
     constructor(
@@ -114,9 +118,5 @@ class EntityPromethiumBullet : EntityBullet {
                 deltaMovement = Vec3(0.0, 1.0, 0.0)
             })
         }
-    }
-
-    override fun getTextureLocation(): ResourceLocation {
-        return ResourceLocation(BuildConstants.MOD_ID, "textures/entity/promethium_bullet.png")
     }
 }

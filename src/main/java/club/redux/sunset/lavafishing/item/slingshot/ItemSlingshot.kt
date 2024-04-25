@@ -24,9 +24,10 @@ import net.minecraftforge.event.ForgeEventFactory
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 import java.util.function.Predicate
 
-open class ItemSlingshot(open val tier: Tier, properties: Properties) : BowItem(properties) {
-
-    open val baseDamage = 10
+open class ItemSlingshot(
+    open val tier: Tier,
+    properties: Properties,
+) : BowItem(properties.defaultDurability((BASE_DURABILITY * tier.uses).toInt())) {
 
     /**
      * # 释放
@@ -129,10 +130,6 @@ open class ItemSlingshot(open val tier: Tier, properties: Properties) : BowItem(
         }
     }
 
-    override fun getMaxDamage(stack: ItemStack): Int {
-        return this.maxDamage.takeIf { it != 0 } ?: (this.baseDamage * tier.uses)
-    }
-
     override fun getAllSupportedProjectiles(): Predicate<ItemStack> =
         Predicate { pStack -> pStack.item is ItemBullet }
 
@@ -197,5 +194,7 @@ open class ItemSlingshot(open val tier: Tier, properties: Properties) : BowItem(
                 }
             }
         }
+
+        const val BASE_DURABILITY = 1.5
     }
 }

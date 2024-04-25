@@ -5,9 +5,17 @@ import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet
 import net.minecraft.advancements.CriteriaTriggers
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.FriendlyByteBuf
+import net.minecraft.network.protocol.Packet
+import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.Mth
 import net.minecraft.world.damagesource.DamageSource
@@ -20,16 +28,23 @@ import net.minecraft.world.entity.projectile.AbstractArrow
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.level.Level
+import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
+import net.minecraftforge.entity.IEntityAdditionalSpawnData
+import net.minecraftforge.network.NetworkHooks
+import net.minecraftforge.registries.ForgeRegistries
 import kotlin.math.max
 import kotlin.math.min
 
-open class EntityBullet : AbstractArrow {
+open class EntityBullet : AbstractArrow, IEntityAdditionalSpawnData {
+    var textureLocation: ResourceLocation
+        get() = ResourceLocation(this.entityData.get(TEXTURE))
+        set(value) = this.entityData.set(TEXTURE, value.toString())
 
     private val inaccuracyMultiplier = 2.0F
 
     init {
-        this.setSoundEvent(SoundEvents.EMPTY)
+        this.setSoundEvent(SoundEvents.COW_HURT)
     }
 
     constructor(bullet: EntityBullet) : this(bullet.owner as LivingEntity, bullet.level()) {
@@ -49,10 +64,6 @@ open class EntityBullet : AbstractArrow {
         z: Double,
         level: Level,
     ) : super(ModEntityTypes.BULLET.get(), x, y, z, level)
-
-    override fun shoot(pX: Double, pY: Double, pZ: Double, pVelocity: Float, pInaccuracy: Float) {
-        super.shoot(pX, pY, pZ, pVelocity, pInaccuracy * inaccuracyMultiplier)
-    }
 
     /**
      * # 击中实体
@@ -177,6 +188,26 @@ open class EntityBullet : AbstractArrow {
         }
     }
 
+    /**
+     * # 去掉强制设置声音
+     */
+    override fun onHitBlock(pResult: BlockHitResult) {
+        this.lastState = level().getBlockState(pResult.blockPos)
+        val blockstate = level().getBlockState(pResult.blockPos)
+        blockstate.onProjectileHit(this.level(), blockstate, pResult, this)
+        val vec3 = pResult.location.subtract(this.x, this.y, this.z)
+        this.deltaMovement = vec3
+        val vec31 = vec3.normalize().scale(0.05)
+        this.setPosRaw(this.x - vec31.x, this.y - vec31.y, this.z - vec31.z)
+        this.playSound(this.hitGroundSoundEvent, 1.0f, 1.2f / (random.nextFloat() * 0.2f + 0.9f))
+        this.inGround = true
+        this.shakeTime = 7
+        this.isCritArrow = false
+        this.pierceLevel = 0.toByte()
+        this.setShotFromCrossbow(false)
+        this.resetPiercedEntities()
+    }
+
     override fun setEnchantmentEffectsFromEntity(pShooter: LivingEntity, pVelocity: Float) {
         pShooter.handSlots.firstOrNull { it.item is ItemSlingshot }?.let {
             val item = it.item
@@ -185,11 +216,51 @@ open class EntityBullet : AbstractArrow {
         }
     }
 
-    open fun getTextureLocation(): ResourceLocation {
-        return ResourceLocation(BuildConstants.MOD_ID, "textures/entity/bullet/default_bullet.png")
+    override fun shoot(pX: Double, pY: Double, pZ: Double, pVelocity: Float, pInaccuracy: Float) {
+        super.shoot(pX, pY, pZ, pVelocity, pInaccuracy * inaccuracyMultiplier)
     }
 
     override fun getPickupItem(): ItemStack {
         return ItemStack.EMPTY
+    }
+
+    override fun addAdditionalSaveData(pCompound: CompoundTag) {
+        super.addAdditionalSaveData(pCompound)
+        pCompound.putString("texture", this.textureLocation.toString())
+    }
+
+    override fun readAdditionalSaveData(pCompound: CompoundTag) {
+        super.readAdditionalSaveData(pCompound)
+        this.textureLocation = ResourceLocation(pCompound.getString("texture"))
+    }
+
+    override fun defineSynchedData() {
+        super.defineSynchedData()
+        this.entityData.define(
+            TEXTURE,
+            ResourceLocation(BuildConstants.MOD_ID, "textures/entity/bullet/default_bullet.png").toString()
+        )
+    }
+
+    override fun getDefaultHitGroundSoundEvent(): SoundEvent {
+        return this.soundEvent ?: SoundEvents.EMPTY
+    }
+
+    companion object {
+        @JvmField val TEXTURE: EntityDataAccessor<String> =
+            SynchedEntityData.defineId(EntityBullet::class.java, EntityDataSerializers.STRING);
+    }
+
+    override fun writeSpawnData(buffer: FriendlyByteBuf) {
+        buffer.writeResourceLocation(this.soundEvent.location)
+    }
+
+    override fun readSpawnData(additionalData: FriendlyByteBuf) {
+        this.soundEvent =
+            ForgeRegistries.SOUND_EVENTS.getValue(additionalData.readResourceLocation()) ?: SoundEvents.EMPTY
+    }
+
+    override fun getAddEntityPacket(): Packet<ClientGamePacketListener> {
+        return NetworkHooks.getEntitySpawningPacket(this)
     }
 }
