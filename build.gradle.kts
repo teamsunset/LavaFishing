@@ -29,7 +29,10 @@ val modDescription: String by project
 
 val shade: Configuration by configurations.creating
 val fullShade: Configuration by configurations.creating
-val maven: Configuration by configurations.creating
+
+val runtimeMaven: Configuration by configurations.creating
+val providedMaven: Configuration by configurations.creating
+val compileMaven: Configuration by configurations.creating
 
 plugins {
     java
@@ -72,15 +75,18 @@ repositories {
 dependencies {
     val jable = "com.github.dsx137:jable:1.0.10"
     val lombok = "org.projectlombok:lombok:1.18.30"
+    val aquaculture = "curse.maven:aquaculture-60028:4921323"
+    val kotlinforforge = "thedarkcolour:kotlinforforge:4.10.0"
 
     // Minecraft
     minecraft("net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}")
 
     // Aquaculture2
-    implementation(fg.deobf("curse.maven:aquaculture-60028:4921323"))
+    implementation(fg.deobf(aquaculture))
 
     // Kotlin for Forge
-    implementation("thedarkcolour:kotlinforforge:4.10.0")
+    implementation(kotlinforforge)
+    compileMaven(kotlinforforge)
 
     // Lombok
     compileOnly(lombok)
@@ -90,6 +96,7 @@ dependencies {
     // Jable
     minecraftLibrary(jable)
     shade(jable)
+    compileMaven(jable)
 }
 
 val javaVersion = JavaLanguageVersion.of(17)
@@ -247,6 +254,10 @@ tasks.jar {
     dependsOn("runData")
 }
 
+tasks.withType(GenerateModuleMetadata::class.java).configureEach {
+    enabled = false
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
@@ -263,6 +274,23 @@ publishing {
                 }
                 withXml {
                     asNode().remove((asNode().get("dependencies") as NodeList).first() as Node)
+
+                    asNode().appendNode("dependencies").apply {
+                        val appendDependency = { configuration: Configuration, scope: String ->
+                            configuration.dependencies.forEach {
+                                appendNode("dependency").apply {
+                                    appendNode("groupId", it.group)
+                                    appendNode("artifactId", it.name)
+                                    appendNode("version", it.version)
+                                    appendNode("scope", scope)
+                                }
+                            }
+                        }
+
+                        appendDependency(compileMaven, "compile")
+                        appendDependency(runtimeMaven, "runtime")
+                        appendDependency(providedMaven, "provided")
+                    }
                 }
             }
         }
