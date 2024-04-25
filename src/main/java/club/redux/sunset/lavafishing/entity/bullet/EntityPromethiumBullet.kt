@@ -1,9 +1,8 @@
 package club.redux.sunset.lavafishing.entity.bullet
 
-import club.redux.sunset.lavafishing.registry.ModEntityTypes
+import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.util.Utils
-import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.LivingEntity
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
@@ -14,8 +13,8 @@ class EntityPromethiumBullet : EntityBullet {
     var dividable: Boolean = false
     var divisionNum = 3
     var divisionTimes = 3
-    val velocity: Double
-        get() = this.deltaMovement.length()
+
+    constructor(bullet: EntityBullet) : super(bullet)
 
     constructor(
         world: Level,
@@ -26,23 +25,11 @@ class EntityPromethiumBullet : EntityBullet {
         divisionNum: Int = 3,
         divisionTimes: Int = 3,
         isCarriedFire: Boolean = false,
-    ) : super(ModEntityTypes.PROMETHIUM_BULLET.get(), x, y, z, world) {
+    ) : super(x, y, z, world) {
         this.dividable = dividable
         this.divisionNum = divisionNum
         this.divisionTimes = divisionTimes
         this.isCarriedFire = isCarriedFire
-    }
-
-    constructor(arrow: EntityType<EntityPromethiumBullet>, world: Level) : super(arrow, world)
-
-    constructor(
-        world: Level,
-        owner: LivingEntity,
-        division: Boolean = false,
-        divisionTimes: Int = 3,
-    ) : super(ModEntityTypes.PROMETHIUM_BULLET.get(), owner, world) {
-        this.dividable = division
-        this.divisionTimes = divisionTimes
     }
 
     private val explode = { radius: Float ->
@@ -97,9 +84,9 @@ class EntityPromethiumBullet : EntityBullet {
         if (this.dividable && this.divisionTimes <= 0) {
             this.remove(RemovalReason.DISCARDED)
         }
-        if (this.dividable && this.divisionTimes > 0 && ((!this.inGround && velocity < 2 && this.deltaMovement.y in (-1.0..-0.3)) || (this.inGround && this.xRot > 0))) {
+        if (this.dividable && this.divisionTimes > 0 && ((!this.inGround && this.deltaMovement.length() < 2 && this.deltaMovement.y in (-1.0..-0.3)) || (this.inGround && this.xRot > 0))) {
             this.explode(1f)
-            this.divide(this.divisionNum, this.velocity)
+            this.divide(this.divisionNum, this.deltaMovement.length())
             this.deltaMovement = Vec3(this.deltaMovement.x, 0.5, this.deltaMovement.z)
             this.divisionTimes--
         }
@@ -127,5 +114,9 @@ class EntityPromethiumBullet : EntityBullet {
                 deltaMovement = Vec3(0.0, 1.0, 0.0)
             })
         }
+    }
+
+    override fun getTextureLocation(): ResourceLocation {
+        return ResourceLocation(BuildConstants.MOD_ID, "textures/entity/promethium_bullet.png")
     }
 }

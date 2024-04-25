@@ -7,7 +7,7 @@ import club.redux.sunset.lavafishing.behavior.BehaviorDispenserPromethiumBullet
 import club.redux.sunset.lavafishing.client.model.ModelBullet
 import club.redux.sunset.lavafishing.client.particle.ParticleFirePunch
 import club.redux.sunset.lavafishing.client.renderer.blockentity.BlockEntityRendererPrometheusBounty
-import club.redux.sunset.lavafishing.client.renderer.entity.EntityRendererPromethiumBullet
+import club.redux.sunset.lavafishing.client.renderer.entity.EntityRendererBullet
 import club.redux.sunset.lavafishing.datagenerator.ModItemTagProvider
 import club.redux.sunset.lavafishing.datagenerator.ModRecipeProvider
 import club.redux.sunset.lavafishing.effect.EffectBlessed
@@ -107,7 +107,7 @@ class EventHandler {
         @SubscribeEvent
         fun onRegisterRenderers(event: RegisterRenderers) {
             BlockEntityRendererPrometheusBounty.onRegisterRenderers(event)
-            EntityRendererPromethiumBullet.onRegisterRenderers(event)
+            EntityRendererBullet.onRegisterRenderers(event)
         }
 
         @SubscribeEvent

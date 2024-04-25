@@ -1,7 +1,6 @@
 package club.redux.sunset.lavafishing.item.slingshot
 
 import club.redux.sunset.lavafishing.entity.bullet.EntityBullet
-import club.redux.sunset.lavafishing.entity.bullet.EntityPromethiumBullet
 import club.redux.sunset.lavafishing.item.bullet.ItemBullet
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModSoundEvents
@@ -14,7 +13,6 @@ import net.minecraft.stats.Stats
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.AbstractArrow
-import net.minecraft.world.item.ArrowItem
 import net.minecraft.world.item.BowItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Tier
@@ -26,7 +24,9 @@ import net.minecraftforge.event.ForgeEventFactory
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 import java.util.function.Predicate
 
-open class ItemSlingshot(val tier: Tier, properties: Properties) : BowItem(properties) {
+open class ItemSlingshot(open val tier: Tier, properties: Properties) : BowItem(properties) {
+
+    open val baseDamage = 10
 
     /**
      * # 释放
@@ -70,8 +70,8 @@ open class ItemSlingshot(val tier: Tier, properties: Properties) : BowItem(prope
         // 仅在服务器端执行发射逻辑
         if (pLevel.isServerSide()) {
             // 创建箭矢实体并赋予初始属性
-            val arrowItem = itemStack.item as ArrowItem
-            val arrow = customArrow(arrowItem.createArrow(pLevel, itemStack, pEntityLiving)).apply {
+            val itemBullet = itemStack.item as ItemBullet
+            val bullet = customBullet(itemBullet.createBullet(pLevel, itemStack, pEntityLiving)).apply {
                 shootFromRotation(
                     pEntityLiving,
                     pEntityLiving.getXRot(),
@@ -84,11 +84,11 @@ open class ItemSlingshot(val tier: Tier, properties: Properties) : BowItem(prope
 
             // 如果力量值为最大，则设置有暴击尾迹
             if (timePower == 1.0f) {
-                arrow.isCritArrow = true
+                bullet.isCritArrow = true
             }
 
             // 绑定附魔效果到箭矢上
-            this.attachEnchantmentToBullet(arrow as EntityPromethiumBullet, pStack)
+            this.attachEnchantmentToBullet(bullet, pStack)
 
             // 广播消耗耐久事件
             pStack.hurtAndBreak(1, pEntityLiving) { player ->
@@ -97,11 +97,11 @@ open class ItemSlingshot(val tier: Tier, properties: Properties) : BowItem(prope
 
             // 如果具有无限箭矢附魔，则设置箭矢为仅限创造模式拾取
             if (infinity) {
-                arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY
+                bullet.pickup = AbstractArrow.Pickup.CREATIVE_ONLY
             }
 
             // 将箭矢实体添加到游戏世界中
-            pLevel.addFreshEntity(arrow)
+            pLevel.addFreshEntity(bullet)
 
             // 播放发射声音，声音强度随力量值变化
             pLevel.playSound(
@@ -129,6 +129,10 @@ open class ItemSlingshot(val tier: Tier, properties: Properties) : BowItem(prope
         }
     }
 
+    override fun getMaxDamage(stack: ItemStack): Int {
+        return this.maxDamage.takeIf { it != 0 } ?: (this.baseDamage * tier.uses)
+    }
+
     override fun getAllSupportedProjectiles(): Predicate<ItemStack> =
         Predicate { pStack -> pStack.item is ItemBullet }
 
@@ -150,11 +154,25 @@ open class ItemSlingshot(val tier: Tier, properties: Properties) : BowItem(prope
         return duration.toInt()
     }
 
-    
     open fun attachEnchantmentToBullet(bullet: EntityBullet, stack: ItemStack) {
         UtilEnchantment.hasThen(Enchantments.POWER_ARROWS, stack) { bullet.baseDamage += it.toDouble() * 0.5 + 0.5 }
         UtilEnchantment.hasThen(Enchantments.PUNCH_ARROWS, stack) { bullet.knockback = it }
         UtilEnchantment.hasThen(Enchantments.FLAMING_ARROWS, stack) { bullet.setSecondsOnFire(100) }
+    }
+
+    /**
+     * # 第二步
+     *
+     * 大概是forge的钩子，之前createArrow作为这里的参数传入
+     * createArrow的结果可以在这里顶掉
+     */
+    @Deprecated("不建议用", ReplaceWith("this.customBullet(bullet)"))
+    override fun customArrow(arrow: AbstractArrow): AbstractArrow {
+        return this.customBullet(arrow as EntityBullet)
+    }
+
+    open fun customBullet(bullet: EntityBullet): EntityBullet {
+        return bullet
     }
 
     companion object {

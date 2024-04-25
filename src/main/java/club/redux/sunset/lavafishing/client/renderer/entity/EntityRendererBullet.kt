@@ -1,8 +1,7 @@
 package club.redux.sunset.lavafishing.client.renderer.entity
 
-import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.client.model.ModelBullet
-import club.redux.sunset.lavafishing.entity.bullet.EntityPromethiumBullet
+import club.redux.sunset.lavafishing.entity.bullet.EntityBullet
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.renderer.MultiBufferSource
@@ -13,21 +12,18 @@ import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.ResourceLocation
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers
 
-class EntityRendererPromethiumBullet(
+class EntityRendererBullet(
     context: EntityRendererProvider.Context,
-) : EntityRenderer<EntityPromethiumBullet>(context) {
+) : EntityRenderer<EntityBullet>(context) {
 
     private var model: ModelBullet = ModelBullet(context.bakeLayer(ModelBullet.LAYER_LOCATION))
 
-    private val textureLocation: ResourceLocation =
-        ResourceLocation(BuildConstants.MOD_ID, "textures/entity/promethium_bullet.png")
-
-    override fun getTextureLocation(pEntity: EntityPromethiumBullet): ResourceLocation {
-        return this.textureLocation
+    override fun getTextureLocation(pEntity: EntityBullet): ResourceLocation {
+        return pEntity.getTextureLocation()
     }
 
     override fun render(
-        pEntity: EntityPromethiumBullet,
+        pEntity: EntityBullet,
         pEntityYaw: Float,
         pPartialTicks: Float,
         pPoseStack: PoseStack,
@@ -54,7 +50,7 @@ class EntityRendererPromethiumBullet(
     companion object {
         @JvmStatic
         fun onRegisterRenderers(event: RegisterRenderers) {
-            event.registerEntityRenderer(ModEntityTypes.PROMETHIUM_BULLET.get()) { EntityRendererPromethiumBullet(it) }
+            event.registerEntityRenderer(ModEntityTypes.BULLET.get()) { EntityRendererBullet(it) }
         }
     }
 }
