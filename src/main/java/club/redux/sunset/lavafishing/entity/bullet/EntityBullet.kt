@@ -246,11 +246,6 @@ open class EntityBullet : AbstractArrow, IEntityAdditionalSpawnData {
         return this.soundEvent ?: SoundEvents.EMPTY
     }
 
-    companion object {
-        @JvmField val TEXTURE: EntityDataAccessor<String> =
-            SynchedEntityData.defineId(EntityBullet::class.java, EntityDataSerializers.STRING);
-    }
-
     override fun writeSpawnData(buffer: FriendlyByteBuf) {
         buffer.writeResourceLocation(this.soundEvent.location)
     }
@@ -262,5 +257,10 @@ open class EntityBullet : AbstractArrow, IEntityAdditionalSpawnData {
 
     override fun getAddEntityPacket(): Packet<ClientGamePacketListener> {
         return NetworkHooks.getEntitySpawningPacket(this)
+    }
+
+    companion object {
+        @JvmField val TEXTURE: EntityDataAccessor<String> =
+            SynchedEntityData.defineId(EntityBullet::class.java, EntityDataSerializers.STRING);
     }
 }
