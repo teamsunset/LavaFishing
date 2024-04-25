@@ -8,7 +8,6 @@ import club.redux.sunset.lavafishing.item.bullet.ItemPromethiumBullet
 import club.redux.sunset.lavafishing.item.fishes.*
 import club.redux.sunset.lavafishing.item.slingshot.ItemPromethiumSlingshot
 import club.redux.sunset.lavafishing.misc.ModArmorMaterials
-import club.redux.sunset.lavafishing.misc.ModTiers
 import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt
 import com.teammetallurgy.aquaculture.api.AquacultureAPI
@@ -43,7 +42,7 @@ object ModItems {
 
     // Tools
     @JvmField val PROMETHIUM_SLINGSHOT = REGISTER.registerKt("promethium_slingshot") {
-        ItemPromethiumSlingshot(ModTiers.PROMETHIUM)
+        ItemPromethiumSlingshot()
     }
 
     // Armor

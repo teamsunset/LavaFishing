@@ -1,8 +1,12 @@
 package club.redux.sunset.lavafishing.entity.bullet
 
+import club.redux.sunset.lavafishing.BuildConstants
+import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
+import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet
 import net.minecraft.advancements.CriteriaTriggers
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.Mth
@@ -25,25 +29,26 @@ open class EntityBullet : AbstractArrow {
     private val inaccuracyMultiplier = 2.0F
 
     init {
-        this.baseDamage = 1.0
         this.setSoundEvent(SoundEvents.EMPTY)
     }
 
-    constructor(arrow: EntityType<EntityPromethiumBullet>, world: Level) : super(arrow, world)
+    constructor(bullet: EntityBullet) : this(bullet.owner as LivingEntity, bullet.level()) {
+        this.baseDamage = bullet.baseDamage
+    }
+
+    constructor(bullet: EntityType<EntityBullet>, world: Level) : super(bullet, world)
 
     constructor(
-        entityType: EntityType<out AbstractArrow>,
         owner: LivingEntity,
         level: Level,
-    ) : super(entityType, owner, level)
+    ) : super(ModEntityTypes.BULLET.get(), owner, level)
 
     constructor(
-        entityType: EntityType<out AbstractArrow>,
         x: Double,
         y: Double,
         z: Double,
         level: Level,
-    ) : super(entityType, x, y, z, level)
+    ) : super(ModEntityTypes.BULLET.get(), x, y, z, level)
 
     override fun shoot(pX: Double, pY: Double, pZ: Double, pVelocity: Float, pInaccuracy: Float) {
         super.shoot(pX, pY, pZ, pVelocity, pInaccuracy * inaccuracyMultiplier)
@@ -170,6 +175,18 @@ open class EntityBullet : AbstractArrow {
                 this.discard()
             }
         }
+    }
+
+    override fun setEnchantmentEffectsFromEntity(pShooter: LivingEntity, pVelocity: Float) {
+        pShooter.handSlots.firstOrNull { it.item is ItemSlingshot }?.let {
+            val item = it.item
+            item as ItemSlingshot
+            item.attachEnchantmentToBullet(this, it)
+        }
+    }
+
+    open fun getTextureLocation(): ResourceLocation {
+        return ResourceLocation(BuildConstants.MOD_ID, "textures/entity/bullet/default_bullet.png")
     }
 
     override fun getPickupItem(): ItemStack {
