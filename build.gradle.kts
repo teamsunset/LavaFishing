@@ -73,13 +73,14 @@ repositories {
 }
 
 dependencies {
+    val mc = "net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}"
     val jable = "com.github.dsx137:jable:1.0.10"
     val lombok = "org.projectlombok:lombok:1.18.30"
     val aquaculture = "curse.maven:aquaculture-60028:4921323"
     val kotlinforforge = "thedarkcolour:kotlinforforge:4.10.0"
 
     // Minecraft
-    minecraft("net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}")
+    minecraft(mc)
 
     // Aquaculture2
     implementation(fg.deobf(aquaculture))
