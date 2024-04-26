@@ -85,8 +85,6 @@ dependencies {
     val mc = "net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}"
     val jable = "com.github.dsx137:jable:1.0.10"
     val lombok = "org.projectlombok:lombok:1.18.30"
-//    val aquaculture = "curse.maven:aquaculture-60028:4921323"
-//    val aquaculture = "com.teammetallurgy.aquaculture:aquaculture2_1.20.1:1.20.1-2.5.1"
     val aquaculture = "com.github.TeamSunset:Aquaculture:aeb4f5516b"
     val kotlinforforge = "thedarkcolour:kotlinforforge:4.10.0"
 
