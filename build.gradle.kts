@@ -34,6 +34,15 @@ val runtimeMaven: Configuration by configurations.creating
 val providedMaven: Configuration by configurations.creating
 val compileMaven: Configuration by configurations.creating
 
+val javaVersion = JavaLanguageVersion.of(17)
+
+version = "$minecraftVersion-$modVersion"
+group = modGroupId
+
+base.archivesName.set(modId)
+java.toolchain.languageVersion.set(javaVersion)
+kapt.keepJavacAnnotationProcessors = true
+
 plugins {
     java
     eclipse
@@ -76,14 +85,17 @@ dependencies {
     val mc = "net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}"
     val jable = "com.github.dsx137:jable:1.0.10"
     val lombok = "org.projectlombok:lombok:1.18.30"
-    val aquaculture = "curse.maven:aquaculture-60028:4921323"
+//    val aquaculture = "curse.maven:aquaculture-60028:4921323"
+//    val aquaculture = "com.teammetallurgy.aquaculture:aquaculture2_1.20.1:1.20.1-2.5.1"
+    val aquaculture = "com.github.TeamSunset:Aquaculture:aeb4f5516b"
     val kotlinforforge = "thedarkcolour:kotlinforforge:4.10.0"
 
     // Minecraft
     minecraft(mc)
 
     // Aquaculture2
-    implementation(fg.deobf(aquaculture))
+    implementation(aquaculture)
+    compileMaven(aquaculture)
 
     // Kotlin for Forge
     implementation(kotlinforforge)
@@ -97,24 +109,7 @@ dependencies {
     // Jable
     minecraftLibrary(jable)
     shade(jable)
-    compileMaven(jable)
-}
-
-val javaVersion = JavaLanguageVersion.of(17)
-
-version = "$minecraftVersion-$modVersion"
-group = modGroupId
-
-base {
-    archivesName.set(modId)
-}
-
-java {
-    toolchain.languageVersion.set(javaVersion)
-}
-
-kapt {
-    keepJavacAnnotationProcessors = true
+    compileMaven(kotlinforforge)
 }
 
 minecraft {
@@ -162,7 +157,7 @@ minecraft {
 
 sourceSets["main"].resources.srcDirs("src/generated/resources")
 
-val runDataAny = { name: String ->
+val createRunDataAny = { name: String ->
     tasks.create("runData$name") {
         group = "forgegradle runs"
         dependsOn("runData")
@@ -170,9 +165,9 @@ val runDataAny = { name: String ->
     }
 }
 
-val runDataClient = runDataAny("Client")
-val runDataServer = runDataAny("Server")
-val runDataGameTestServer = runDataAny("GameTestServer")
+val runDataClient = createRunDataAny("Client")
+val runDataServer = createRunDataAny("Server")
+val runDataGameTestServer = createRunDataAny("GameTestServer")
 
 val props = mapOf(
     "minecraft_version" to minecraftVersion,
@@ -255,7 +250,7 @@ tasks.jar {
     dependsOn("runData")
 }
 
-tasks.withType(GenerateModuleMetadata::class.java).configureEach {
+tasks.withType(GenerateModuleMetadata::class.java) {
     enabled = false
 }
 
