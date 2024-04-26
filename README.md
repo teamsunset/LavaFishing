@@ -36,7 +36,7 @@ repositories {
     maven {
         url = uri("https://thedarkcolour.github.io/KotlinForForge/")
     }
-    maven("jitpack") {
+    maven {
         url = uri("https://jitpack.io")
     }
 }
