@@ -107,7 +107,7 @@ dependencies {
     // Jable
     minecraftLibrary(jable)
     shade(jable)
-    compileMaven(kotlinforforge)
+    compileMaven(jable)
 }
 
 minecraft {
