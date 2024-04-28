@@ -3,7 +3,7 @@ package club.redux.sunset.lavafishing.event
 
 import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.ai.goal.SlingshotGoal
-import club.redux.sunset.lavafishing.behavior.BehaviorDispenserPromethiumBullet
+import club.redux.sunset.lavafishing.behavior.BehaviorDispenserBullet
 import club.redux.sunset.lavafishing.client.model.ModelBullet
 import club.redux.sunset.lavafishing.client.particle.ParticleFirePunch
 import club.redux.sunset.lavafishing.client.renderer.blockentity.BlockEntityRendererPrometheusBounty
@@ -15,18 +15,17 @@ import club.redux.sunset.lavafishing.effect.EffectLavaWalker
 import club.redux.sunset.lavafishing.item.PromethiumArmor
 import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
 import club.redux.sunset.lavafishing.loot.LootTableHandler
-import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModParticleTypes
 import net.minecraft.client.Minecraft
 import net.minecraft.client.particle.SpriteSet
 import net.minecraft.data.tags.TagsProvider
-import net.minecraft.world.level.block.DispenserBlock
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent
 import net.minecraftforge.data.event.GatherDataEvent
 import net.minecraftforge.event.LootTableLoadEvent
+import net.minecraftforge.event.TickEvent
 import net.minecraftforge.event.entity.EntityJoinLevelEvent
 import net.minecraftforge.event.entity.living.LivingAttackEvent
 import net.minecraftforge.event.entity.living.LivingDamageEvent
@@ -71,13 +70,18 @@ class EventHandler {
         fun onEntityJoinLevel(event: EntityJoinLevelEvent) {
             SlingshotGoal.onEntityJoinLevel(event)
         }
+
+        @SubscribeEvent
+        fun onPlayerTick(event: TickEvent.PlayerTickEvent) {
+
+        }
     }
 
     @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
     object ModEventBoth {
         @SubscribeEvent
         fun onSetup(event: FMLCommonSetupEvent) {
-            DispenserBlock.registerBehavior(ModItems.PROMETHIUM_BULLET.get(), BehaviorDispenserPromethiumBullet())
+            BehaviorDispenserBullet.onSetup(event)
         }
 
         @SubscribeEvent

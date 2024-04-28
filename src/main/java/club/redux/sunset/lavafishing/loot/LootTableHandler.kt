@@ -1,6 +1,7 @@
 package club.redux.sunset.lavafishing.loot
 
 import club.redux.sunset.lavafishing.BuildConstants
+import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import com.teammetallurgy.aquaculture.init.AquaLootTables
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.storage.loot.BuiltInLootTables
@@ -20,7 +21,7 @@ object LootTableHandler {
     @JvmField val NETHER_TREASURE: ResourceLocation = register("gameplay/fishing/nether/treasure")
 
     private fun register(path: String): ResourceLocation {
-        return BuiltInLootTables.register(ResourceLocation(BuildConstants.MOD_ID, path))
+        return BuiltInLootTables.register(ModResourceLocation(path))
     }
 
     fun onLootTableLoad(event: LootTableLoadEvent) {
