@@ -18,6 +18,9 @@ val minecraftMappingChannel: String by project
 val minecraftMappingVersion: String by project
 val aquacultureVersionRange: String by project
 val kotlinForForgeVersionRange: String by project
+var kotlinForForgeMandatory = project.gradle.startParameter.taskNames.intersect(
+    listOf("build")
+).isNotEmpty()
 val modId: String by project
 val modName: String by project
 val modLicense: String by project
@@ -96,8 +99,7 @@ dependencies {
     compileMaven(aquaculture)
 
     // Kotlin for Forge
-    implementation(kotlinforforge)
-    compileMaven(kotlinforforge)
+    minecraftLibrary(kotlinforforge)
 
     // Lombok
     compileOnly(lombok)
@@ -108,12 +110,6 @@ dependencies {
     minecraftLibrary(jable)
     shade(jable)
     compileMaven(jable)
-}
-
-buildscript {
-    dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.23")
-    }
 }
 
 minecraft {
@@ -188,6 +184,7 @@ val props = mapOf(
     "mod_description" to modDescription,
     "aquaculture_version_range" to aquacultureVersionRange,
     "kotlin_for_forge_version_range" to kotlinForForgeVersionRange,
+    "kotlin_for_forge_mandatory" to kotlinForForgeMandatory,
     "mod_credits" to modCredits
 )
 
@@ -244,14 +241,14 @@ tasks.shadowJar {
 
     configurations = listOf(shade, fullShade)
 
-    relocate("com.github", "${modGroupId}.shadowed.com.github")
+    relocate("com.github", "${modGroupId}.${modId}.shadowed.com.github")
 }
 
 val reobfShadowJar = reobf.create("shadowJar") {
 }
 
 tasks.jar {
-    dependsOn("runData")
+//    dependsOn("runData")
 }
 
 tasks.withType(GenerateModuleMetadata::class.java) {

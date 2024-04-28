@@ -5,7 +5,6 @@ import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.util.UtilEnchantment
 import club.redux.sunset.lavafishing.util.Utils
-import com.github.dsx137.jable.extension.log4j
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
@@ -105,6 +104,8 @@ class EntityPromethiumBullet : EntityBullet {
 
     override fun tick() {
         super.tick()
+        if (this.level().isClientSide) return
+
         if (this.dividable && this.divisionTimes <= 0) {
             this.remove(RemovalReason.DISCARDED)
         }
@@ -121,7 +122,6 @@ class EntityPromethiumBullet : EntityBullet {
     }
 
     private fun divide(num: Int, velocity: Double, b: Double = 1.0) {
-        log4j.info("分裂")
         Utils.generateArchimedianScrew(num, b).forEach { point ->
             this.level().addFreshEntity(newBullet(false, 0, 0).apply {
                 deltaMovement = Vec3(point.first, -3.0 * velocity, point.second)
