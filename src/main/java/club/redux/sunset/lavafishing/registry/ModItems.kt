@@ -1,19 +1,24 @@
 package club.redux.sunset.lavafishing.registry
 
 import club.redux.sunset.lavafishing.BuildConstants
+import club.redux.sunset.lavafishing.entity.bullet.EntityBullet
+import club.redux.sunset.lavafishing.entity.bullet.EntityPromethiumBullet
 import club.redux.sunset.lavafishing.item.BlockItemWithoutLevelRenderer
 import club.redux.sunset.lavafishing.item.ItemObsidianFishingRod
 import club.redux.sunset.lavafishing.item.PromethiumArmor
-import club.redux.sunset.lavafishing.item.bullet.ItemPromethiumBullet
+import club.redux.sunset.lavafishing.item.bullet.ItemBullet
 import club.redux.sunset.lavafishing.item.fishes.*
 import club.redux.sunset.lavafishing.item.slingshot.ItemPromethiumSlingshot
 import club.redux.sunset.lavafishing.misc.ModArmorMaterials
+import club.redux.sunset.lavafishing.misc.ModTiers
 import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt
 import com.teammetallurgy.aquaculture.api.AquacultureAPI
 import com.teammetallurgy.aquaculture.item.SimpleItem
 import net.minecraft.world.item.ArmorItem
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.Item.Properties
+import net.minecraft.world.item.Tiers
 import net.minecraftforge.registries.ForgeRegistries
 
 object ModItems {
@@ -47,10 +52,10 @@ object ModItems {
 
     // Armor
     @JvmField val PROMETHIUM_INGOT = REGISTER.registerKt("promethium_ingot") {
-        SimpleItem(Item.Properties().fireResistant())
+        SimpleItem(Properties().fireResistant())
     }
     @JvmField val PROMETHIUM_NUGGET = REGISTER.registerKt("promethium_nugget") {
-        SimpleItem(Item.Properties().fireResistant())
+        SimpleItem(Properties().fireResistant())
     }
     @JvmField val PROMETHIUM_HELMET = REGISTER.registerKt("promethium_helmet") {
         PromethiumArmor(ModArmorMaterials.PROMETHIUM, ArmorItem.Type.HELMET).setArmorTexture("promethium_layer_1")
@@ -70,5 +75,19 @@ object ModItems {
         BlockItemWithoutLevelRenderer(ModBlocks.PROMETHEUS_BOUNTY.get(), Item.Properties().fireResistant())
     }
 
-    @JvmField val PROMETHIUM_BULLET = REGISTER.registerKt("promethium_bullet") { ItemPromethiumBullet() }
+    @JvmField val PROMETHIUM_BULLET = REGISTER.registerKt("promethium_bullet") {
+        ItemBullet(
+            ModTiers.PROMETHIUM,
+            Properties(),
+            { ModEntityTypes.PROMETHIUM_BULLET.get() },
+            ::EntityPromethiumBullet
+        )
+    }
+    @JvmField val STONE_BULLET = REGISTER.registerKt("stone_bullet") {
+        ItemBullet(Tiers.STONE, Properties(), { ModEntityTypes.STONE_BULLET.get() }, ::EntityBullet)
+    }
+
+    @JvmField val IRON_BULLET = REGISTER.registerKt("iron_bullet") {
+        ItemBullet(Tiers.IRON, Properties(), { ModEntityTypes.IRON_BULLET.get() }, ::EntityBullet)
+    }
 }

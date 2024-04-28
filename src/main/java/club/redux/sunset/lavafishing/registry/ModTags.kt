@@ -1,8 +1,6 @@
 package club.redux.sunset.lavafishing.registry
 
-import club.redux.sunset.lavafishing.BuildConstants
-import club.redux.sunset.lavafishing.registry.ModTags.Blocks.tag
-import net.minecraft.resources.ResourceLocation
+import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import net.minecraft.tags.BlockTags
 import net.minecraft.tags.ItemTags
 import net.minecraft.tags.TagKey
@@ -14,7 +12,7 @@ object ModTags {
         @JvmField val TEST_TAG = tag("test")
 
         private fun tag(name: String): TagKey<Block> {
-            return BlockTags.create(ResourceLocation(BuildConstants.MOD_ID, name))
+            return BlockTags.create(ModResourceLocation(name))
         }
     }
 
@@ -22,7 +20,7 @@ object ModTags {
         @JvmField val TEST_TAG = tag("test")
 
         private fun tag(name: String): TagKey<Item> {
-            return ItemTags.create(ResourceLocation(BuildConstants.MOD_ID, name))
+            return ItemTags.create(ModResourceLocation(name))
         }
     }
 }

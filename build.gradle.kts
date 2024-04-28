@@ -74,7 +74,7 @@ repositories {
     maven {
         url = uri("https://maven.aliyun.com/repository/gradle-plugin")
     }
-    maven("jitpack") {
+    maven {
         url = uri("https://jitpack.io")
     }
     mavenLocal()
@@ -108,6 +108,12 @@ dependencies {
     minecraftLibrary(jable)
     shade(jable)
     compileMaven(jable)
+}
+
+buildscript {
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.23")
+    }
 }
 
 minecraft {

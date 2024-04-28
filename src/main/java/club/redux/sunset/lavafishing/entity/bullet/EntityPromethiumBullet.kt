@@ -1,27 +1,45 @@
 package club.redux.sunset.lavafishing.entity.bullet
 
-import club.redux.sunset.lavafishing.BuildConstants
+import club.redux.sunset.lavafishing.misc.ModResourceLocation
+import club.redux.sunset.lavafishing.registry.ModEntityTypes
+import club.redux.sunset.lavafishing.registry.ModItems
+import club.redux.sunset.lavafishing.util.UtilEnchantment
 import club.redux.sunset.lavafishing.util.Utils
-import net.minecraft.resources.ResourceLocation
+import com.github.dsx137.jable.extension.log4j
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.Vec3
 
 class EntityPromethiumBullet : EntityBullet {
+    override fun getTextureLocation() = ModResourceLocation("textures/entity/bullet/promethium_bullet.png")
+
+    override fun getPickupItem() = ItemStack(ModItems.PROMETHIUM_BULLET.get())
+
     var isCarriedFire = false
-    var dividable: Boolean = false
+    var dividable = true
+    var divisionTimes = 1
     var divisionNum = 3
-    var divisionTimes = 3
-
-    init {
-        this.textureLocation = ResourceLocation(BuildConstants.MOD_ID, "textures/entity/bullet/promethium_bullet.png")
-    }
-
-    constructor(bullet: EntityBullet) : super(bullet)
 
     constructor(
-        world: Level,
+        entityType: EntityType<out EntityBullet>,
+        owner: LivingEntity,
+        level: Level,
+    ) : super(entityType, owner, level)
+
+    constructor(
+        entityType: EntityType<out EntityBullet>,
+        level: Level,
+    ) : super(entityType, level)
+
+    constructor(
+        entityType: EntityType<out EntityBullet>,
+        level: Level,
         x: Double,
         y: Double,
         z: Double,
@@ -29,7 +47,7 @@ class EntityPromethiumBullet : EntityBullet {
         divisionNum: Int = 3,
         divisionTimes: Int = 3,
         isCarriedFire: Boolean = false,
-    ) : super(x, y, z, world) {
+    ) : super(entityType, x, y, z, level) {
         this.dividable = dividable
         this.divisionNum = divisionNum
         this.divisionTimes = divisionTimes
@@ -47,8 +65,9 @@ class EntityPromethiumBullet : EntityBullet {
             Level.ExplosionInteraction.NONE
         )
     }
-    private val newArrow = { division: Boolean, divisionNum: Int, divisionCount: Int ->
+    private val newBullet = { division: Boolean, divisionNum: Int, divisionCount: Int ->
         EntityPromethiumBullet(
+            ModEntityTypes.PROMETHIUM_BULLET.get(),
             this.level(),
             this.x,
             this.y,
@@ -57,8 +76,9 @@ class EntityPromethiumBullet : EntityBullet {
             divisionNum,
             divisionCount,
             this.isCarriedFire
-        ).apply {
-            owner = this.owner
+        ).also {
+            it.owner = this.owner
+            it.baseDamage = this.baseDamage
         }
     }
 
@@ -101,8 +121,9 @@ class EntityPromethiumBullet : EntityBullet {
     }
 
     private fun divide(num: Int, velocity: Double, b: Double = 1.0) {
+        log4j.info("分裂")
         Utils.generateArchimedianScrew(num, b).forEach { point ->
-            this.level().addFreshEntity(newArrow(false, 0, 0).apply {
+            this.level().addFreshEntity(newBullet(false, 0, 0).apply {
                 deltaMovement = Vec3(point.first, -3.0 * velocity, point.second)
             })
         }
@@ -114,9 +135,34 @@ class EntityPromethiumBullet : EntityBullet {
             this.divide(this.divisionNum, -0.3, 0.5)
         } else {
             this.explode(2f)
-            this.level().addFreshEntity(newArrow(true, this.divisionNum, this.divisionTimes - 1).apply {
+            this.level().addFreshEntity(newBullet(true, this.divisionNum, this.divisionTimes - 1).apply {
                 deltaMovement = Vec3(0.0, 1.0, 0.0)
             })
         }
+    }
+
+    override fun attachEnchantment(stack: ItemStack) {
+        super.attachEnchantment(stack)
+        UtilEnchantment.hasThen(Enchantments.POWER_ARROWS, stack) { this.divisionNum += it }
+        UtilEnchantment.hasThen(Enchantments.FLAMING_ARROWS, stack) { this.isCarriedFire = true }
+        UtilEnchantment.hasThen(Enchantments.MULTISHOT, stack) { this.divisionTimes = 3 }
+    }
+
+    //-----------------network----------------//
+
+    override fun addAdditionalSaveData(pCompound: CompoundTag) {
+        super.addAdditionalSaveData(pCompound)
+        pCompound.putBoolean("dividable", this.dividable)
+        pCompound.putInt("divisionNum", this.divisionNum)
+        pCompound.putInt("divisionTimes", this.divisionTimes)
+        pCompound.putBoolean("isCarriedFire", this.isCarriedFire)
+    }
+
+    override fun readAdditionalSaveData(pCompound: CompoundTag) {
+        super.readAdditionalSaveData(pCompound)
+        this.dividable = pCompound.getBoolean("dividable")
+        this.divisionNum = pCompound.getInt("divisionNum")
+        this.divisionTimes = pCompound.getInt("divisionTimes")
+        this.isCarriedFire = pCompound.getBoolean("isCarriedFire")
     }
 }

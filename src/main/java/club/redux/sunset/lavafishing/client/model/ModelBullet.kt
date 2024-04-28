@@ -1,6 +1,5 @@
 package club.redux.sunset.lavafishing.client.model
 
-import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.entity.bullet.EntityPromethiumBullet
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
@@ -44,8 +43,7 @@ class ModelBullet(
     }
 
     companion object {
-        @JvmField val LAYER_LOCATION: ModelLayerLocation =
-            ModelLayerLocation(ResourceLocation(BuildConstants.MOD_ID, "bullet"), "main")
+        @JvmField val LAYER_LOCATION: ModelLayerLocation = ModelLayerLocation(ResourceLocation("bullet"), "main")
 
         fun createBodyLayer(): LayerDefinition {
             val meshdefinition = MeshDefinition()

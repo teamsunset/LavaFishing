@@ -18,9 +18,7 @@ class EntityRendererBullet<T : EntityBullet>(
 
     private var model: ModelBullet = ModelBullet(context.bakeLayer(ModelBullet.LAYER_LOCATION))
 
-    override fun getTextureLocation(pEntity: T): ResourceLocation {
-        return pEntity.textureLocation
-    }
+    override fun getTextureLocation(pEntity: T): ResourceLocation = pEntity.getTextureLocation()
 
     override fun render(
         pEntity: T,
@@ -31,7 +29,7 @@ class EntityRendererBullet<T : EntityBullet>(
         pPackedLight: Int,
     ) {
         pPoseStack.pushPose()
-        pPoseStack.translate(0.0, -1.5, 0.0)
+        pPoseStack.translate(0.0, -1.4, 0.0)
         val vertexConsumer = pBuffer.getBuffer(RenderType.entityCutout(this.getTextureLocation(pEntity)))
         model.renderToBuffer(
             pPoseStack,
@@ -50,7 +48,9 @@ class EntityRendererBullet<T : EntityBullet>(
     companion object {
         @JvmStatic
         fun onRegisterRenderers(event: RegisterRenderers) {
-            event.registerEntityRenderer(ModEntityTypes.BULLET.get()) { EntityRendererBullet(it) }
+            ModEntityTypes.BULLET_ENTITY_TYPES.map { it.get() }.forEach { entityType ->
+                event.registerEntityRenderer(entityType) { EntityRendererBullet(it) }
+            }
         }
     }
 }

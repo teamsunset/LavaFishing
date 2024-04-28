@@ -2,6 +2,7 @@ package club.redux.sunset.lavafishing.item.slingshot
 
 import club.redux.sunset.lavafishing.entity.bullet.EntityBullet
 import club.redux.sunset.lavafishing.item.bullet.ItemBullet
+import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModSoundEvents
 import club.redux.sunset.lavafishing.util.UtilEnchantment
@@ -51,14 +52,19 @@ open class ItemSlingshot(
             pEntityLiving.getProjectile(pStack).takeIf { allSupportedProjectiles.test(it) } ?: ItemStack.EMPTY
 
         // 触发箭矢松开事件，计算额外的使用时间
-        val overtime = ForgeEventFactory.onArrowLoose(
-            pStack, pLevel, pEntityLiving, duration - pTimeLeft, !itemStack.isEmpty || hasFreeAmmo
+        var overtime = duration - pTimeLeft
+
+        // 加速拉弓
+        overtime *= this.getChargeMultiplier(pStack)
+
+        overtime = ForgeEventFactory.onArrowLoose(
+            pStack, pLevel, pEntityLiving, overtime, !itemStack.isEmpty || hasFreeAmmo
         )
         if (overtime < 0) return
 
         // 如果有免费弹药且当前发射物为空，则替换为默认子弹
         if (hasFreeAmmo && itemStack.isEmpty) {
-            itemStack = ItemStack(ModItems.PROMETHIUM_BULLET.get())
+            itemStack = ItemStack(ModItems.STONE_BULLET.get())
         }
 
         // 如果经过筛选后发射物仍为空，则直接返回
@@ -72,7 +78,7 @@ open class ItemSlingshot(
         if (pLevel.isServerSide()) {
             // 创建箭矢实体并赋予初始属性
             val itemBullet = itemStack.item as ItemBullet
-            val bullet = customBullet(itemBullet.createBullet(pLevel, itemStack, pEntityLiving)).apply {
+            val bullet = customArrow(itemBullet.createArrow(pLevel, itemStack, pEntityLiving)).apply {
                 shootFromRotation(
                     pEntityLiving,
                     pEntityLiving.getXRot(),
@@ -89,7 +95,7 @@ open class ItemSlingshot(
             }
 
             // 绑定附魔效果到箭矢上
-            this.attachEnchantmentToBullet(bullet, pStack)
+            this.attachEnchantmentToBullet(bullet as EntityBullet, pStack)
 
             // 广播消耗耐久事件
             pStack.hurtAndBreak(1, pEntityLiving) { player ->
@@ -130,6 +136,14 @@ open class ItemSlingshot(
         }
     }
 
+    override fun getUseDuration(pStack: ItemStack): Int {
+        return super.getUseDuration(pStack)
+    }
+
+    override fun onUseTick(pLevel: Level, pLivingEntity: LivingEntity, pStack: ItemStack, pRemainingUseDuration: Int) {
+        super.onUseTick(pLevel, pLivingEntity, pStack, pRemainingUseDuration)
+    }
+
     override fun getAllSupportedProjectiles(): Predicate<ItemStack> =
         Predicate { pStack -> pStack.item is ItemBullet }
 
@@ -138,6 +152,7 @@ open class ItemSlingshot(
 
     override fun getEnchantmentValue(stack: ItemStack): Int = this.tier.enchantmentValue
 
+
     override fun canApplyAtEnchantingTable(stack: ItemStack?, enchantment: Enchantment?): Boolean {
         return super.canApplyAtEnchantingTable(
             stack,
@@ -145,16 +160,11 @@ open class ItemSlingshot(
         ) || enchantment == Enchantments.MULTISHOT || enchantment == Enchantments.QUICK_CHARGE
     }
 
-    override fun getUseDuration(pStack: ItemStack): Int {
-        var duration = super.getUseDuration(pStack) * 0.5
-        UtilEnchantment.hasThen(Enchantments.QUICK_CHARGE, pStack) { duration *= 1.0 / (1 + it) }
-        return duration.toInt()
-    }
-
     open fun attachEnchantmentToBullet(bullet: EntityBullet, stack: ItemStack) {
-        UtilEnchantment.hasThen(Enchantments.POWER_ARROWS, stack) { bullet.baseDamage += it.toDouble() * 0.5 + 0.5 }
+        UtilEnchantment.hasThen(Enchantments.POWER_ARROWS, stack) { bullet.baseDamage += it * 0.5 + 0.5 }
         UtilEnchantment.hasThen(Enchantments.PUNCH_ARROWS, stack) { bullet.knockback = it }
         UtilEnchantment.hasThen(Enchantments.FLAMING_ARROWS, stack) { bullet.setSecondsOnFire(100) }
+        bullet.attachEnchantment(stack)
     }
 
     /**
@@ -165,26 +175,33 @@ open class ItemSlingshot(
      */
     @Deprecated("不建议用", ReplaceWith("this.customBullet(bullet)"))
     override fun customArrow(arrow: AbstractArrow): AbstractArrow {
-        return this.customBullet(arrow as EntityBullet)
+        return this.customBullet(
+            if (arrow is EntityBullet) arrow
+            else EntityBullet(ModEntityTypes.STONE_BULLET.get(), arrow.owner as LivingEntity, arrow.level())
+        )
     }
 
     open fun customBullet(bullet: EntityBullet): EntityBullet {
         return bullet
     }
 
+    open fun getChargeMultiplier(stack: ItemStack): Int {
+        return 1 + EnchantmentHelper.getTagEnchantmentLevel(Enchantments.QUICK_CHARGE, stack)
+    }
+
     companion object {
         @JvmStatic
         fun onClientSetup(event: FMLClientSetupEvent) {
             event.enqueueWork {
-                for (item in ModItems.REGISTER.entries) {
-                    ItemProperties.register(item.get(), ResourceLocation("pull")) { pStack, _, pEntity, _ ->
+                ModItems.REGISTER.entries.map { it.get() }.filterIsInstance<ItemSlingshot>().forEach { item ->
+                    ItemProperties.register(item, ResourceLocation("pull")) { pStack, _, pEntity, _ ->
                         if (pEntity == null || pEntity.useItem != pStack) {
                             0f
                         } else {
-                            (pStack.useDuration - pEntity.useItemRemainingTicks) / 20f
+                            (pStack.useDuration - pEntity.useItemRemainingTicks) / 20f * item.getChargeMultiplier(pStack)
                         }
                     }
-                    ItemProperties.register(item.get(), ResourceLocation("pulling")) { pStack, _, pEntity, _ ->
+                    ItemProperties.register(item, ResourceLocation("pulling")) { pStack, _, pEntity, _ ->
                         if (pEntity != null && pEntity.isUsingItem && pEntity.useItem === pStack) {
                             1f
                         } else {
