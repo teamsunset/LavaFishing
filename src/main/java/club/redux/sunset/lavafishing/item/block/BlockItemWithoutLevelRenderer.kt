@@ -1,4 +1,4 @@
-package club.redux.sunset.lavafishing.item
+package club.redux.sunset.lavafishing.item.block
 
 import club.redux.sunset.lavafishing.client.renderer.BlockItemCustomRenderer
 import net.minecraft.client.Minecraft

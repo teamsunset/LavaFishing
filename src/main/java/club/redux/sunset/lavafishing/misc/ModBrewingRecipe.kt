@@ -1,46 +1,32 @@
-package club.redux.sunset.lavafishing.misc;
+package club.redux.sunset.lavafishing.misc
 
-import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraftforge.common.brewing.IBrewingRecipe;
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.alchemy.Potion
+import net.minecraft.world.item.alchemy.PotionUtils
+import net.minecraftforge.common.brewing.IBrewingRecipe
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
-public class ModBrewingRecipe implements IBrewingRecipe {
-    private final Potion input;
-    private final Item ingredient;
-    private final Potion output;
-
-    public ModBrewingRecipe(Potion input, Item ingredient, Potion output) {
-        this.input = input;
-        this.ingredient = ingredient;
-        this.output = output;
+class ModBrewingRecipe(
+    private val input: Potion,
+    private val ingredient: Item,
+    private val output: Potion,
+) : IBrewingRecipe {
+    override fun isInput(input: ItemStack): Boolean {
+        return PotionUtils.getPotion(input) === this.input
     }
 
-    @Override
-    public boolean isInput(ItemStack input) {
-        return PotionUtils.getPotion(input) == this.input;
+    override fun isIngredient(ingredient: ItemStack): Boolean {
+        return ingredient.item === this.ingredient
     }
 
-    @Override
-    public boolean isIngredient(ItemStack ingredient) {
-        return ingredient.getItem() == this.ingredient;
-    }
-
-    @Override
-    public ItemStack getOutput(ItemStack input, ItemStack ingredient) {
+    override fun getOutput(input: ItemStack, ingredient: ItemStack): ItemStack {
         if (!this.isInput(input) || !this.isIngredient(ingredient)) {
-            return ItemStack.EMPTY;
+            return ItemStack.EMPTY
         }
-        ItemStack itemStack = new ItemStack(input.getItem());
-        itemStack.setTag(new CompoundTag());
-        PotionUtils.setPotion(itemStack, this.output);
-        return itemStack;
+        val itemStack = ItemStack(input.item)
+        itemStack.tag = CompoundTag()
+        PotionUtils.setPotion(itemStack, this.output)
+        return itemStack
     }
 }

@@ -33,7 +33,7 @@ ordering = "NONE"
 side = "BOTH"
 [[dependencies.${ mod_id }]]
 modId = "kotlinforforge"
-mandatory = ${ kotlin_for_forge_mandatory }
+mandatory = false # kff template replace
 versionRange = "${kotlin_for_forge_version_range}"
 ordering = "NONE"
 side = "BOTH"

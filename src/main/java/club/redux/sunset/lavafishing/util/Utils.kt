@@ -1,5 +1,6 @@
 package club.redux.sunset.lavafishing.util
 
+import net.minecraft.world.phys.Vec3
 import java.security.SecureRandom
 
 object Utils {
@@ -29,6 +30,11 @@ object Utils {
         }
 
         return points
+    }
+
+    @JvmStatic
+    fun dot(vecA: Vec3, vecB: Vec3): Double {
+        return vecA.x * vecB.x + vecA.y * vecB.y + vecA.z * vecB.z
     }
 }
 

@@ -1,6 +1,7 @@
 package club.redux.sunset.lavafishing.item.fishes
 
 import club.redux.sunset.lavafishing.misc.ModTiers
+import com.teammetallurgy.aquaculture.item.FishItem
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.LivingEntity
@@ -20,14 +21,13 @@ class ItemObsidianSwordFish : SwordItem(
             return this
         }
     }.food(
-        FoodProperties.Builder()
-            .nutrition(3)
-            .saturationMod(0.6f)
-            .build()
+        FishItem.MEDIUM_FISH_RAW
     )
         .fireResistant()
         .setNoRepair()
 ) {
+
+
     override fun finishUsingItem(pStack: ItemStack, pLevel: Level, pLivingEntity: LivingEntity): ItemStack {
         pLivingEntity.addEffect(MobEffectInstance(MobEffects.FIRE_RESISTANCE, 300))
         return super.finishUsingItem(pStack, pLevel, pLivingEntity)

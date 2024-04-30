@@ -2,10 +2,8 @@ package club.redux.sunset.lavafishing.item.slingshot
 
 import club.redux.sunset.lavafishing.entity.bullet.EntityBullet
 import club.redux.sunset.lavafishing.item.bullet.ItemBullet
-import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModSoundEvents
-import club.redux.sunset.lavafishing.util.UtilEnchantment
 import club.redux.sunset.lavafishing.util.isServerSide
 import net.minecraft.client.renderer.item.ItemProperties
 import net.minecraft.resources.ResourceLocation
@@ -87,7 +85,7 @@ open class ItemSlingshot(
                     timePower * 3.0f,
                     1.0f
                 )
-            }
+            } as EntityBullet
 
             // 如果力量值为最大，则设置有暴击尾迹
             if (timePower == 1.0f) {
@@ -95,7 +93,7 @@ open class ItemSlingshot(
             }
 
             // 绑定附魔效果到箭矢上
-            this.attachEnchantmentToBullet(bullet as EntityBullet, pStack)
+            bullet.attachEnchantment(pStack)
 
             // 广播消耗耐久事件
             pStack.hurtAndBreak(1, pEntityLiving) { player ->
@@ -136,35 +134,18 @@ open class ItemSlingshot(
         }
     }
 
-    override fun getUseDuration(pStack: ItemStack): Int {
-        return super.getUseDuration(pStack)
-    }
-
-    override fun onUseTick(pLevel: Level, pLivingEntity: LivingEntity, pStack: ItemStack, pRemainingUseDuration: Int) {
-        super.onUseTick(pLevel, pLivingEntity, pStack, pRemainingUseDuration)
-    }
-
-    override fun getAllSupportedProjectiles(): Predicate<ItemStack> =
-        Predicate { pStack -> pStack.item is ItemBullet }
+    override fun getAllSupportedProjectiles(): Predicate<ItemStack> = Predicate { pStack -> pStack.item is ItemBullet }
 
     override fun isValidRepairItem(pStack: ItemStack, pRepairCandidate: ItemStack): Boolean =
         this.tier.repairIngredient.test(pRepairCandidate)
 
     override fun getEnchantmentValue(stack: ItemStack): Int = this.tier.enchantmentValue
 
-
     override fun canApplyAtEnchantingTable(stack: ItemStack?, enchantment: Enchantment?): Boolean {
-        return super.canApplyAtEnchantingTable(
-            stack,
-            enchantment
-        ) || enchantment == Enchantments.MULTISHOT || enchantment == Enchantments.QUICK_CHARGE
-    }
-
-    open fun attachEnchantmentToBullet(bullet: EntityBullet, stack: ItemStack) {
-        UtilEnchantment.hasThen(Enchantments.POWER_ARROWS, stack) { bullet.baseDamage += it * 0.5 + 0.5 }
-        UtilEnchantment.hasThen(Enchantments.PUNCH_ARROWS, stack) { bullet.knockback = it }
-        UtilEnchantment.hasThen(Enchantments.FLAMING_ARROWS, stack) { bullet.setSecondsOnFire(100) }
-        bullet.attachEnchantment(stack)
+        return (super.canApplyAtEnchantingTable(stack, enchantment) ||
+                enchantment == Enchantments.MULTISHOT ||
+                enchantment == Enchantments.QUICK_CHARGE) &&
+                enchantment != Enchantments.INFINITY_ARROWS
     }
 
     /**
@@ -177,7 +158,10 @@ open class ItemSlingshot(
     override fun customArrow(arrow: AbstractArrow): AbstractArrow {
         return this.customBullet(
             if (arrow is EntityBullet) arrow
-            else EntityBullet(ModEntityTypes.STONE_BULLET.get(), arrow.owner as LivingEntity, arrow.level())
+            else ModItems.STONE_BULLET.get().createBullet(arrow.level()).apply {
+                this.setPos(arrow.x, arrow.y, arrow.z)
+                this.owner = arrow.owner
+            }
         )
     }
 
