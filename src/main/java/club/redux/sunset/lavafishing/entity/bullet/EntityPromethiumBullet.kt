@@ -120,8 +120,9 @@ class EntityPromethiumBullet : EntityBullet {
 
     private fun divide(num: Int, velocity: Double, b: Double = 1.0) {
         Utils.generateArchimedianScrew(num, b).forEach { point ->
-            this.level().addFreshEntity(newBullet(false, 0, 0).apply {
-                deltaMovement = Vec3(point.first, -3.0 * velocity, point.second)
+            this.level().addFreshEntity(newBullet(false, 0, 0).also {
+                it.deltaMovement = Vec3(point.first, -3.0 * velocity, point.second)
+                it.waterInertia = this.waterInertia
             })
         }
     }
@@ -132,8 +133,9 @@ class EntityPromethiumBullet : EntityBullet {
             this.divide(this.divisionNum, -0.3, 0.5)
         } else {
             this.explode(2f)
-            this.level().addFreshEntity(newBullet(true, this.divisionNum, this.divisionTimes - 1).apply {
-                deltaMovement = Vec3(0.0, 1.0, 0.0)
+            this.level().addFreshEntity(newBullet(true, this.divisionNum, this.divisionTimes - 1).also {
+                it.deltaMovement = Vec3(0.0, 1.0, 0.0)
+                it.waterInertia = this.waterInertia
             })
         }
     }
