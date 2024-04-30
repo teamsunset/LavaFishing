@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "minecraft:weeping_vines"
+    },
+    {
+      "item": "aquaculture:fish_fillet_cooked"
+    }
+  ],
+  "result": {
+    "item": "lavafishing:spicy_fish_fillet"
+  }
+}

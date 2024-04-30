@@ -17,7 +17,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent
 
-class PromethiumArmor(
+class ItemPromethiumArmor(
     armorMaterial: ArmorMaterial,
     type: Type,
 ) : ArmorItem(armorMaterial, type, Properties().fireResistant()) {
@@ -49,7 +49,7 @@ class PromethiumArmor(
             val level = event.entity.level()
             for (itemStack in event.entity.armorSlots) {
                 val item = itemStack.item
-                if (item is PromethiumArmor) {
+                if (item is ItemPromethiumArmor) {
                     val applyEffect = { effect: MobEffect ->
                         event.entity.addEffect(MobEffectInstance(effect, 20, 0, false, false, false))
                     }
@@ -81,7 +81,7 @@ class PromethiumArmor(
                 var promethiumArmorCount = 0
                 for (itemStack in event.entity.armorSlots) {
                     val item = itemStack.item
-                    if (item is PromethiumArmor) {
+                    if (item is ItemPromethiumArmor) {
                         event.amount -= 1f / 4 * damage
                         promethiumArmorCount++
                     }
@@ -91,7 +91,7 @@ class PromethiumArmor(
 
         fun onEntityAttack(event: LivingAttackEvent) {
             if (damageSources.any { event.source.`is`(it) }) {
-                if (event.entity.armorSlots.count { it.item is PromethiumArmor } == 4) {
+                if (event.entity.armorSlots.count { it.item is ItemPromethiumArmor } == 4) {
                     event.isCanceled = true
                 }
             }

@@ -2,7 +2,6 @@ package club.redux.sunset.lavafishing.entity.bullet
 
 import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
-import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.util.UtilEnchantment
 import club.redux.sunset.lavafishing.util.Utils
 import net.minecraft.nbt.CompoundTag
@@ -17,8 +16,6 @@ import net.minecraft.world.phys.Vec3
 
 class EntityPromethiumBullet : EntityBullet {
     override fun getTextureLocation() = ModResourceLocation("textures/entity/bullet/promethium_bullet.png")
-
-    override fun getPickupItem() = ItemStack(ModItems.PROMETHIUM_BULLET.get())
 
     var isCarriedFire = false
     var dividable = true
@@ -38,10 +35,10 @@ class EntityPromethiumBullet : EntityBullet {
 
     constructor(
         entityType: EntityType<out EntityBullet>,
-        level: Level,
         x: Double,
         y: Double,
         z: Double,
+        level: Level,
         dividable: Boolean = false,
         divisionNum: Int = 3,
         divisionTimes: Int = 3,
@@ -67,10 +64,10 @@ class EntityPromethiumBullet : EntityBullet {
     private val newBullet = { division: Boolean, divisionNum: Int, divisionCount: Int ->
         EntityPromethiumBullet(
             ModEntityTypes.PROMETHIUM_BULLET.get(),
-            this.level(),
             this.x,
             this.y,
             this.z,
+            this.level(),
             division,
             divisionNum,
             divisionCount,

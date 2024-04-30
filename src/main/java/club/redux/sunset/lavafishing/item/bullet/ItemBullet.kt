@@ -2,6 +2,7 @@ package club.redux.sunset.lavafishing.item.bullet
 
 
 import club.redux.sunset.lavafishing.entity.bullet.EntityBullet
+import club.redux.sunset.lavafishing.util.setShooter
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
@@ -17,7 +18,6 @@ open class ItemBullet(
     open val tier: Tier,
     properties: Properties,
     val entityTypeProvider: () -> EntityType<out EntityBullet>,
-    val entityProvider: (EntityType<out EntityBullet>, LivingEntity, Level) -> EntityBullet,
 ) : ArrowItem(properties) {
     open val baseDamage = 0.5
 
@@ -25,6 +25,13 @@ open class ItemBullet(
         return EnchantmentHelper.getTagEnchantmentLevel(Enchantments.INFINITY_ARROWS, bow) > 0
     }
 
+    open fun attachBasePropertiesToBullet(bullet: EntityBullet) {
+        bullet.baseDamage = this.baseDamage * tier.attackDamageBonus
+    }
+
+    open fun customBullet(pLevel: Level): EntityBullet {
+        return entityTypeProvider().create(pLevel)!!
+    }
 
     /**
      * # 第一步
@@ -33,12 +40,16 @@ open class ItemBullet(
      */
     @Deprecated("不建议用", ReplaceWith("this.createBullet(pLevel, pStack, pShooter)"))
     override fun createArrow(pLevel: Level, pStack: ItemStack, pShooter: LivingEntity): AbstractArrow {
-        val bullet = this.createBullet(pLevel, pStack, pShooter)
-        bullet.baseDamage = this.baseDamage * tier.attackDamageBonus
+        return this.createBullet(pLevel, pStack, pShooter)
+    }
+
+    open fun createBullet(pLevel: Level): EntityBullet {
+        val bullet = this.customBullet(pLevel)
+        this.attachBasePropertiesToBullet(bullet)
         return bullet
     }
 
     open fun createBullet(pLevel: Level, pStack: ItemStack, pShooter: LivingEntity): EntityBullet {
-        return entityProvider(entityTypeProvider(), pShooter, pLevel)
+        return this.createBullet(pLevel).setShooter(pShooter)
     }
 }

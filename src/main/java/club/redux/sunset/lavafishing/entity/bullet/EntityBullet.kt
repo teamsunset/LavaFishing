@@ -4,6 +4,7 @@ import club.redux.sunset.lavafishing.item.bullet.ItemBullet
 import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
 import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import club.redux.sunset.lavafishing.registry.ModItems
+import club.redux.sunset.lavafishing.util.UtilEnchantment
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet
 import net.minecraft.advancements.CriteriaTriggers
 import net.minecraft.network.FriendlyByteBuf
@@ -24,6 +25,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.AbstractArrow
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.enchantment.EnchantmentHelper
+import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
@@ -35,6 +37,7 @@ import kotlin.math.min
 
 open class EntityBullet : AbstractArrow, IEntityAdditionalSpawnData {
     private val inaccuracyMultiplier = 3.0F
+    private var waterInertia = 0.6F
 
     init {
         this.setSoundEvent(SoundEvents.MUD_HIT)
@@ -204,12 +207,15 @@ open class EntityBullet : AbstractArrow, IEntityAdditionalSpawnData {
 
     override fun setEnchantmentEffectsFromEntity(pShooter: LivingEntity, pVelocity: Float) {
         pShooter.handSlots.firstOrNull { it.item is ItemSlingshot }?.let {
-            val item = it.item as ItemSlingshot
-            item.attachEnchantmentToBullet(this, it)
+            this.attachEnchantment(it)
         }
     }
 
-    open fun attachEnchantment(stack: ItemStack) {}
+    open fun attachEnchantment(stack: ItemStack) {
+        UtilEnchantment.hasThen(Enchantments.POWER_ARROWS, stack) { this.baseDamage += it * 0.5 + 0.5 }
+        UtilEnchantment.hasThen(Enchantments.PUNCH_ARROWS, stack) { this.knockback = it }
+        UtilEnchantment.hasThen(Enchantments.FLAMING_ARROWS, stack) { this.setSecondsOnFire(100) }
+    }
 
     override fun shoot(pX: Double, pY: Double, pZ: Double, pVelocity: Float, pInaccuracy: Float) {
         super.shoot(pX, pY, pZ, pVelocity, pInaccuracy * inaccuracyMultiplier)
@@ -219,6 +225,12 @@ open class EntityBullet : AbstractArrow, IEntityAdditionalSpawnData {
         return ModItems.REGISTER.entries
             .map { it.get() }.filterIsInstance<ItemBullet>().first { it.entityTypeProvider() == this.type }
             .let { ItemStack(it) }
+    }
+
+    public override fun getWaterInertia(): Float = this.waterInertia
+
+    open fun setWaterInertia(value: Float) {
+        this.waterInertia = value
     }
 
     open fun getTextureLocation(): ResourceLocation = DEFAULT_TEXTURE
@@ -231,11 +243,13 @@ open class EntityBullet : AbstractArrow, IEntityAdditionalSpawnData {
 
     override fun writeSpawnData(buffer: FriendlyByteBuf) {
         buffer.writeResourceLocation(this.soundEvent.location)
+        buffer.writeFloat(this.waterInertia)
     }
 
     override fun readSpawnData(additionalData: FriendlyByteBuf) {
         this.soundEvent =
             ForgeRegistries.SOUND_EVENTS.getValue(additionalData.readResourceLocation()) ?: SoundEvents.EMPTY
+        this.waterInertia = additionalData.readFloat()
     }
 
     override fun getAddEntityPacket(): Packet<ClientGamePacketListener> {

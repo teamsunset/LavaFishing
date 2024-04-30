@@ -10,12 +10,14 @@ import club.redux.sunset.lavafishing.client.renderer.blockentity.BlockEntityRend
 import club.redux.sunset.lavafishing.client.renderer.entity.EntityRendererBullet
 import club.redux.sunset.lavafishing.datagenerator.ModItemTagProvider
 import club.redux.sunset.lavafishing.datagenerator.ModRecipeProvider
-import club.redux.sunset.lavafishing.effect.EffectBlessed
+import club.redux.sunset.lavafishing.effect.EffectEndlessFlame
 import club.redux.sunset.lavafishing.effect.EffectLavaWalker
-import club.redux.sunset.lavafishing.item.PromethiumArmor
+import club.redux.sunset.lavafishing.item.ItemPromethiumArmor
 import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
 import club.redux.sunset.lavafishing.loot.LootTableHandler
+import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModParticleTypes
+import club.redux.sunset.lavafishing.registry.ModPotions
 import net.minecraft.client.Minecraft
 import net.minecraft.client.particle.SpriteSet
 import net.minecraft.data.tags.TagsProvider
@@ -42,8 +44,8 @@ class EventHandler {
     object ForgeEvent {
         @SubscribeEvent
         fun onEntityDamage(event: LivingDamageEvent) {
-            EffectBlessed.onEntityDamage(event)
-            PromethiumArmor.onEntityDamage(event)
+            EffectEndlessFlame.onEntityDamage(event)
+            ItemPromethiumArmor.onEntityDamage(event)
         }
 
         @SubscribeEvent
@@ -53,12 +55,12 @@ class EventHandler {
 
         @SubscribeEvent
         fun onEntityTick(event: LivingTickEvent) {
-            PromethiumArmor.onLivingTick(event)
+            ItemPromethiumArmor.onLivingTick(event)
         }
 
         @SubscribeEvent
         fun onEntityAttack(event: LivingAttackEvent) {
-            PromethiumArmor.onEntityAttack(event)
+            ItemPromethiumArmor.onEntityAttack(event)
         }
 
         @SubscribeEvent
@@ -82,6 +84,8 @@ class EventHandler {
         @SubscribeEvent
         fun onSetup(event: FMLCommonSetupEvent) {
             BehaviorDispenserBullet.onSetup(event)
+            ModPotions.onCommonSetupEvent(event)
+            ModItems.registerFishData()
         }
 
         @SubscribeEvent

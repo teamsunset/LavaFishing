@@ -18,9 +18,7 @@ val minecraftMappingChannel: String by project
 val minecraftMappingVersion: String by project
 val aquacultureVersionRange: String by project
 val kotlinForForgeVersionRange: String by project
-var kotlinForForgeMandatory = project.gradle.startParameter.taskNames.intersect(
-    listOf("build")
-).isNotEmpty()
+val jeiVersion: String by project
 val modId: String by project
 val modName: String by project
 val modLicense: String by project
@@ -62,16 +60,6 @@ plugins {
 
 repositories {
     maven {
-        url = uri("https://www.cursemaven.com")
-        content {
-            includeGroup("curse.maven")
-        }
-    }
-    maven {
-        name = "Kotlin for Forge"
-        setUrl("https://thedarkcolour.github.io/KotlinForForge/")
-    }
-    maven {
         url = uri("https://maven.aliyun.com/repository/public/")
     }
     maven {
@@ -79,6 +67,18 @@ repositories {
     }
     maven {
         url = uri("https://jitpack.io")
+    }
+    maven("Kotlin for Forge") {
+        url = uri("https://thedarkcolour.github.io/KotlinForForge/")
+    }
+    maven("Jared's maven") {
+        url = uri("https://maven.blamejared.com/")
+    }
+    maven {
+        url = uri("https://www.cursemaven.com")
+        content {
+            includeGroup("curse.maven")
+        }
     }
     mavenLocal()
     mavenCentral()
@@ -90,6 +90,9 @@ dependencies {
     val lombok = "org.projectlombok:lombok:1.18.30"
     val aquaculture = "com.github.TeamSunset:Aquaculture:aeb4f5516b"
     val kotlinforforge = "thedarkcolour:kotlinforforge:4.10.0"
+    val jeiCommonApi = "mezz.jei:jei-${minecraftVersion}-common-api:${jeiVersion}"
+    val jeiForgeApi = "mezz.jei:jei-${minecraftVersion}-forge-api:${jeiVersion}"
+    val jei = "mezz.jei:jei-${minecraftVersion}-forge:${jeiVersion}"
 
     // Minecraft
     minecraft(mc)
@@ -98,8 +101,14 @@ dependencies {
     implementation(aquaculture)
     compileMaven(aquaculture)
 
+    // Jei
+    compileOnly(fg.deobf(jeiCommonApi))
+    compileOnly(fg.deobf(jeiForgeApi))
+    runtimeOnly(fg.deobf(jei))
+
     // Kotlin for Forge
-    minecraftLibrary(kotlinforforge)
+    implementation(kotlinforforge)
+    compileMaven(kotlinforforge)
 
     // Lombok
     compileOnly(lombok)
@@ -109,7 +118,6 @@ dependencies {
     // Jable
     minecraftLibrary(jable)
     shade(jable)
-    compileMaven(jable)
 }
 
 minecraft {
@@ -184,7 +192,6 @@ val props = mapOf(
     "mod_description" to modDescription,
     "aquaculture_version_range" to aquacultureVersionRange,
     "kotlin_for_forge_version_range" to kotlinForForgeVersionRange,
-    "kotlin_for_forge_mandatory" to kotlinForForgeMandatory,
     "mod_credits" to modCredits
 )
 
@@ -206,7 +213,6 @@ tasks.processResources {
     val targets = listOf("META-INF/mods.toml", "pack.mcmeta")
 
     inputs.properties(props)
-//    replaceProperties["project"] = project
 
     filesMatching(targets) {
         expand(props)
@@ -248,7 +254,16 @@ val reobfShadowJar = reobf.create("shadowJar") {
 }
 
 tasks.jar {
-//    dependsOn("runData")
+    dependsOn("runData")
+    doFirst {
+        val modToml = file("build/resources/main/META-INF/mods.toml")
+        modToml.writeText(
+            modToml.readText().replace(
+                "mandatory = false # kff template replace",
+                "mandatory = true"
+            )
+        )
+    }
 }
 
 tasks.withType(GenerateModuleMetadata::class.java) {

@@ -1,13 +1,13 @@
 package club.redux.sunset.lavafishing.registry
 
 import club.redux.sunset.lavafishing.BuildConstants
-import club.redux.sunset.lavafishing.entity.bullet.EntityBullet
-import club.redux.sunset.lavafishing.entity.bullet.EntityPromethiumBullet
-import club.redux.sunset.lavafishing.item.BlockItemWithoutLevelRenderer
 import club.redux.sunset.lavafishing.item.ItemObsidianFishingRod
-import club.redux.sunset.lavafishing.item.PromethiumArmor
+import club.redux.sunset.lavafishing.item.ItemPromethiumArmor
+import club.redux.sunset.lavafishing.item.block.BlockItemWithoutLevelRenderer
 import club.redux.sunset.lavafishing.item.bullet.ItemBullet
+import club.redux.sunset.lavafishing.item.cuisine.ItemSpicyFishFillet
 import club.redux.sunset.lavafishing.item.fishes.*
+import club.redux.sunset.lavafishing.item.slingshot.ItemNeptuniumSlingshot
 import club.redux.sunset.lavafishing.item.slingshot.ItemPromethiumSlingshot
 import club.redux.sunset.lavafishing.misc.ModArmorMaterials
 import club.redux.sunset.lavafishing.misc.ModTiers
@@ -16,7 +16,6 @@ import club.redux.sunset.lavafishing.util.registerKt
 import com.teammetallurgy.aquaculture.api.AquacultureAPI
 import com.teammetallurgy.aquaculture.item.SimpleItem
 import net.minecraft.world.item.ArmorItem
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.Item.Properties
 import net.minecraft.world.item.Tiers
 import net.minecraftforge.registries.ForgeRegistries
@@ -37,18 +36,16 @@ object ModItems {
     // FISH_DATA
     // TODO
     fun registerFishData() {
-        AquacultureAPI.FISH_DATA.add(QUARTZ_FISH.get(), 100.0, 200.0, 6)
-        AquacultureAPI.FISH_DATA.add(FLAME_SQUAT_LOBSTER.get(), 100.0, 200.0, 6)
-        AquacultureAPI.FISH_DATA.add(OBSIDIAN_SWORD_FISH.get(), 100.0, 200.0, 6)
-        AquacultureAPI.FISH_DATA.add(STEAM_FLYING_FISH.get(), 100.0, 200.0, 6)
-        AquacultureAPI.FISH_DATA.add(AROWANA_FISH.get(), 100.0, 200.0, 6)
-        AquacultureAPI.FISH_DATA.add(AGNI_FISH.get(), 100.0, 200.0, 6)
+        AquacultureAPI.FISH_DATA.add(QUARTZ_FISH.get(), 100.0, 200.0, 4)
+        AquacultureAPI.FISH_DATA.add(FLAME_SQUAT_LOBSTER.get(), 100.0, 200.0, 2)
+        AquacultureAPI.FISH_DATA.add(OBSIDIAN_SWORD_FISH.get(), 100.0, 200.0, 3)
+        AquacultureAPI.FISH_DATA.add(STEAM_FLYING_FISH.get(), 100.0, 200.0, 3)
+        AquacultureAPI.FISH_DATA.add(AROWANA_FISH.get(), 100.0, 200.0, 3)
+        AquacultureAPI.FISH_DATA.add(AGNI_FISH.get(), 100.0, 200.0, 3)
     }
 
-    // Tools
-    @JvmField val PROMETHIUM_SLINGSHOT = REGISTER.registerKt("promethium_slingshot") {
-        ItemPromethiumSlingshot()
-    }
+    // Food
+    val SPICY_FISH_FILLET = REGISTER.registerKt("spicy_fish_fillet") { ItemSpicyFishFillet() }
 
     // Armor
     @JvmField val PROMETHIUM_INGOT = REGISTER.registerKt("promethium_ingot") {
@@ -58,36 +55,48 @@ object ModItems {
         SimpleItem(Properties().fireResistant())
     }
     @JvmField val PROMETHIUM_HELMET = REGISTER.registerKt("promethium_helmet") {
-        PromethiumArmor(ModArmorMaterials.PROMETHIUM, ArmorItem.Type.HELMET).setArmorTexture("promethium_layer_1")
+        ItemPromethiumArmor(ModArmorMaterials.PROMETHIUM, ArmorItem.Type.HELMET).setArmorTexture("promethium_layer_1")
     }
     @JvmField val PROMETHIUM_CHESTPLATE = REGISTER.registerKt("promethium_chestplate") {
-        PromethiumArmor(ModArmorMaterials.PROMETHIUM, ArmorItem.Type.CHESTPLATE).setArmorTexture("promethium_layer_1")
+        ItemPromethiumArmor(
+            ModArmorMaterials.PROMETHIUM,
+            ArmorItem.Type.CHESTPLATE
+        ).setArmorTexture("promethium_layer_1")
     }
     @JvmField val PROMETHIUM_LEGGINGS = REGISTER.registerKt("promethium_leggings") {
-        PromethiumArmor(ModArmorMaterials.PROMETHIUM, ArmorItem.Type.LEGGINGS).setArmorTexture("promethium_layer_2")
+        ItemPromethiumArmor(ModArmorMaterials.PROMETHIUM, ArmorItem.Type.LEGGINGS).setArmorTexture("promethium_layer_2")
     }
     @JvmField val PROMETHIUM_BOOTS = REGISTER.registerKt("promethium_boots") {
-        PromethiumArmor(ModArmorMaterials.PROMETHIUM, ArmorItem.Type.BOOTS).setArmorTexture("promethium_layer_1")
+        ItemPromethiumArmor(ModArmorMaterials.PROMETHIUM, ArmorItem.Type.BOOTS).setArmorTexture("promethium_layer_1")
+    }
+
+    // Slingshot
+    @JvmField val NEPTUNIUM_SLINGSHOT = REGISTER.registerKt("neptunium_slingshot") {
+        ItemNeptuniumSlingshot()
+    }
+
+    @JvmField val PROMETHIUM_SLINGSHOT = REGISTER.registerKt("promethium_slingshot") {
+        ItemPromethiumSlingshot()
+    }
+
+    @JvmField val STONE_BULLET = REGISTER.registerKt("stone_bullet") {
+        ItemBullet(Tiers.STONE, Properties()) { ModEntityTypes.STONE_BULLET.get() }
+    }
+
+    @JvmField val IRON_BULLET = REGISTER.registerKt("iron_bullet") {
+        ItemBullet(Tiers.IRON, Properties()) { ModEntityTypes.IRON_BULLET.get() }
+    }
+
+    @JvmField val NEPTUNIUM_BULLET = REGISTER.registerKt("neptunium_bullet") {
+        ItemBullet(AquacultureAPI.MATS.NEPTUNIUM, Properties()) { ModEntityTypes.NEPTUNIUM_BULLET.get() }
+    }
+
+    @JvmField val PROMETHIUM_BULLET = REGISTER.registerKt("promethium_bullet") {
+        ItemBullet(ModTiers.PROMETHIUM, Properties()) { ModEntityTypes.PROMETHIUM_BULLET.get() }
     }
 
     // other
     @JvmField val BLOCK_PROMETHEUS_BOUNTY = REGISTER.registerKt("prometheus_bounty") {
-        BlockItemWithoutLevelRenderer(ModBlocks.PROMETHEUS_BOUNTY.get(), Item.Properties().fireResistant())
-    }
-
-    @JvmField val PROMETHIUM_BULLET = REGISTER.registerKt("promethium_bullet") {
-        ItemBullet(
-            ModTiers.PROMETHIUM,
-            Properties(),
-            { ModEntityTypes.PROMETHIUM_BULLET.get() },
-            ::EntityPromethiumBullet
-        )
-    }
-    @JvmField val STONE_BULLET = REGISTER.registerKt("stone_bullet") {
-        ItemBullet(Tiers.STONE, Properties(), { ModEntityTypes.STONE_BULLET.get() }, ::EntityBullet)
-    }
-
-    @JvmField val IRON_BULLET = REGISTER.registerKt("iron_bullet") {
-        ItemBullet(Tiers.IRON, Properties(), { ModEntityTypes.IRON_BULLET.get() }, ::EntityBullet)
+        BlockItemWithoutLevelRenderer(ModBlocks.PROMETHEUS_BOUNTY.get(), Properties().fireResistant())
     }
 }
