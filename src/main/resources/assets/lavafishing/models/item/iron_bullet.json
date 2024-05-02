@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "lavafishing:item/neptunium_slingshot_pulling_2"
+    "layer0": "lavafishing:item/iron_bullet"
   }
 }
