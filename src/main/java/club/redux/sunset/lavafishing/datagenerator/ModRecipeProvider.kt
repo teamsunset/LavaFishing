@@ -53,33 +53,34 @@ class ModRecipeProvider(pOutput: PackOutput) : RecipeProvider(pOutput) {
 
     private fun buildArmors(pWriter: Consumer<FinishedRecipe>) {
         val category = RecipeCategory.COMBAT
-        val armorPattern = { itemLike: ItemLike ->
+        val promethiumArmorPattern = { itemLike: ItemLike ->
             ShapedRecipeBuilder.shaped(category, itemLike)
                 .define('#', ModItems.PROMETHIUM_INGOT.get())
                 .unlockedBy("has_item", has(ModItems.PROMETHIUM_INGOT.get()))
         }
 
-        armorPattern(ModItems.PROMETHIUM_HELMET.get())
+        promethiumArmorPattern(ModItems.PROMETHIUM_HELMET.get())
             .pattern("###")
             .pattern("# #")
             .save(pWriter)
-        armorPattern(ModItems.PROMETHIUM_CHESTPLATE.get())
+        promethiumArmorPattern(ModItems.PROMETHIUM_CHESTPLATE.get())
             .pattern("# #")
             .pattern("###")
             .pattern("###")
             .save(pWriter)
-        armorPattern(ModItems.PROMETHIUM_LEGGINGS.get())
+        promethiumArmorPattern(ModItems.PROMETHIUM_LEGGINGS.get())
             .pattern("###")
             .pattern("# #")
             .pattern("# #")
             .save(pWriter)
-        armorPattern(ModItems.PROMETHIUM_BOOTS.get())
+        promethiumArmorPattern(ModItems.PROMETHIUM_BOOTS.get())
             .pattern("# #")
             .pattern("# #")
             .save(pWriter)
 
         smeltingPattern(
-            category, ModItems.PROMETHIUM_NUGGET.get(), listOf(
+            category, ModItems.PROMETHIUM_NUGGET.get(),
+            listOf(
                 ModItems.PROMETHIUM_HELMET.get(),
                 ModItems.PROMETHIUM_CHESTPLATE.get(),
                 ModItems.PROMETHIUM_LEGGINGS.get(),
