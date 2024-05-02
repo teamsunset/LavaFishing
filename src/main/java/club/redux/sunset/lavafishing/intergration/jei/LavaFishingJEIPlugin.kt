@@ -1,4 +1,4 @@
-package club.redux.sunset.lavafishing.jei
+package club.redux.sunset.lavafishing.intergration.jei
 
 import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import mezz.jei.api.IModPlugin

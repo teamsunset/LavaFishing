@@ -16,6 +16,7 @@ import club.redux.sunset.lavafishing.util.registerKt
 import com.teammetallurgy.aquaculture.api.AquacultureAPI
 import com.teammetallurgy.aquaculture.item.SimpleItem
 import net.minecraft.world.item.ArmorItem
+import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item.Properties
 import net.minecraft.world.item.Tiers
 import net.minecraftforge.registries.ForgeRegistries
@@ -96,7 +97,11 @@ object ModItems {
     }
 
     // other
-    @JvmField val BLOCK_PROMETHEUS_BOUNTY = REGISTER.registerKt("prometheus_bounty") {
+    @JvmField val PROMETHIUM_BLOCK = REGISTER.registerKt("promethium_block") {
+        BlockItem(ModBlocks.PROMETHIUM_BLOCK.get(), Properties().fireResistant())
+    }
+
+    @JvmField val PROMETHEUS_BOUNTY = REGISTER.registerKt("prometheus_bounty") {
         BlockItemWithoutLevelRenderer(ModBlocks.PROMETHEUS_BOUNTY.get(), Properties().fireResistant())
     }
 }
