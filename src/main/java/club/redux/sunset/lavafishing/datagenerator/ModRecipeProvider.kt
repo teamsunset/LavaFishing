@@ -107,5 +107,12 @@ class ModRecipeProvider(pOutput: PackOutput) : RecipeProvider(pOutput) {
             .requires(Items.PAPER)
             .unlockedBy("has_item", has(ModItems.PROMETHIUM_NUGGET.get()))
             .save(pWriter)
+        ShapedRecipeBuilder.shaped(category, ModItems.PROMETHIUM_BLOCK.get())
+            .define('#', ModItems.PROMETHIUM_INGOT.get())
+            .pattern("###")
+            .pattern("###")
+            .pattern("###")
+            .unlockedBy("has_item", has(ModItems.PROMETHIUM_INGOT.get()))
+            .save(pWriter)
     }
 }
