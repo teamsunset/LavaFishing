@@ -17,7 +17,7 @@ enum class ModTiers(
     private val tag: TagKey<Block>?,
 ) : Tier {
 
-    OBSIDIAN(2, 1500, 7.0f, 2.5f, 9, { Ingredient.of(Items.OBSIDIAN) }, null),
+    OBSIDIAN(2, 1500, 7.0f, 2.0f, 9, { Ingredient.of(Items.OBSIDIAN) }, null),
     PROMETHIUM(4, 2000, 10.0f, 4.0f, 15, { Ingredient.of(ModItems.PROMETHIUM_INGOT.get()) }, null);
 
     override fun getUses() = this.maxUses
@@ -27,6 +27,6 @@ enum class ModTiers(
     override fun getRepairIngredient() = this.repairIngredientSupplier()
     override fun getTag() = this.tag
 
-    @Deprecated("Use getLevel()", ReplaceWith("getLevel()"))
+    @Deprecated("")
     override fun getLevel() = this.level
 }
