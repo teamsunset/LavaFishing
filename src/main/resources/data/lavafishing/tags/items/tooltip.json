@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "aquaculture:double_obsidian_hook",
+    "aquaculture:glowstone_hook",
+    "aquaculture:quartz_hook",
+    "aquaculture:soul_sand_hook",
+    "aquaculture:obsidian_note_hook",
+    "lavafishing:promethium_slingshot",
+    "lavafishing:promethium_bullet"
+  ]
+}

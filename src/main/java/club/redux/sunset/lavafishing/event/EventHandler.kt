@@ -32,6 +32,7 @@ import net.minecraftforge.event.entity.EntityJoinLevelEvent
 import net.minecraftforge.event.entity.living.LivingAttackEvent
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent
+import net.minecraftforge.event.entity.player.ItemTooltipEvent
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
@@ -40,8 +41,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
 import java.util.concurrent.CompletableFuture
 
 class EventHandler {
-    @EventBusSubscriber
-    object ForgeEvent {
+    @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.FORGE)
+    object ForgeEventBoth {
         @SubscribeEvent
         fun onEntityDamage(event: LivingDamageEvent) {
             EffectEndlessFlame.onEntityDamage(event)
@@ -79,6 +80,14 @@ class EventHandler {
         }
     }
 
+    @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.FORGE, value = [Dist.CLIENT])
+    object ForgeEventClient {
+        @SubscribeEvent
+        fun onItemTooltip(event: ItemTooltipEvent) {
+            ModTooltip.onItemTooltip(event)
+        }
+    }
+
     @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
     object ModEventBoth {
         @SubscribeEvent
@@ -107,6 +116,7 @@ class EventHandler {
 
     @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = [Dist.CLIENT])
     object ModEventClient {
+
         @SubscribeEvent
         fun onClientSetup(event: FMLClientSetupEvent) {
             ItemSlingshot.onClientSetup(event)
