@@ -14,6 +14,7 @@ import club.redux.sunset.lavafishing.misc.ModTiers
 import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt
 import com.teammetallurgy.aquaculture.api.AquacultureAPI
+import com.teammetallurgy.aquaculture.item.FishItem.SMALL_FISH_RAW
 import com.teammetallurgy.aquaculture.item.SimpleItem
 import net.minecraft.world.item.ArmorItem
 import net.minecraft.world.item.BlockItem
@@ -27,22 +28,24 @@ object ModItems {
     @JvmField val OBSIDIAN_FISHING_ROD = REGISTER.registerKt("obsidian_fishing_rod") { ItemObsidianFishingRod() }
 
     // Fish
-    @JvmField val QUARTZ_FISH = REGISTER.registerKt("quartz_fish") { ItemQuartzFish() }
     @JvmField val FLAME_SQUAT_LOBSTER = REGISTER.registerKt("flame_squat_lobster") { ItemFlameSquatLobster() }
     @JvmField val OBSIDIAN_SWORD_FISH = REGISTER.registerKt("obsidian_sword_fish") { ItemObsidianSwordFish() }
     @JvmField val STEAM_FLYING_FISH = REGISTER.registerKt("steam_flying_fish") { ItemSteamFlyingFish() }
-    @JvmField val AROWANA_FISH = REGISTER.registerKt("arowana_fish") { ItemArowanaFish() }
     @JvmField val AGNI_FISH = REGISTER.registerKt("agni_fish") { ItemAgniFish() }
+
+    @JvmField val AROWANA_FISH = REGISTER.registerKt("arowana_fish") { ItemLavaFish() }
+    @JvmField val QUARTZ_FISH = REGISTER.registerKt("quartz_fish") { ItemLavaFish() }
+    @JvmField val SCALY_FOOT_SNAIL = REGISTER.registerKt("scaly_foot_snail") { ItemLavaFish(SMALL_FISH_RAW) }
+    @JvmField val YETI_CRAB = REGISTER.registerKt("yeti_crab") { ItemLavaFish(SMALL_FISH_RAW) }
+    @JvmField val LAVA_LAMPREY = REGISTER.registerKt("lava_lamprey") { ItemLavaFish() }
+
 
     // FISH_DATA
     // TODO
     fun registerFishData() {
-        AquacultureAPI.FISH_DATA.add(QUARTZ_FISH.get(), 100.0, 200.0, 4)
-        AquacultureAPI.FISH_DATA.add(FLAME_SQUAT_LOBSTER.get(), 100.0, 200.0, 2)
-        AquacultureAPI.FISH_DATA.add(OBSIDIAN_SWORD_FISH.get(), 100.0, 200.0, 3)
-        AquacultureAPI.FISH_DATA.add(STEAM_FLYING_FISH.get(), 100.0, 200.0, 3)
-        AquacultureAPI.FISH_DATA.add(AROWANA_FISH.get(), 100.0, 200.0, 3)
-        AquacultureAPI.FISH_DATA.add(AGNI_FISH.get(), 100.0, 200.0, 3)
+        REGISTER.entries.map { it.get() }.filterIsInstance<ItemLavaFish>().forEach {
+            AquacultureAPI.FISH_DATA.add(it, 100.0, 200.0, it.filletAmount)
+        }
     }
 
     // Food

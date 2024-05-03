@@ -8,6 +8,7 @@ import club.redux.sunset.lavafishing.client.model.ModelBullet
 import club.redux.sunset.lavafishing.client.particle.ParticleFirePunch
 import club.redux.sunset.lavafishing.client.renderer.blockentity.BlockEntityRendererPrometheusBounty
 import club.redux.sunset.lavafishing.client.renderer.entity.EntityRendererBullet
+import club.redux.sunset.lavafishing.datagenerator.ModItemModelProvider
 import club.redux.sunset.lavafishing.datagenerator.ModItemTagProvider
 import club.redux.sunset.lavafishing.datagenerator.ModRecipeProvider
 import club.redux.sunset.lavafishing.effect.EffectEndlessFlame
@@ -18,6 +19,7 @@ import club.redux.sunset.lavafishing.loot.LootTableHandler
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModParticleTypes
 import club.redux.sunset.lavafishing.registry.ModPotions
+import com.teammetallurgy.aquaculture.client.ClientHandler
 import net.minecraft.client.Minecraft
 import net.minecraft.client.particle.SpriteSet
 import net.minecraft.data.tags.TagsProvider
@@ -110,6 +112,7 @@ class EventHandler {
                         event.existingFileHelper
                     )
                 )
+                addProvider(event.includeClient(), ModItemModelProvider(packOutput, event.existingFileHelper))
             }
         }
     }
@@ -120,6 +123,7 @@ class EventHandler {
         @SubscribeEvent
         fun onClientSetup(event: FMLClientSetupEvent) {
             ItemSlingshot.onClientSetup(event)
+            event.enqueueWork { ClientHandler.registerFishingRodModelProperties(ModItems.OBSIDIAN_FISHING_ROD.get()) }
         }
 
         @SubscribeEvent
