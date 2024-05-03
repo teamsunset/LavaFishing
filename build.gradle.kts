@@ -170,6 +170,10 @@ val createRunDataAny = { name: String ->
         group = "forgegradle runs"
         dependsOn("runData")
         finalizedBy("run$name")
+
+        doLast {
+            tasks.getByName("prepareRun${name}Compile").outputs.upToDateWhen { false }
+        }
     }
 }
 
