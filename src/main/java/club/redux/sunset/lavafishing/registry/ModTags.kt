@@ -17,7 +17,7 @@ object ModTags {
     }
 
     object Items {
-        @JvmField val TEST_TAG = tag("test")
+        @JvmField val TOOLTIP = tag("tooltip")
 
         private fun tag(name: String): TagKey<Item> {
             return ItemTags.create(ModResourceLocation(name))

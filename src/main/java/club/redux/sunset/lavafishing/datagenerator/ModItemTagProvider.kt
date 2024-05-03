@@ -1,8 +1,6 @@
 package club.redux.sunset.lavafishing.datagenerator
 
 import club.redux.sunset.lavafishing.BuildConstants
-import club.redux.sunset.lavafishing.registry.ModItems
-import club.redux.sunset.lavafishing.registry.ModTags
 import net.minecraft.core.HolderLookup
 import net.minecraft.data.PackOutput
 import net.minecraft.data.tags.ItemTagsProvider
@@ -17,6 +15,5 @@ class ModItemTagProvider(
     existingFileHelper: ExistingFileHelper,
 ) : ItemTagsProvider(packOutput, lookupProvider, blockTags, BuildConstants.MOD_ID, existingFileHelper) {
     override fun addTags(pProvider: HolderLookup.Provider) {
-        this.tag(ModTags.Items.TEST_TAG).add(ModItems.PROMETHIUM_BULLET.get())
     }
 }
