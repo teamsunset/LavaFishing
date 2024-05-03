@@ -1,6 +1,7 @@
 package club.redux.sunset.lavafishing.datagenerator
 
 import club.redux.sunset.lavafishing.registry.ModItems
+import com.teammetallurgy.aquaculture.init.AquaItems
 import net.minecraft.advancements.critereon.ItemPredicate
 import net.minecraft.data.PackOutput
 import net.minecraft.data.recipes.*
@@ -113,11 +114,22 @@ class ModRecipeProvider(pOutput: PackOutput) : RecipeProvider(pOutput) {
             .requires(ModItems.PROMETHIUM_BLOCK.get())
             .unlockedBy("has_item", has(ModItems.PROMETHIUM_INGOT.get()))
             .save(pWriter, ModItems.PROMETHIUM_INGOT.get().descriptionId + "_from_block")
-        ShapelessRecipeBuilder.shapeless(category, ModItems.PROMETHIUM_BULLET.get())
-            .requires(ModItems.PROMETHIUM_NUGGET.get())
+
+        val bulletPattern = { itemLike: ItemLike, ingredient: ItemLike ->
+            ShapelessRecipeBuilder.shapeless(category, itemLike)
+                .requires(ingredient)
+                .requires(Items.CLAY_BALL)
+                .unlockedBy("has_item", has(ingredient))
+        }
+        bulletPattern(ModItems.STONE_BULLET.get(), Items.STONE_BUTTON)
+            .save(pWriter)
+        bulletPattern(ModItems.IRON_BULLET.get(), Items.IRON_NUGGET)
+            .save(pWriter)
+        bulletPattern(ModItems.NEPTUNIUM_BULLET.get(), AquaItems.NEPTUNIUM_NUGGET.get())
+            .requires(Items.PRISMARINE_CRYSTALS)
+            .save(pWriter)
+        bulletPattern(ModItems.PROMETHIUM_BULLET.get(), ModItems.PROMETHIUM_NUGGET.get())
             .requires(Items.GUNPOWDER)
-            .requires(Items.PAPER)
-            .unlockedBy("has_item", has(ModItems.PROMETHIUM_NUGGET.get()))
             .save(pWriter)
     }
 }
