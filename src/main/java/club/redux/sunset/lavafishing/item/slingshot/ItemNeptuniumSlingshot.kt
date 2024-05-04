@@ -5,7 +5,7 @@ import club.redux.sunset.lavafishing.misc.ModTiers
 
 class ItemNeptuniumSlingshot : ItemSlingshot(
     ModTiers.PROMETHIUM,
-    Properties().fireResistant()
+    Properties()
 ) {
 
     override fun customBullet(bullet: EntityBullet): EntityBullet {
