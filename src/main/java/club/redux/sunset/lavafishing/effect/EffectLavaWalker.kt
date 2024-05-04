@@ -27,34 +27,16 @@ class EffectLavaWalker : MobEffect(MobEffectCategory.BENEFICIAL, 0xCC3300) {
             } else if (level.getFluidState(onPos).`is`(FluidTags.LAVA)) {
                 if (level is ServerLevel) {
                     level.sendParticles(
-                        ParticleTypes.WHITE_ASH,
-                        pos.x(),
-                        pos.y() + 0.1,
-                        pos.z(),
-                        10,
-                        0.2,
-                        0.1,
-                        0.2,
-                        1.5
+                        ParticleTypes.WHITE_ASH, pos.x(), pos.y() + 0.1, pos.z(), 10, 0.2, 0.1, 0.2, 1.5
                     )
                 }
 
                 pLivingEntity.setDeltaMovement(movement.x(), max(movement.y(), 0.0), movement.z())
                 pLivingEntity.setOnGround(true)
-            } else if (pLivingEntity.level().getFluidState(futureBlockPos)
-                    .`is`(FluidTags.LAVA) && movement.y() > -0.8
-            ) {
+            } else if (level.getFluidState(futureBlockPos).`is`(FluidTags.LAVA) && movement.y() > -0.8) {
                 if (level is ServerLevel) {
                     level.sendParticles(
-                        ParticleTypes.WHITE_ASH,
-                        pos.x(),
-                        pos.y() + 0.1,
-                        pos.z(),
-                        10,
-                        0.2,
-                        0.1,
-                        0.2,
-                        1.5
+                        ParticleTypes.WHITE_ASH, pos.x(), pos.y() + 0.1, pos.z(), 10, 0.2, 0.1, 0.2, 1.5
                     )
                 }
 

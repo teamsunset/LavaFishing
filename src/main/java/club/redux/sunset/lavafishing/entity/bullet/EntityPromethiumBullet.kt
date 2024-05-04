@@ -24,14 +24,14 @@ class EntityPromethiumBullet : EntityBullet {
 
     constructor(
         entityType: EntityType<out EntityBullet>,
-        owner: LivingEntity,
         level: Level,
-    ) : super(entityType, owner, level)
+    ) : super(entityType, level)
 
     constructor(
         entityType: EntityType<out EntityBullet>,
+        owner: LivingEntity,
         level: Level,
-    ) : super(entityType, level)
+    ) : super(entityType, owner, level)
 
     constructor(
         entityType: EntityType<out EntityBullet>,

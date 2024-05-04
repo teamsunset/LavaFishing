@@ -39,12 +39,6 @@ class ItemPromethiumArmor(
     }
 
     companion object {
-        private val damageSources = listOf(
-            DamageTypes.LAVA,
-            DamageTypes.IN_FIRE,
-            DamageTypes.ON_FIRE
-        )
-
         fun onLivingTick(event: LivingTickEvent) {
             val level = event.entity.level()
             for (itemStack in event.entity.armorSlots) {
@@ -53,17 +47,7 @@ class ItemPromethiumArmor(
                     val applyEffect = { effect: MobEffect ->
                         event.entity.addEffect(MobEffectInstance(effect, 20, 0, false, false, false))
                     }
-
-                    if (item.type == Type.CHESTPLATE) {
-                        if (event.entity.isInLava) {
-                            event.entity.heal(0.06f)
-                        } else if (level.getBlockState(event.entity.blockPosition()).`is`(Blocks.FIRE)) {
-                            event.entity.heal(0.04f)
-                        } else if (event.entity.isOnFire) {
-                            event.entity.heal(0.02f)
-                        }
-                    }
-
+                    
                     if (event.entity.isInLava || level.getBlockState(event.entity.onPos).`is`(Blocks.LAVA)) {
                         if (item.type == Type.LEGGINGS) {
                             applyEffect(MobEffects.MOVEMENT_SPEED)
@@ -77,7 +61,11 @@ class ItemPromethiumArmor(
 
         fun onEntityDamage(event: LivingDamageEvent) {
             val damage = event.amount
-            if (damageSources.any { event.source.`is`(it) }) {
+            if (
+                event.source.`is`(DamageTypes.LAVA) ||
+                event.source.`is`(DamageTypes.IN_FIRE) ||
+                event.source.`is`(DamageTypes.ON_FIRE)
+            ) {
                 var promethiumArmorCount = 0
                 for (itemStack in event.entity.armorSlots) {
                     val item = itemStack.item
@@ -90,10 +78,26 @@ class ItemPromethiumArmor(
         }
 
         fun onEntityAttack(event: LivingAttackEvent) {
-            if (damageSources.any { event.source.`is`(it) }) {
-                if (event.entity.armorSlots.count { it.item is ItemPromethiumArmor } == 4) {
+            val armorItems = event.entity.armorSlots.map { it.item }.filterIsInstance<ItemPromethiumArmor>()
+
+            if (
+                event.source.`is`(DamageTypes.LAVA) ||
+                event.source.`is`(DamageTypes.IN_FIRE) ||
+                event.source.`is`(DamageTypes.ON_FIRE)
+            ) {
+                if (armorItems.any { it.type == Type.CHESTPLATE }) {
+                    event.entity.heal(0.04f)
+                }
+                if (armorItems.count() == 4) {
                     event.isCanceled = true
                 }
+            }
+
+            if (event.source.`is`(DamageTypes.HOT_FLOOR) && armorItems.any { it.type == Type.BOOTS }) {
+                if (armorItems.any { it.type == Type.CHESTPLATE }) {
+                    event.entity.heal(0.04f)
+                }
+                event.isCanceled = true
             }
         }
     }
