@@ -47,3 +47,13 @@ jobs:
           body: ''
           files: |
             ./build/libs/*-all.jar
+
+      - name: Upload to Modrinth
+        uses: cloudnode-pro/modrinth-publish@1.0.0
+        with:
+          token: '${{ secrets.MODRINTH_TOKEN }}'
+          project: lavafishing
+          file: './build/libs/*-all.jar'
+          changelog: '${{ github.event.release.body }}'
+          loaders: 'forge'
+
