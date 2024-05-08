@@ -56,7 +56,6 @@ jobs:
           api_token: ${{ secrets.MODRINTH_TOKEN }}
           project_id: lavafishing
           version_number: ${{ env.VERSION }}
-          files: |
-            ./build/libs/*-all.jar
+          files: "[\"./build/libs/lavafishing-${{env.VERSION}}-all.jar\"]"
           game_versions: ${{ env.MINECRAFT_VERSION }}
 
