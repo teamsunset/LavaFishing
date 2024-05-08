@@ -54,7 +54,7 @@ jobs:
         uses: benwoo1110/modrinth-upload-action@main
         with:
           api_token: ${{ secrets.MODRINTH_TOKEN }}
-          project_id: lavafishing
+          project_id: puTJzCb0
           version_number: ${{ env.VERSION }}
           files: '["${{ github.workspace }}/build/libs/lavafishing-${{env.VERSION}}-all.jar"]'
           game_versions: ${{ env.MINECRAFT_VERSION }}
