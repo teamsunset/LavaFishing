@@ -61,7 +61,7 @@ jobs:
           game_versions: ${{ env.MINECRAFT_VERSION }}
           version_number: ${{ env.VERSION }}
           files: |
-            /build/libs/*-all.jar
+            ./build/libs/*-all.jar
           dependencies: >
             [
               {
