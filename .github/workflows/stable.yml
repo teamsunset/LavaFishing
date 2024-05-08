@@ -46,7 +46,7 @@ jobs:
           tag_name: ${{ env.VERSION }}
           name: ${{ env.VERSION }}
           prerelease: false
-          body: ''
+          body: ${{ github.event.head_commit.message }}
           files: |
             ./build/libs/*-all.jar
 
