@@ -53,11 +53,11 @@ jobs:
       - name: Modrinth Release
         uses: benwoo1110/modrinth-upload-action@main
         with:
-          name: ${{ env.VERSION }}
           api_token: ${{ secrets.MODRINTH_TOKEN }}
+          name: ${{ env.VERSION }}
           project_id: puTJzCb0
+          loaders: forge
+          game_versions: ${{ env.MINECRAFT_VERSION }}
           version_number: ${{ env.VERSION }}
           files: '["${{ github.workspace }}/build/libs/lavafishing-${{env.VERSION}}-all.jar"]'
-          game_versions: ${{ env.MINECRAFT_VERSION }}
-          loaders: forge
 
