@@ -53,6 +53,7 @@ jobs:
       - name: Modrinth Release
         uses: benwoo1110/modrinth-upload-action@main
         with:
+          name: ${{ env.VERSION }}
           api_token: ${{ secrets.MODRINTH_TOKEN }}
           project_id: puTJzCb0
           version_number: ${{ env.VERSION }}
