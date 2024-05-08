@@ -63,14 +63,5 @@ jobs:
           version_type: beta
           files: |
             ./build/libs/*-all.jar
-          dependencies: >
-            [
-              {
-                "project_id": "Vl1uNAuy",
-                "dependency_type": "required"
-              },{
-                "project_id": "ordsPcFz",
-                "dependency_type": "required"
-              }
-            ]
+          dependencies: Vl1uNAuy:required, ordsPcFz:required
 
