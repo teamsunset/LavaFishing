@@ -36,7 +36,6 @@ jobs:
       - name: Extract Version
         run: |
           echo "VERSION=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')" >> $GITHUB_ENV
-          echo "MINECRAFT_VERSION=$(grep minecraftVersion= gradle.properties | cut -d'=' -f2)" >> $GITHUB_ENV
 
       - name: Create GitHub Release
         uses: andelf/nightly-release@main
@@ -58,7 +57,7 @@ jobs:
           name: ${{ env.VERSION }}
           project_id: puTJzCb0
           loaders: forge
-          game_versions: ${{ env.MINECRAFT_VERSION }}
+          game_versions: 1.20.1
           version_number: ${{ env.VERSION }}
           changelog: ${{ github.event.head_commit.message }}
           version_type: beta
