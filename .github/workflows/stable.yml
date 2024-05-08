@@ -33,8 +33,10 @@ jobs:
           chmod +x ./gradlew
           ./gradlew build
 
-      - name: Extract version
-        run: echo "VERSION=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')" >> $GITHUB_ENV
+      - name: Extract Version
+        run: |
+          echo "VERSION=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')" >> $GITHUB_ENV
+          echo "MINECRAFT_VERSION=$(grep minecraftVersion gradle.properties | cut -d'=' -f2)" >> $GITHUB_ENV
 
       - name: Create GitHub Release
         uses: andelf/nightly-release@main
@@ -48,4 +50,13 @@ jobs:
           files: |
             ./build/libs/*-all.jar
 
+      - name: Modrinth Release
+        uses: benwoo1110/modrinth-upload-action@main
+        with:
+          api_token: ${{ secrets.MODRINTH_TOKEN }}
+          project_id: lavafishing
+          version_number: ${{ env.VERSION }}
+          files: |
+            ./build/libs/*-all.jar
+          game_version: ${{ env.MINECRAFT_VERSION }}
 
