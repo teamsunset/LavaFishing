@@ -34,9 +34,7 @@ jobs:
           ./gradlew build
 
       - name: Extract Version
-        run: |
-          echo "VERSION=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')" >> $GITHUB_ENV
-          echo "MINECRAFT_VERSION=$(grep minecraftVersion gradle.properties | cut -d'=' -f2)" >> $GITHUB_ENV
+        run: echo "VERSION=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')" >> $GITHUB_ENV
 
       - name: Create GitHub Release
         uses: andelf/nightly-release@main
@@ -49,6 +47,9 @@ jobs:
           body: ''
           files: |
             ./build/libs/*-all.jar
+
+      - name: Extract Minecraft Version
+        run: echo "MINECRAFT_VERSION=$(grep minecraftVersion gradle.properties | cut -d'=' -f2)" >> $GITHUB_ENV
 
       - name: Modrinth Release
         uses: benwoo1110/modrinth-upload-action@main
