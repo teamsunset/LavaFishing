@@ -60,4 +60,14 @@ jobs:
           game_versions: ${{ env.MINECRAFT_VERSION }}
           version_number: ${{ env.VERSION }}
           files: '["${{ github.workspace }}/build/libs/lavafishing-${{env.VERSION}}-all.jar"]'
+          dependencies: >
+            [
+              {
+                "project_id": "Vl1uNAuy",
+                "dependency_type": "required"
+              },{
+                "project_id": "ordsPcFz",
+                "dependency_type": "required"
+              }
+            ]
 
