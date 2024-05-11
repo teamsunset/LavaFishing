@@ -6,7 +6,7 @@ import club.redux.sunset.lavafishing.item.ItemPromethiumArmor
 import club.redux.sunset.lavafishing.item.block.BlockItemWithoutLevelRenderer
 import club.redux.sunset.lavafishing.item.bullet.ItemBullet
 import club.redux.sunset.lavafishing.item.cuisine.ItemSpicyFishFillet
-import club.redux.sunset.lavafishing.item.fishes.*
+import club.redux.sunset.lavafishing.item.fish.*
 import club.redux.sunset.lavafishing.item.slingshot.ItemNeptuniumSlingshot
 import club.redux.sunset.lavafishing.item.slingshot.ItemPromethiumSlingshot
 import club.redux.sunset.lavafishing.misc.ModArmorMaterials
