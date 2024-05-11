@@ -5,17 +5,18 @@
       "rolls": 1.0,
       "entries": [
         {
+          "type": "minecraft:loot_table",
+          "weight": 30,
+          "name": "lavafishing:gameplay/fishing/lava/treasure"
+        },
+        {
           "type": "minecraft:item",
-          "weight": 1,
+          "weight": 10,
           "name": "minecraft:netherite_scrap"
         },
         {
           "type": "minecraft:item",
-          "weight": 1,
-          "name": "lavafishing:promethium_nugget"
-        },
-        {
-          "type": "minecraft:item",
+          "weight": 5,
           "functions": [
             {
               "function": "minecraft:set_contents",
@@ -33,5 +34,5 @@
       ]
     }
   ],
-  "random_sequence": "aquaculture:gameplay/fishing/nether/treasure"
+  "random_sequence": "lavafishing:gameplay/fishing/nether/treasure"
 }

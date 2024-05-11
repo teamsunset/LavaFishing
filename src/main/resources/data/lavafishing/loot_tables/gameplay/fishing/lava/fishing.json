@@ -8,22 +8,22 @@
           "type": "minecraft:loot_table",
           "weight": 10,
           "quality": -2,
-          "name": "aquaculture:gameplay/fishing/lava/junk"
+          "name": "lavafishing:gameplay/fishing/lava/junk"
         },
         {
           "type": "minecraft:loot_table",
           "weight": 5,
           "quality": 2,
-          "name": "aquaculture:gameplay/fishing/lava/treasure"
+          "name": "lavafishing:gameplay/fishing/lava/treasure"
         },
         {
           "type": "minecraft:loot_table",
           "weight": 85,
           "quality": -1,
-          "name": "aquaculture:gameplay/fishing/lava/fish"
+          "name": "lavafishing:gameplay/fishing/lava/fish"
         }
       ]
     }
   ],
-  "random_sequence": "aquaculture:gameplay/fishing/lava/fishing"
+  "random_sequence": "lavafishing:gameplay/fishing/lava/fishing"
 }
