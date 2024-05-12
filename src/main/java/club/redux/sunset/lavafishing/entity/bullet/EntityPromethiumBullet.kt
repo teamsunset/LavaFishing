@@ -17,7 +17,6 @@ import net.minecraft.world.phys.Vec3
 class EntityPromethiumBullet : EntityBullet {
     override fun getTextureLocation() = ModResourceLocation("textures/entity/bullet/promethium_bullet.png")
 
-    var isCarriedFire = false
     var dividable = true
     var divisionTimes = 1
     var divisionNum = 3
@@ -42,12 +41,10 @@ class EntityPromethiumBullet : EntityBullet {
         dividable: Boolean = false,
         divisionNum: Int = 3,
         divisionTimes: Int = 3,
-        isCarriedFire: Boolean = false,
     ) : super(entityType, x, y, z, level) {
         this.dividable = dividable
         this.divisionNum = divisionNum
         this.divisionTimes = divisionTimes
-        this.isCarriedFire = isCarriedFire
     }
 
     private val explode = { radius: Float ->
@@ -57,7 +54,7 @@ class EntityPromethiumBullet : EntityBullet {
             this.y,
             this.z,
             radius,
-            this.isCarriedFire,
+            this.isOnFire,
             Level.ExplosionInteraction.NONE
         )
     }
@@ -70,11 +67,11 @@ class EntityPromethiumBullet : EntityBullet {
             this.level(),
             division,
             divisionNum,
-            divisionCount,
-            this.isCarriedFire
+            divisionCount
         ).also {
             it.owner = this.owner
             it.baseDamage = this.baseDamage
+            it.remainingFireTicks = this.remainingFireTicks
         }
     }
 
@@ -143,7 +140,6 @@ class EntityPromethiumBullet : EntityBullet {
     override fun attachEnchantment(stack: ItemStack) {
         super.attachEnchantment(stack)
         UtilEnchantment.hasThen(Enchantments.POWER_ARROWS, stack) { this.divisionNum += it }
-        UtilEnchantment.hasThen(Enchantments.FLAMING_ARROWS, stack) { this.isCarriedFire = true }
         UtilEnchantment.hasThen(Enchantments.MULTISHOT, stack) { this.divisionTimes = 3 }
     }
 
@@ -154,7 +150,6 @@ class EntityPromethiumBullet : EntityBullet {
         pCompound.putBoolean("dividable", this.dividable)
         pCompound.putInt("divisionNum", this.divisionNum)
         pCompound.putInt("divisionTimes", this.divisionTimes)
-        pCompound.putBoolean("isCarriedFire", this.isCarriedFire)
     }
 
     override fun readAdditionalSaveData(pCompound: CompoundTag) {
@@ -162,6 +157,5 @@ class EntityPromethiumBullet : EntityBullet {
         this.dividable = pCompound.getBoolean("dividable")
         this.divisionNum = pCompound.getInt("divisionNum")
         this.divisionTimes = pCompound.getInt("divisionTimes")
-        this.isCarriedFire = pCompound.getBoolean("isCarriedFire")
     }
 }
