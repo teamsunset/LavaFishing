@@ -1,4 +1,4 @@
-package club.redux.sunset.lavafishing.item.fishes
+package club.redux.sunset.lavafishing.item.fish
 
 import com.teammetallurgy.aquaculture.item.FishItem
 import net.minecraft.world.food.FoodProperties

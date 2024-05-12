@@ -4,9 +4,8 @@
     {
       "rolls": 1.0,
       "entries": [
-
       ]
     }
   ],
-  "random_sequence": "aquaculture:gameplay/fishing/nether/junk"
+  "random_sequence": "lavafishing:gameplay/fishing/nether/junk"
 }
