@@ -1,14 +1,15 @@
-package club.redux.sunset.lavafishing.item.fishes
+package club.redux.sunset.lavafishing.item.fish
 
-import club.redux.sunset.lavafishing.registry.ModMobEffects
 import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
-class ItemSteamFlyingFish : ItemLavaFish() {
+class ItemFlameSquatLobster : ItemLavaFish(SMALL_FISH_RAW) {
     override fun finishUsingItem(pStack: ItemStack, pLevel: Level, pLivingEntity: LivingEntity): ItemStack {
-        pLivingEntity.addEffect(MobEffectInstance(ModMobEffects.LAVA_WALKER.get(), 300))
+        pLivingEntity.addEffect(MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 400))
+        pLivingEntity.remainingFireTicks = 100
         return super.finishUsingItem(pStack, pLevel, pLivingEntity)
     }
 }

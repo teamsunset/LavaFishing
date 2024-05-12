@@ -33,8 +33,9 @@ jobs:
           chmod +x ./gradlew
           ./gradlew build
 
-      - name: Extract version
-        run: echo "VERSION=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')" >> $GITHUB_ENV
+      - name: Extract Version
+        run: |
+          echo "VERSION=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')" >> $GITHUB_ENV
 
       - name: Create GitHub Release
         uses: andelf/nightly-release@main
@@ -44,6 +45,23 @@ jobs:
           tag_name: ${{ env.VERSION }}
           name: ${{ env.VERSION }}
           prerelease: false
-          body: ''
+          body: ${{ github.event.head_commit.message }}
           files: |
             ./build/libs/*-all.jar
+
+      - name: Modrinth Release
+        uses: dsx137/modrinth-release-action@main
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        with:
+          name: ${{ env.VERSION }}
+          project_id: puTJzCb0
+          loaders: forge
+          game_versions: 1.20.1
+          version_number: ${{ env.VERSION }}
+          changelog: ${{ github.event.head_commit.message }}
+          version_type: beta
+          files: |
+            ./build/libs/*-all.jar
+          dependencies: Vl1uNAuy:required, ordsPcFz:required
+

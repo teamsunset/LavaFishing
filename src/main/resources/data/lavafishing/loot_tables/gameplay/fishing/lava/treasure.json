@@ -7,31 +7,10 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:netherite_scrap"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 1,
           "name": "lavafishing:promethium_nugget"
-        },
-        {
-          "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "minecraft:set_contents",
-              "type": "lavafishing:prometheus_bounty",
-              "entries": [
-                {
-                  "type": "minecraft:loot_table",
-                  "name": "lavafishing:box/prometheus_bounty"
-                }
-              ]
-            }
-          ],
-          "name": "lavafishing:prometheus_bounty"
         }
       ]
     }
   ],
-  "random_sequence": "aquaculture:gameplay/fishing/lava/treasure"
+  "random_sequence": "lavafishing:gameplay/fishing/lava/treasure"
 }

@@ -1,4 +1,4 @@
-package club.redux.sunset.lavafishing.item.fishes
+package club.redux.sunset.lavafishing.item.fish
 
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects

@@ -41,14 +41,20 @@ class ModRecipeProvider(pOutput: PackOutput) : RecipeProvider(pOutput) {
             .pattern("t s")
             .unlockedBy("has_item", has(Items.OBSIDIAN))
             .save(pWriter)
-        ShapedRecipeBuilder.shaped(category, ModItems.PROMETHIUM_SLINGSHOT.get())
-            .define('s', Items.STRING)
-            .define('p', ModItems.PROMETHIUM_INGOT.get())
-            .define('l', Items.LEATHER)
-            .pattern("psp")
-            .pattern("lpl")
-            .pattern("lpl")
-            .unlockedBy("has_item", has(ModItems.PROMETHIUM_INGOT.get()))
+
+        val slingshotPattern = { result: ItemLike, ingredient: ItemLike ->
+            ShapedRecipeBuilder.shaped(category, result)
+                .define('s', Items.STRING)
+                .define('l', Items.LEATHER)
+                .define('i', ingredient)
+                .pattern("isi")
+                .pattern(" l ")
+                .pattern(" i ")
+                .unlockedBy("has_item", has(ingredient))
+        }
+        slingshotPattern(ModItems.NEPTUNIUM_SLINGSHOT.get(), AquaItems.NEPTUNIUM_INGOT.get())
+            .save(pWriter)
+        slingshotPattern(ModItems.PROMETHIUM_SLINGSHOT.get(), ModItems.PROMETHIUM_INGOT.get())
             .save(pWriter)
     }
 

@@ -5,37 +5,27 @@
       "rolls": 1.0,
       "entries": [
         {
-          "type": "minecraft:item",
-          "weight": 50,
-          "name": "lavafishing:quartz_fish"
+          "type": "minecraft:loot_table",
+          "weight": 15,
+          "name": "lavafishing:gameplay/fishing/lava/fish"
         },
         {
           "type": "minecraft:item",
-          "weight": 10,
-          "name": "lavafishing:flame_squat_lobster"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 10,
-          "name": "lavafishing:obsidian_sword_fish"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 10,
+          "weight": 5,
           "name": "lavafishing:steam_flying_fish"
         },
         {
           "type": "minecraft:item",
-          "weight": 10,
-          "name": "lavafishing:arowana_fish"
+          "weight": 5,
+          "name": "lavafishing:agni_fish"
         },
         {
           "type": "minecraft:item",
-          "weight": 10,
-          "name": "lavafishing:agni_fish"
+          "weight": 5,
+          "name": "lavafishing:quartz_fish"
         }
       ]
     }
   ],
-  "random_sequence": "aquaculture:gameplay/fishing/nether/fish"
+  "random_sequence": "lavafishing:gameplay/fishing/nether/fish"
 }

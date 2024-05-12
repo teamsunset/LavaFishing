@@ -1,7 +1,7 @@
 package club.redux.sunset.lavafishing.datagenerator
 
 import club.redux.sunset.lavafishing.BuildConstants
-import club.redux.sunset.lavafishing.item.fishes.ItemLavaFish
+import club.redux.sunset.lavafishing.item.fish.ItemLavaFish
 import club.redux.sunset.lavafishing.registry.ModItems
 import net.minecraft.core.HolderLookup
 import net.minecraft.data.PackOutput
