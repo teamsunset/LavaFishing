@@ -40,7 +40,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
-import org.slf4j.LoggerFactory
 import java.util.concurrent.CompletableFuture
 
 class EventHandler {
@@ -116,7 +115,6 @@ class EventHandler {
                 )
                 addProvider(event.includeClient(), ModItemModelProvider(packOutput, event.existingFileHelper))
             }
-            LoggerFactory.getLogger(this::class.java.name).info("hello this is a test")
         }
     }
 

@@ -4,6 +4,7 @@ import club.redux.sunset.lavafishing.BuildConstants
 import net.minecraft.data.PackOutput
 import net.minecraftforge.client.model.generators.ItemModelProvider
 import net.minecraftforge.common.data.ExistingFileHelper
+import org.slf4j.LoggerFactory
 
 class ModItemModelProvider(
     packOutput: PackOutput,
@@ -19,7 +20,7 @@ class ModItemModelProvider(
             withExistingParent("item/$itemId", "item/generated")
                 .texture("layer0", "item/$itemId")
         }
-
+        LoggerFactory.getLogger("ModItemModelProvider").info("hello Registering models...")
         // Fish
         register("agni_fish")
         register("obsidian_sword_fish")
