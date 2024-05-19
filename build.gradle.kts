@@ -165,22 +165,6 @@ minecraft {
 
 sourceSets["main"].resources.srcDirs("src/generated/resources")
 
-val createRunDataAny = { name: String ->
-    tasks.create("runData$name") {
-        group = "forgegradle runs"
-        dependsOn("runData")
-        finalizedBy("run$name")
-
-        doLast {
-            tasks.getByName("prepareRun${name}Compile").outputs.upToDateWhen { false }
-        }
-    }
-}
-
-val runDataClient = createRunDataAny("Client")
-val runDataServer = createRunDataAny("Server")
-val runDataGameTestServer = createRunDataAny("GameTestServer")
-
 val props = mapOf(
     "minecraft_version" to minecraftVersion,
     "minecraft_version_range" to minecraftVersionRange,
@@ -213,6 +197,7 @@ sourceSets["main"].java.srcDirs(generateTemplates.map { it.destinationDir })
 rootProject.idea.project.settings.taskTriggers.afterSync(generateTemplates)
 project.eclipse.synchronizationTasks(generateTemplates)
 
+// 同一流程中只有一个processResources任务，所以runData必须和其他任务分开执行
 tasks.processResources {
     val targets = listOf("META-INF/mods.toml", "pack.mcmeta")
 
@@ -258,7 +243,6 @@ val reobfShadowJar = reobf.create("shadowJar") {
 }
 
 tasks.jar {
-    dependsOn("runData")
     doFirst {
         val modToml = file("build/resources/main/META-INF/mods.toml")
         modToml.writeText(
