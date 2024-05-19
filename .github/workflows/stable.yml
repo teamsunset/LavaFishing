@@ -33,6 +33,10 @@ jobs:
           chmod +x ./gradlew
           ./gradlew build
 
+      - name: Debug Check
+        run: |
+          ls build/resources/main/assets/lavafishing/models/item
+
       - name: Extract Version
         run: |
           echo "VERSION=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')" >> $GITHUB_ENV
@@ -44,7 +48,7 @@ jobs:
         with:
           tag_name: ${{ env.VERSION }}
           name: ${{ env.VERSION }}
-          prerelease: false
+          prerelease: true
           body: ${{ github.event.head_commit.message }}
           files: |
             ./build/libs/*-all.jar
