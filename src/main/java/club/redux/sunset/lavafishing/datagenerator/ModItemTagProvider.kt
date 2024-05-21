@@ -18,8 +18,8 @@ class ModItemTagProvider(
     existingFileHelper: ExistingFileHelper,
 ) : ItemTagsProvider(packOutput, lookupProvider, blockTags, BuildConstants.MOD_ID, existingFileHelper) {
     override fun addTags(pProvider: HolderLookup.Provider) {
-        ModItems.REGISTER.entries.map { it.get() }.filterIsInstance<ItemLavaFish>().forEach {
-            tag(ItemTags.FISHES).add(it)
-        }
+        ModItems.REGISTER.entries.map { it.get() }
+            .filterIsInstance<ItemLavaFish>()
+            .forEach { tag(ItemTags.FISHES).add(it) }
     }
 }

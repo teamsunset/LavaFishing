@@ -13,6 +13,8 @@
         },
         {
           "type": "minecraft:item",
+          "weight": 5,
+          "name": "minecraft:weeping_vines",
           "conditions": [
             {
               "condition": "minecraft:location_check",
@@ -20,12 +22,12 @@
                 "biome": "minecraft:crimson_forest"
               }
             }
-          ],
-          "weight": 5,
-          "name": "minecraft:weeping_vines"
+          ]
         },
         {
           "type": "minecraft:item",
+          "weight": 5,
+          "name": "minecraft:twisting_vines",
           "conditions": [
             {
               "condition": "minecraft:location_check",
@@ -33,12 +35,12 @@
                 "biome": "minecraft:warped_forest"
               }
             }
-          ],
-          "weight": 5,
-          "name": "minecraft:twisting_vines"
+          ]
         },
         {
           "type": "minecraft:item",
+          "weight": 5,
+          "name": "minecraft:crimson_fungus",
           "conditions": [
             {
               "condition": "minecraft:location_check",
@@ -46,9 +48,7 @@
                 "biome": "minecraft:crimson_forest"
               }
             }
-          ],
-          "weight": 5,
-          "name": "minecraft:crimson_fungus"
+          ]
         },
         {
           "type": "minecraft:item",
@@ -65,6 +65,21 @@
         },
         {
           "type": "minecraft:item",
+          "weight": 5,
+          "name": "minecraft:bone_meal",
+          "conditions": [
+            {
+              "condition": "minecraft:location_check",
+              "predicate": {
+                "biome": "minecraft:soul_sand_valley"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 5,
+          "name": "minecraft:nether_wart",
           "conditions": [
             {
               "condition": "minecraft:location_check",
@@ -72,9 +87,7 @@
                 "dimension": "minecraft:the_nether"
               }
             }
-          ],
-          "weight": 5,
-          "name": "minecraft:nether_wart"
+          ]
         }
       ]
     }

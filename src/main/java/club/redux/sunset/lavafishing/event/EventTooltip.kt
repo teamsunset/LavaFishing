@@ -11,7 +11,7 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent
 import net.minecraftforge.registries.ForgeRegistries
 import org.lwjgl.glfw.GLFW
 
-object ModTooltip {
+object EventTooltip {
     fun onItemTooltip(event: ItemTooltipEvent) {
         if (event.itemStack.isEmpty) return
         if (!event.itemStack.`is`(ModTags.Items.TOOLTIP)) return
