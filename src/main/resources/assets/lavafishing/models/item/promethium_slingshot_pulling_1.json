@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "lavafishing:item/template/slingshot",
   "textures": {
     "layer0": "lavafishing:item/promethium_slingshot_pulling_1"
   }
