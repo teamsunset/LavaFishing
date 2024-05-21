@@ -8,21 +8,17 @@ import club.redux.sunset.lavafishing.client.model.ModelBullet
 import club.redux.sunset.lavafishing.client.particle.ParticleFirePunch
 import club.redux.sunset.lavafishing.client.renderer.blockentity.BlockEntityRendererPrometheusBounty
 import club.redux.sunset.lavafishing.client.renderer.entity.EntityRendererBullet
-import club.redux.sunset.lavafishing.datagenerator.ModItemModelProvider
-import club.redux.sunset.lavafishing.datagenerator.ModItemTagProvider
-import club.redux.sunset.lavafishing.datagenerator.ModRecipeProvider
 import club.redux.sunset.lavafishing.effect.EffectEndlessFlame
 import club.redux.sunset.lavafishing.effect.EffectLavaWalker
 import club.redux.sunset.lavafishing.item.ItemPromethiumArmor
 import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
-import club.redux.sunset.lavafishing.loot.LootTableHandler
 import club.redux.sunset.lavafishing.registry.ModItems
+import club.redux.sunset.lavafishing.registry.ModLootTables
 import club.redux.sunset.lavafishing.registry.ModParticleTypes
 import club.redux.sunset.lavafishing.registry.ModPotions
 import com.teammetallurgy.aquaculture.client.ClientHandler
 import net.minecraft.client.Minecraft
 import net.minecraft.client.particle.SpriteSet
-import net.minecraft.data.tags.TagsProvider
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers
@@ -40,7 +36,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
-import java.util.concurrent.CompletableFuture
 
 class EventHandler {
     @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.FORGE)
@@ -68,7 +63,7 @@ class EventHandler {
 
         @SubscribeEvent
         fun onLootTableLoad(event: LootTableLoadEvent) {
-            LootTableHandler.onLootTableLoad(event)
+            ModLootTables.onLootTableLoad(event)
         }
 
         @SubscribeEvent
@@ -87,7 +82,7 @@ class EventHandler {
     object ForgeEventClient {
         @SubscribeEvent
         fun onItemTooltip(event: ItemTooltipEvent) {
-            ModTooltip.onItemTooltip(event)
+            EventTooltip.onItemTooltip(event)
         }
     }
 
@@ -102,19 +97,7 @@ class EventHandler {
 
         @SubscribeEvent
         fun onGatherDataEvent(event: GatherDataEvent) {
-            event.generator.apply {
-                addProvider(true, ModRecipeProvider(this.packOutput))
-                addProvider(
-                    event.includeServer(),
-                    ModItemTagProvider(
-                        packOutput,
-                        event.lookupProvider,
-                        CompletableFuture.completedFuture(TagsProvider.TagLookup.empty()),
-                        event.existingFileHelper
-                    )
-                )
-                addProvider(event.includeClient(), ModItemModelProvider(packOutput, event.existingFileHelper))
-            }
+            EventDataGenerator.onGatherData(event)
         }
     }
 
@@ -137,7 +120,7 @@ class EventHandler {
         fun onParticleFactoriesRegistry(event: RegisterParticleProvidersEvent?) {
             Minecraft.getInstance().particleEngine.register(
                 ModParticleTypes.FIRE_PUNCH.get()
-            ) { sprites: SpriteSet? -> ParticleFirePunch.Provider(sprites!!) }
+            ) { sprites: SpriteSet -> ParticleFirePunch.Provider(sprites) }
         }
 
         @SubscribeEvent

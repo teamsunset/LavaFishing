@@ -1,4 +1,4 @@
-package club.redux.sunset.lavafishing.loot
+package club.redux.sunset.lavafishing.registry
 
 import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.misc.ModResourceLocation
@@ -9,7 +9,7 @@ import net.minecraft.world.level.storage.loot.LootPool
 import net.minecraft.world.level.storage.loot.entries.LootTableReference
 import net.minecraftforge.event.LootTableLoadEvent
 
-object LootTableHandler {
+object ModLootTables {
     @JvmField val FISH: ResourceLocation = register("gameplay/fishing/fish")
     @JvmField val LAVA_FISHING: ResourceLocation = register("gameplay/fishing/lava/fishing")
     @JvmField val LAVA_FISH: ResourceLocation = register("gameplay/fishing/lava/fish")
