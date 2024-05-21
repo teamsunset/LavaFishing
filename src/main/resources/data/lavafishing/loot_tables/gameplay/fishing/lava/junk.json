@@ -4,6 +4,16 @@
     {
       "rolls": 1.0,
       "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 50,
+          "name": "minecraft:coal"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 50,
+          "name": "minecraft:flint"
+        }
       ]
     }
   ],

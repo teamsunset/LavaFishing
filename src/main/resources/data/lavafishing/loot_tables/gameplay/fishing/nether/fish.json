@@ -12,12 +12,28 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "lavafishing:steam_flying_fish"
+          "name": "lavafishing:steam_flying_fish",
+          "conditions": [
+            {
+              "condition": "minecraft:location_check",
+              "predicate": {
+                "biome": "minecraft:soul_sand_valley"
+              }
+            }
+          ]
         },
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "lavafishing:agni_fish"
+          "name": "lavafishing:agni_fish",
+          "conditions": [
+            {
+              "condition": "minecraft:location_check",
+              "predicate": {
+                "biome": "minecraft:crimson_forest"
+              }
+            }
+          ]
         },
         {
           "type": "minecraft:item",
