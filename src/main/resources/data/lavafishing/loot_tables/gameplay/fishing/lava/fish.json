@@ -18,6 +18,16 @@
           "type": "minecraft:item",
           "weight": 5,
           "name": "lavafishing:arowana_fish"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 5,
+          "name": "lavafishing:scaly_foot_snail"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 5,
+          "name": "lavafishing:yeti_crab"
         }
       ]
     }

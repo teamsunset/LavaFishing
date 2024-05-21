@@ -4,6 +4,11 @@
     {
       "rolls": 1.0,
       "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "weight": 100,
+          "name": "lavafishing:gameplay/fishing/lava/junk"
+        }
       ]
     }
   ],
