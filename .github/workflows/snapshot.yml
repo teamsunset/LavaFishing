@@ -37,16 +37,16 @@ jobs:
           ./gradlew runData
           ./gradlew build
 
-      - name: Extract Current Branch
-        run: echo "BRANCH=$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/g')" >> $GITHUB_ENV
+      - name: Extract Current Minecraft Version
+        run: echo "MINECRAFT_VERSION=$(grep 'minecraftVersion=' gradle.properties | sed 's/minecraftVersion=//g')" >> $GITHUB_ENV
 
       - name: Update Snapshot Release
         uses: andelf/nightly-release@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: 'snapshot-${{ env.BRANCH }}'
-          name: 'snapshot-${{ env.BRANCH }}-$$-${{ github.run_id }}'
+          tag_name: 'snapshot-${{ env.MINECRAFT_VERSION }}'
+          name: 'snapshot-${{ env.MINECRAFT_VERSION }}-$$-${{ github.run_id }}'
           prerelease: true
           body: ${{ github.event.head_commit.message }}
           files: |
