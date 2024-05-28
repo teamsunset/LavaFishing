@@ -7,6 +7,10 @@
     "aquaculture:soul_sand_hook",
     "aquaculture:obsidian_note_hook",
     "lavafishing:promethium_slingshot",
-    "lavafishing:promethium_bullet"
+    "lavafishing:promethium_bullet",
+    "lavafishing:promethium_helmet",
+    "lavafishing:promethium_chestplate",
+    "lavafishing:promethium_leggings",
+    "lavafishing:promethium_boots"
   ]
 }

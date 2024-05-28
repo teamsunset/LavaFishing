@@ -49,5 +49,21 @@
   "lavafishing.soul_sand_hook.tooltip.title": "诱惑",
   "lavafishing.soul_sand_hook.tooltip.desc": "延长钓上鱼所需的时间",
   "lavafishing.obsidian_note_hook.tooltip.title": "警报",
-  "lavafishing.obsidian_note_hook.tooltip.desc": "当鱼接近时发出警报声"
+  "lavafishing.obsidian_note_hook.tooltip.desc": "当鱼接近时发出警报声",
+  "lavafishing.promethium_helmet.tooltip.title.1": "喜热",
+  "lavafishing.promethium_helmet.tooltip.title": "金睛",
+  "lavafishing.promethium_helmet.tooltip.desc.1": "25% 火焰伤害减免",
+  "lavafishing.promethium_helmet.tooltip.desc": "在岩浆下拥有良好视野",
+  "lavafishing.promethium_chestplate.tooltip.title.1": "喜热",
+  "lavafishing.promethium_chestplate.tooltip.title": "焚身",
+  "lavafishing.promethium_chestplate.tooltip.desc.1": "25% 火焰伤害减免",
+  "lavafishing.promethium_chestplate.tooltip.desc": "在炎热时缓慢恢复生命",
+  "lavafishing.promethium_leggings.tooltip.title.1": "喜热",
+  "lavafishing.promethium_leggings.tooltip.title": "幽步",
+  "lavafishing.promethium_leggings.tooltip.desc.1": "25% 火焰伤害减免",
+  "lavafishing.promethium_leggings.tooltip.desc": "提高炎热时的移动速度",
+  "lavafishing.promethium_boots.tooltip.title.1": "喜热",
+  "lavafishing.promethium_boots.tooltip.title": "气浮",
+  "lavafishing.promethium_boots.tooltip.desc.1": "25% 火焰伤害减免",
+  "lavafishing.promethium_boots.tooltip.desc": "在岩浆上行走"
 }
