@@ -1,7 +1,5 @@
 package club.redux.sunset.lavafishing.util
 
-import net.minecraft.core.Vec3i
-import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3
 import java.security.SecureRandom
 
@@ -40,4 +38,3 @@ object Utils {
     }
 }
 
-fun Vec3.toVec3iC(): Vec3i = Vec3i(Mth.ceil(x), Mth.ceil(y), Mth.ceil(z))

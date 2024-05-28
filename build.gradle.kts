@@ -273,6 +273,10 @@ tasks.jar {
     }
 }
 
+tasks.compileJava {
+    outputs.upToDateWhen { false }
+}
+
 tasks.withType(GenerateModuleMetadata::class.java) {
     enabled = false
 }
