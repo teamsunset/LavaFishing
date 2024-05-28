@@ -44,6 +44,20 @@ base.archivesName.set(modId)
 java.toolchain.languageVersion.set(javaVersion)
 kapt.keepJavacAnnotationProcessors = true
 
+buildscript {
+    repositories {
+        maven {
+            url = uri("https://maven.aliyun.com/repository/public/")
+        }
+        maven {
+            url = uri("https://repo.spongepowered.org/repository/maven-public/")
+        }
+    }
+    dependencies {
+        classpath("org.spongepowered:mixingradle:0.7-SNAPSHOT")
+    }
+}
+
 plugins {
     java
     eclipse
@@ -53,10 +67,11 @@ plugins {
     id("org.parchmentmc.librarian.forgegradle") version "1.+"
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("org.spongepowered.mixin")
+    id("org.spongepowered.mixin") version "0.7.+"
     kotlin("jvm") version "1.9.23"
     kotlin("kapt") version "1.9.23"
     kotlin("plugin.serialization") version "1.9.23"
+    kotlin("plugin.lombok") version "1.9.23"
 }
 
 repositories {
@@ -87,7 +102,7 @@ repositories {
 
 dependencies {
     val mc = "net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}"
-    val mixinProcessor = "org.spongepowered:mixin:0.8.2:processor"
+    val mixinProcessor = "org.spongepowered:mixin:0.8.5:processor"
     val aquaculture = "com.github.TeamSunset:Aquaculture:aeb4f5516b"
     val kotlinforforge = "thedarkcolour:kotlinforforge:4.10.0"
     val jeiCommonApi = "mezz.jei:jei-${minecraftVersion}-common-api:${jeiVersion}"
@@ -95,8 +110,6 @@ dependencies {
     val jei = "mezz.jei:jei-${minecraftVersion}-forge:${jeiVersion}"
 
     val jable = "com.github.dsx137:jable:1.0.10"
-    val lombok = "org.projectlombok:lombok:1.18.30"
-    val gson = "com.google.code.gson:gson:2.8.9"
 
     // Minecraft
     minecraft(mc)
@@ -116,11 +129,6 @@ dependencies {
     // Kotlin for Forge
     implementation(kotlinforforge)
     compileMaven(kotlinforforge)
-
-    // Lombok
-    compileOnly(lombok)
-    annotationProcessor(lombok)
-    kapt(lombok)
 
     // Jable
     minecraftLibrary(jable)
@@ -169,13 +177,12 @@ minecraft {
         )
     }
 }
+sourceSets["main"].resources.srcDirs("src/generated/resources")
 
 mixin {
-    add(sourceSets.main.get(), "lavafishing.mixins.refmap.json")
-    config("lavafishing.mixins.json")
+    add(sourceSets.main.get(), "${modId}.refmap.json")
+    config("${modId}.mixins.json")
 }
-
-sourceSets["main"].resources.srcDirs("src/generated/resources")
 
 val props = mapOf(
     "minecraft_version" to minecraftVersion,

@@ -13,23 +13,23 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(LivingEntity.class)
+@Mixin(value = LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity implements Attackable, IForgeLivingEntity {
 
     public MixinLivingEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    @Shadow(remap = false)
+    @Shadow
     protected abstract boolean isAffectedByFluids();
 
-    @Shadow(remap = false)
+    @Shadow
     public abstract boolean canStandOnFluid(FluidState pFluidState);
 
-    @Shadow(remap = false)
+    @Shadow
     public abstract ItemStack getItemBySlot(EquipmentSlot equipmentSlot);
 
-    @Inject(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;moveRelative(FLnet/minecraft/world/phys/Vec3;)V"), remap = false)
+    @Inject(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;moveRelative(FLnet/minecraft/world/phys/Vec3;)V"))
     public void travel(Vec3 pTravelVector, CallbackInfo ci) {
         if (this.isControlledByLocalInstance()) {
             if (this.isInLava() && this.isAffectedByFluids() && !this.canStandOnFluid(this.level().getFluidState(this.blockPosition()))) {
