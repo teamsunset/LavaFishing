@@ -23,6 +23,7 @@ import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent
+import net.minecraftforge.client.event.ViewportEvent
 import net.minecraftforge.data.event.GatherDataEvent
 import net.minecraftforge.event.LootTableLoadEvent
 import net.minecraftforge.event.TickEvent
@@ -83,6 +84,11 @@ class EventHandler {
         @SubscribeEvent
         fun onItemTooltip(event: ItemTooltipEvent) {
             EventTooltip.onItemTooltip(event)
+        }
+
+        @SubscribeEvent
+        fun onFogRender(event: ViewportEvent.RenderFog) {
+            ItemPromethiumArmor.onFogRender(event)
         }
     }
 

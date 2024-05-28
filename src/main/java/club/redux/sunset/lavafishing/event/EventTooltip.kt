@@ -16,17 +16,24 @@ object EventTooltip {
         if (event.itemStack.isEmpty) return
         if (!event.itemStack.`is`(ModTags.Items.TOOLTIP)) return
         val id = ForgeRegistries.ITEMS.getKey(event.itemStack.item) ?: return
-        val tooltipPath = id.path + ".tooltip"
-        if (InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            event.toolTip.add(
-                Component.translatable("${BuildConstants.MOD_ID}.$tooltipPath.desc").withStyle(ChatFormatting.DARK_RED)
-            )
+        val tooltipPath = "${BuildConstants.MOD_ID}.${id.path}.tooltip"
+        val key = if (InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_LEFT_SHIFT)) {
+            "$tooltipPath.desc"
         } else {
-            event.toolTip.add(
-                Component.translatable("${BuildConstants.MOD_ID}.$tooltipPath.title").withStyle(ChatFormatting.DARK_RED)
-                    .append(" ")
-                    .append(Component.translatable(Aquaculture.MOD_ID + ".shift").withStyle(ChatFormatting.DARK_GRAY))
-            )
+            "$tooltipPath.title"
         }
+
+        var index = 1
+        val indexKey = { "$key.$index" }
+        val indexComponent = { Component.translatable(indexKey()).withStyle(ChatFormatting.DARK_RED) }
+        while (indexComponent().string != indexKey()) {
+            event.toolTip.add(indexComponent())
+            index++
+        }
+        event.toolTip.add(
+            Component.translatable(key).withStyle(ChatFormatting.DARK_RED)
+                .append(" ")
+                .append(Component.translatable(Aquaculture.MOD_ID + ".shift").withStyle(ChatFormatting.DARK_GRAY))
+        )
     }
 }

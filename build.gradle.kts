@@ -53,6 +53,7 @@ plugins {
     id("org.parchmentmc.librarian.forgegradle") version "1.+"
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
     id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("org.spongepowered.mixin")
     kotlin("jvm") version "1.9.23"
     kotlin("kapt") version "1.9.23"
     kotlin("plugin.serialization") version "1.9.23"
@@ -86,16 +87,22 @@ repositories {
 
 dependencies {
     val mc = "net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}"
-    val jable = "com.github.dsx137:jable:1.0.10"
-    val lombok = "org.projectlombok:lombok:1.18.30"
+    val mixinProcessor = "org.spongepowered:mixin:0.8.2:processor"
     val aquaculture = "com.github.TeamSunset:Aquaculture:aeb4f5516b"
     val kotlinforforge = "thedarkcolour:kotlinforforge:4.10.0"
     val jeiCommonApi = "mezz.jei:jei-${minecraftVersion}-common-api:${jeiVersion}"
     val jeiForgeApi = "mezz.jei:jei-${minecraftVersion}-forge-api:${jeiVersion}"
     val jei = "mezz.jei:jei-${minecraftVersion}-forge:${jeiVersion}"
 
+    val jable = "com.github.dsx137:jable:1.0.10"
+    val lombok = "org.projectlombok:lombok:1.18.30"
+    val gson = "com.google.code.gson:gson:2.8.9"
+
     // Minecraft
     minecraft(mc)
+
+    // Mixin
+    annotationProcessor(mixinProcessor)
 
     // Aquaculture2
     implementation(aquaculture)
@@ -161,6 +168,11 @@ minecraft {
             file("src/main/resources/")
         )
     }
+}
+
+mixin {
+    add(sourceSets.main.get(), "lavafishing.mixins.refmap.json")
+    config("lavafishing.mixins.json")
 }
 
 sourceSets["main"].resources.srcDirs("src/generated/resources")

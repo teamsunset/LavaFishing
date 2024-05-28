@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "club.redux.sunset.lavafishing.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MixinLivingEntity"
+  ],
+  "client": [
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

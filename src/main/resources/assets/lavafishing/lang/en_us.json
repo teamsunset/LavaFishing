@@ -49,5 +49,21 @@
   "lavafishing.soul_sand_hook.tooltip.title": "Enticing",
   "lavafishing.soul_sand_hook.tooltip.desc": "Increases how long you have to reel in fish",
   "lavafishing.obsidian_note_hook.tooltip.title": "Alert",
-  "lavafishing.obsidian_note_hook.tooltip.desc": "Plays an alert when a fish is approaching"
+  "lavafishing.obsidian_note_hook.tooltip.desc": "Plays an alert when a fish is approaching",
+  "lavafishing.promethium_helmet.tooltip.title.1": "Heat Lover",
+  "lavafishing.promethium_helmet.tooltip.title": "Golden Eyes",
+  "lavafishing.promethium_helmet.tooltip.desc.1": "25% fire damage reduction",
+  "lavafishing.promethium_helmet.tooltip.desc": "Watch under the lava clearly",
+  "lavafishing.promethium_chestplate.tooltip.title.1": "Heat Lover",
+  "lavafishing.promethium_chestplate.tooltip.title": "Immolator",
+  "lavafishing.promethium_chestplate.tooltip.desc.1": "25% fire damage reduction",
+  "lavafishing.promethium_chestplate.tooltip.desc": "Slowly regenerates health in the heat",
+  "lavafishing.promethium_leggings.tooltip.title.1": "Heat Lover",
+  "lavafishing.promethium_leggings.tooltip.title": "Ghost",
+  "lavafishing.promethium_leggings.tooltip.desc.1": "25% fire damage reduction",
+  "lavafishing.promethium_leggings.tooltip.desc": "Increases movement speed in the heat",
+  "lavafishing.promethium_boots.tooltip.title.1": "Heat Lover",
+  "lavafishing.promethium_boots.tooltip.title": "Steam",
+  "lavafishing.promethium_boots.tooltip.desc.1": "25% fire damage reduction",
+  "lavafishing.promethium_boots.tooltip.desc": "Walk on the lava"
 }

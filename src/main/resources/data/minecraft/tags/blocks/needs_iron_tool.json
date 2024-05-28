@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "aquaculture:promethium_block",
-    "aquaculture:prometheus_bounty"
+    "lavafishing:promethium_block",
+    "lavafishing:prometheus_bounty"
   ]
 }

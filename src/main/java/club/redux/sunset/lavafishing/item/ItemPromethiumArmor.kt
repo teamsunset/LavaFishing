@@ -1,7 +1,10 @@
 package club.redux.sunset.lavafishing.item
 
 import club.redux.sunset.lavafishing.BuildConstants
+import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModMobEffects
+import net.minecraft.client.Minecraft
+import net.minecraft.core.BlockPos
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectInstance
@@ -13,9 +16,12 @@ import net.minecraft.world.item.ArmorMaterial
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.material.FogType
+import net.minecraftforge.client.event.ViewportEvent
 import net.minecraftforge.event.entity.living.LivingAttackEvent
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent
+import thedarkcolour.kotlinforforge.forge.vectorutil.v3d.toVec3i
 
 class ItemPromethiumArmor(
     armorMaterial: ArmorMaterial,
@@ -45,10 +51,14 @@ class ItemPromethiumArmor(
                 val item = itemStack.item
                 if (item is ItemPromethiumArmor) {
                     val applyEffect = { effect: MobEffect ->
-                        event.entity.addEffect(MobEffectInstance(effect, 20, 0, false, false, false))
+                        event.entity.addEffect(MobEffectInstance(effect, 20, 0, false, false, true))
                     }
-                    
-                    if (event.entity.isInLava || level.getBlockState(event.entity.onPos).`is`(Blocks.LAVA)) {
+                    val futureBlockPos =
+                        BlockPos(event.entity.position().add(event.entity.deltaMovement.scale(1.5)).toVec3i())
+                    if (event.entity.isOnFire ||
+                        level.getBlockState(event.entity.onPos).`is`(Blocks.LAVA) ||
+                        level.getBlockState(futureBlockPos).`is`(Blocks.LAVA)
+                    ) {
                         if (item.type == Type.LEGGINGS) {
                             applyEffect(MobEffects.MOVEMENT_SPEED)
                         } else if (item.type == Type.BOOTS) {
@@ -56,6 +66,17 @@ class ItemPromethiumArmor(
                         }
                     }
                 }
+            }
+        }
+
+        fun onFogRender(event: ViewportEvent.RenderFog) {
+            val player = Minecraft.getInstance().player ?: return
+            if (event.type == FogType.LAVA && player.getItemBySlot(EquipmentSlot.HEAD)
+                    .`is`(ModItems.PROMETHIUM_HELMET.get())
+            ) {
+                event.nearPlaneDistance = 0.0f
+                event.farPlaneDistance = 10.0f
+                event.isCanceled = true // 神秘的判断，event post默认情况为事件取消返回true
             }
         }
 
