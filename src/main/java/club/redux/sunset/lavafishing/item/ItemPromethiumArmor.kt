@@ -3,8 +3,8 @@ package club.redux.sunset.lavafishing.item
 import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModMobEffects
+import club.redux.sunset.lavafishing.util.toBlockPos
 import net.minecraft.client.Minecraft
-import net.minecraft.core.BlockPos
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectInstance
@@ -21,7 +21,6 @@ import net.minecraftforge.client.event.ViewportEvent
 import net.minecraftforge.event.entity.living.LivingAttackEvent
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent
-import thedarkcolour.kotlinforforge.forge.vectorutil.v3d.toVec3i
 
 class ItemPromethiumArmor(
     armorMaterial: ArmorMaterial,
@@ -53,8 +52,7 @@ class ItemPromethiumArmor(
                     val applyEffect = { effect: MobEffect ->
                         event.entity.addEffect(MobEffectInstance(effect, 20, 0, false, false, true))
                     }
-                    val futureBlockPos =
-                        BlockPos(event.entity.position().add(event.entity.deltaMovement.scale(1.5)).toVec3i())
+                    val futureBlockPos = event.entity.position().add(event.entity.deltaMovement.scale(1.5)).toBlockPos()
                     if (event.entity.isOnFire ||
                         level.getBlockState(event.entity.onPos).`is`(Blocks.LAVA) ||
                         level.getBlockState(futureBlockPos).`is`(Blocks.LAVA)
