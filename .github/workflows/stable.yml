@@ -66,3 +66,14 @@ jobs:
             ./build/libs/*-all.jar
           dependencies: Vl1uNAuy:required, ordsPcFz:required
 
+      - name: CurseForge Release
+        uses: itsmeow/curseforge-upload@v3.1.2
+        with:
+          token: ${{ secrets.CURSEFORGE_TOKEN }}
+          file_path: ./build/libs/*-all.jar
+          game_endpoint: minecraft
+          relations: aquaculture:requiredDependency
+          game_versions: 1.20.1
+          project_id: 1035887
+          release_type: beta
+          changelog: ${{ github.event.head_commit.message }}
