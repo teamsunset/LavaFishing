@@ -1,6 +1,7 @@
 package club.redux.sunset.lavafishing.registry
 
 import club.redux.sunset.lavafishing.BuildConstants
+import club.redux.sunset.lavafishing.block.blockentity.BlockEntityPrometheusBounty
 import club.redux.sunset.lavafishing.item.ItemObsidianFishingRod
 import club.redux.sunset.lavafishing.item.ItemPromethiumArmor
 import club.redux.sunset.lavafishing.item.block.BlockItemWithoutLevelRenderer
@@ -16,6 +17,7 @@ import club.redux.sunset.lavafishing.util.registerKt
 import com.teammetallurgy.aquaculture.api.AquacultureAPI
 import com.teammetallurgy.aquaculture.item.FishItem.SMALL_FISH_RAW
 import com.teammetallurgy.aquaculture.item.SimpleItem
+import net.minecraft.core.BlockPos
 import net.minecraft.world.item.ArmorItem
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item.Properties
@@ -105,6 +107,8 @@ object ModItems {
     }
 
     @JvmField val PROMETHEUS_BOUNTY = REGISTER.registerKt("prometheus_bounty") {
-        BlockItemWithoutLevelRenderer(ModBlocks.PROMETHEUS_BOUNTY.get(), Properties().fireResistant())
+        BlockItemWithoutLevelRenderer(ModBlocks.PROMETHEUS_BOUNTY.get(), Properties().fireResistant()) {
+            BlockEntityPrometheusBounty(BlockPos.ZERO, ModBlocks.PROMETHEUS_BOUNTY.get().defaultBlockState())
+        }
     }
 }

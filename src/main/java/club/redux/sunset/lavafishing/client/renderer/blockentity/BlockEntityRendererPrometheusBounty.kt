@@ -21,9 +21,7 @@ class BlockEntityRendererPrometheusBounty(
         @JvmStatic
         fun onRegisterRenderers(event: EntityRenderersEvent.RegisterRenderers) {
             event.registerBlockEntityRenderer(ModBlockEntityTypes.PROMETHEUS_BOUNTY.get()) {
-                BlockEntityRendererPrometheusBounty(
-                    it
-                )
+                BlockEntityRendererPrometheusBounty(it)
             }
         }
     }
