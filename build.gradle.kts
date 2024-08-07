@@ -103,7 +103,7 @@ repositories {
 dependencies {
     val mc = "net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}"
     val mixinProcessor = "org.spongepowered:mixin:0.8.5:processor"
-    val aquaculture = "com.github.TeamSunset:Aquaculture:aeb4f5516b"
+    val aquaculture = "com.github.teamsunset:aquaculture:0bba648c2f"
     val kotlinforforge = "thedarkcolour:kotlinforforge:4.10.0"
     val jeiCommonApi = "mezz.jei:jei-${minecraftVersion}-common-api:${jeiVersion}"
     val jeiForgeApi = "mezz.jei:jei-${minecraftVersion}-forge-api:${jeiVersion}"

@@ -20,7 +20,7 @@ class ModItemModelProvider(
             withExistingParent("item/$itemId", "item/generated")
                 .texture("layer0", "item/$itemId")
         }
-        LoggerFactory.getLogger("ModItemModelProvider").info("hello Registering models...")
+        LoggerFactory.getLogger("ModItemModelProvider").info("Registering item models...")
         // Fish
         register("agni_fish")
         register("obsidian_sword_fish")
