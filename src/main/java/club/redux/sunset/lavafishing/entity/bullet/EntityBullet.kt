@@ -45,8 +45,8 @@ open class EntityBullet : AbstractArrow, IEntityAdditionalSpawnData {
 
     constructor(
         entityType: EntityType<out EntityBullet>,
-        world: Level,
-    ) : super(entityType, world)
+        level: Level,
+    ) : super(entityType, level)
 
     constructor(
         entityType: EntityType<out EntityBullet>,

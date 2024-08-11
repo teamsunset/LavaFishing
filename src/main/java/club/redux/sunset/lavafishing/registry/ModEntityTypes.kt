@@ -5,6 +5,7 @@ import club.redux.sunset.lavafishing.entity.bullet.*
 import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
 import net.minecraft.world.level.Level
@@ -14,9 +15,11 @@ import net.minecraftforge.registries.RegistryObject
 object ModEntityTypes {
     @JvmField val REGISTER = UtilRegister.create(ForgeRegistries.ENTITY_TYPES, BuildConstants.MOD_ID)
 
-    @JvmField val BULLET_ENTITY_TYPES: MutableList<RegistryObject<out EntityType<out EntityBullet>>> = mutableListOf()
+    @JvmField val TYPE_MAP: MutableMap<RegistryObject<out EntityType<out Entity>>, Class<out Entity>> = mutableMapOf()
 
-    @JvmField val STONE_BULLET = registerBullet("stone_bullet", ::EntityStoneBullet)
+    // EntityTypes
+    @JvmField
+    val STONE_BULLET = registerBullet("stone_bullet", ::EntityStoneBullet)
 
     @JvmField val IRON_BULLET = registerBullet("iron_bullet", ::EntityIronBullet)
 
@@ -24,16 +27,28 @@ object ModEntityTypes {
 
     @JvmField val PROMETHIUM_BULLET = registerBullet("promethium_bullet", ::EntityPromethiumBullet)
 
-    private fun <T : EntityBullet> registerBullet(
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Entity> getEntriesByEntityParentClass(clazz: Class<T>): List<RegistryObject<EntityType<T>>> {
+        return REGISTER.entries.filter {
+            clazz.isAssignableFrom(TYPE_MAP[it] ?: return@filter false)
+        } as List<RegistryObject<EntityType<T>>>
+    }
+
+    inline fun <reified T : Entity> register(
         name: String,
-        constructor: (EntityType<T>, Level) -> T,
+        noinline supplier: () -> EntityType<T>,
+    ): RegistryObject<EntityType<T>> = REGISTER.registerKt(name, supplier).also { TYPE_MAP[it] = T::class.java }
+
+    private inline fun <reified T : EntityBullet> registerBullet(
+        name: String,
+        noinline constructor: (EntityType<T>, Level) -> T,
     ): RegistryObject<EntityType<T>> {
-        return REGISTER.registerKt(name) {
+        return register(name) {
             EntityType.Builder.of(constructor, MobCategory.MISC)
                 .sized(0.5f, 0.5f)
                 .clientTrackingRange(4)
                 .updateInterval(10)
                 .build(ModResourceLocation(name).toString())
-        }.apply { BULLET_ENTITY_TYPES.add(this) }
+        }
     }
 }

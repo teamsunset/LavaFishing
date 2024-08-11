@@ -34,7 +34,7 @@ public abstract class MixinLivingEntity extends Entity implements Attackable, IF
         if (this.isControlledByLocalInstance()) {
             if (this.isInLava() && this.isAffectedByFluids() && !this.canStandOnFluid(this.level().getFluidState(this.blockPosition()))) {
                 if (this.getItemBySlot(EquipmentSlot.LEGS).is(ModItems.PROMETHIUM_LEGGINGS.get())) {
-                    this.moveRelative(0.06F, pTravelVector);
+                    this.moveRelative(0.08F, pTravelVector);
                 }
             }
         }

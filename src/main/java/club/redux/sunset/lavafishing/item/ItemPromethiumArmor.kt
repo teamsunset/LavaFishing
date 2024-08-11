@@ -73,7 +73,7 @@ class ItemPromethiumArmor(
                     .`is`(ModItems.PROMETHIUM_HELMET.get())
             ) {
                 event.nearPlaneDistance = 0.0f
-                event.farPlaneDistance = 10.0f
+                event.farPlaneDistance = 20.0f
                 event.isCanceled = true // 神秘的判断，event post默认情况为事件取消返回true
             }
         }

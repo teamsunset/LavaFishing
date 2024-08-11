@@ -52,9 +52,10 @@ class EntityRendererBullet<T : EntityBullet>(
     companion object {
         @JvmStatic
         fun onRegisterRenderers(event: RegisterRenderers) {
-            ModEntityTypes.BULLET_ENTITY_TYPES.map { it.get() }.forEach { entityType ->
-                event.registerEntityRenderer(entityType) { EntityRendererBullet(it) }
-            }
+            ModEntityTypes.getEntriesByEntityParentClass(EntityBullet::class.java).map { it.get() }
+                .forEach { entityType ->
+                    event.registerEntityRenderer(entityType) { EntityRendererBullet(it) }
+                }
         }
     }
 }

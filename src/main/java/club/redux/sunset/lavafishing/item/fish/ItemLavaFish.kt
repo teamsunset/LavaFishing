@@ -1,7 +1,10 @@
 package club.redux.sunset.lavafishing.item.fish
 
+import club.redux.sunset.lavafishing.registry.ModItems.REGISTER
+import com.teammetallurgy.aquaculture.api.AquacultureAPI
 import com.teammetallurgy.aquaculture.item.FishItem
 import net.minecraft.world.food.FoodProperties
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
 
 open class ItemLavaFish : FishItem {
     var filletAmount = 0
@@ -15,4 +18,15 @@ open class ItemLavaFish : FishItem {
     }
 
     override fun isFireResistant(): Boolean = true
+
+    companion object {
+        // FISH_DATA
+        // TODO
+        @JvmStatic
+        fun onSetup(event: FMLCommonSetupEvent) {
+            REGISTER.entries.map { it.get() }.filterIsInstance<ItemLavaFish>().forEach {
+                AquacultureAPI.FISH_DATA.add(it, 100.0, 200.0, it.filletAmount)
+            }
+        }
+    }
 }
