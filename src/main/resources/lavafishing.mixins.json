@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "lavafishing.refmap.json",
   "mixins": [
+    "MixinAbstractFish",
     "MixinLivingEntity"
   ],
   "client": [

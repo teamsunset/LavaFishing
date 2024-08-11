@@ -12,6 +12,7 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder
 import net.minecraft.client.model.geom.builders.LayerDefinition
 import net.minecraft.client.model.geom.builders.MeshDefinition
 import net.minecraft.resources.ResourceLocation
+import net.minecraftforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions
 
 
 class ModelBullet(
@@ -46,17 +47,21 @@ class ModelBullet(
         @JvmField val LAYER_LOCATION: ModelLayerLocation = ModelLayerLocation(ResourceLocation("bullet"), "main")
 
         fun createBodyLayer(): LayerDefinition {
-            val meshdefinition = MeshDefinition()
-            val partdefinition = meshdefinition.root
+            val meshDefinition = MeshDefinition()
+            val partDefinition = meshDefinition.root
 
-            val whole = partdefinition.addOrReplaceChild(
+            val whole = partDefinition.addOrReplaceChild(
                 "whole",
                 CubeListBuilder.create().texOffs(0, 0)
                     .addBox(-1.0f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.0f)),
                 PartPose.offset(0.0f, 23.0f, 0.0f)
             )
 
-            return LayerDefinition.create(meshdefinition, 16, 16)
+            return LayerDefinition.create(meshDefinition, 16, 16)
+        }
+
+        fun onRegisterLayers(event: RegisterLayerDefinitions) {
+            event.registerLayerDefinition(LAYER_LOCATION) { createBodyLayer() }
         }
     }
 }

@@ -10,16 +10,18 @@ import club.redux.sunset.lavafishing.client.renderer.blockentity.BlockEntityRend
 import club.redux.sunset.lavafishing.client.renderer.entity.EntityRendererBullet
 import club.redux.sunset.lavafishing.effect.EffectEndlessFlame
 import club.redux.sunset.lavafishing.effect.EffectLavaWalker
+import club.redux.sunset.lavafishing.entity.EntityLavaFish
 import club.redux.sunset.lavafishing.item.ItemPromethiumArmor
+import club.redux.sunset.lavafishing.item.fish.ItemLavaFish
 import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModLootTables
 import club.redux.sunset.lavafishing.registry.ModParticleTypes
 import club.redux.sunset.lavafishing.registry.ModPotions
 import com.teammetallurgy.aquaculture.client.ClientHandler
-import net.minecraft.client.Minecraft
 import net.minecraft.client.particle.SpriteSet
 import net.minecraftforge.api.distmarker.Dist
+import net.minecraftforge.client.event.EntityRenderersEvent
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent
@@ -27,7 +29,9 @@ import net.minecraftforge.client.event.ViewportEvent
 import net.minecraftforge.data.event.GatherDataEvent
 import net.minecraftforge.event.LootTableLoadEvent
 import net.minecraftforge.event.TickEvent
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent
 import net.minecraftforge.event.entity.EntityJoinLevelEvent
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent
 import net.minecraftforge.event.entity.living.LivingAttackEvent
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent
@@ -78,7 +82,6 @@ class EventHandler {
         }
     }
 
-
     @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.FORGE, value = [Dist.CLIENT])
     object ForgeEventClient {
         @SubscribeEvent
@@ -98,12 +101,23 @@ class EventHandler {
         fun onSetup(event: FMLCommonSetupEvent) {
             BehaviorDispenserBullet.onSetup(event)
             ModPotions.onCommonSetupEvent(event)
-            ModItems.registerFishData()
+            ItemLavaFish.onSetup(event)
+            EntityLavaFish.onSetup(event)
         }
 
         @SubscribeEvent
-        fun onGatherDataEvent(event: GatherDataEvent) {
+        fun onSpawnPlacementRegister(event: SpawnPlacementRegisterEvent) {
+            EntityLavaFish.onSpawnPlacementRegister(event)
+        }
+
+        @SubscribeEvent
+        fun onGatherData(event: GatherDataEvent) {
             EventDataGenerator.onGatherData(event)
+        }
+
+        @SubscribeEvent
+        fun onEntityAttributeCreation(event: EntityAttributeCreationEvent) {
+            EntityLavaFish.onEntityAttributeCreation(event)
         }
     }
 
@@ -123,15 +137,21 @@ class EventHandler {
         }
 
         @SubscribeEvent
-        fun onParticleFactoriesRegistry(event: RegisterParticleProvidersEvent?) {
-            Minecraft.getInstance().particleEngine.register(
-                ModParticleTypes.FIRE_PUNCH.get()
-            ) { sprites: SpriteSet -> ParticleFirePunch.Provider(sprites) }
+        fun onRegisterEntityRenderers(event: EntityRenderersEvent.RegisterRenderers) {
+            EntityLavaFish.onRegisterEntityRenderers(event)
         }
 
         @SubscribeEvent
+        fun onRegisterParticleProviders(event: RegisterParticleProvidersEvent) {
+            event.registerSpriteSet(ModParticleTypes.FIRE_PUNCH.get()) { sprites: SpriteSet ->
+                ParticleFirePunch.Provider(sprites)
+            }
+        }
+
+
+        @SubscribeEvent
         fun onRegisterLayers(event: RegisterLayerDefinitions) {
-            event.registerLayerDefinition(ModelBullet.LAYER_LOCATION, ModelBullet::createBodyLayer)
+            ModelBullet.onRegisterLayers(event)
         }
     }
 }

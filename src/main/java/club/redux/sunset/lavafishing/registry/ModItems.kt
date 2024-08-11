@@ -2,6 +2,7 @@ package club.redux.sunset.lavafishing.registry
 
 import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.block.blockentity.BlockEntityPrometheusBounty
+import club.redux.sunset.lavafishing.entity.EntityLavaFish
 import club.redux.sunset.lavafishing.item.ItemObsidianFishingRod
 import club.redux.sunset.lavafishing.item.ItemPromethiumArmor
 import club.redux.sunset.lavafishing.item.block.BlockItemWithoutLevelRenderer
@@ -15,14 +16,19 @@ import club.redux.sunset.lavafishing.misc.ModTiers
 import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt
 import com.teammetallurgy.aquaculture.api.AquacultureAPI
+import com.teammetallurgy.aquaculture.entity.FishType
 import com.teammetallurgy.aquaculture.item.FishItem.SMALL_FISH_RAW
 import com.teammetallurgy.aquaculture.item.SimpleItem
 import net.minecraft.core.BlockPos
-import net.minecraft.world.item.ArmorItem
-import net.minecraft.world.item.BlockItem
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.MobCategory
+import net.minecraft.world.item.*
 import net.minecraft.world.item.Item.Properties
-import net.minecraft.world.item.Tiers
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.material.Fluids
 import net.minecraftforge.registries.ForgeRegistries
+import net.minecraftforge.registries.RegistryObject
 
 object ModItems {
     @JvmField val REGISTER = UtilRegister.create(ForgeRegistries.ITEMS, BuildConstants.MOD_ID)
@@ -30,25 +36,15 @@ object ModItems {
     @JvmField val OBSIDIAN_FISHING_ROD = REGISTER.registerKt("obsidian_fishing_rod") { ItemObsidianFishingRod() }
 
     // Fish
-    @JvmField val FLAME_SQUAT_LOBSTER = REGISTER.registerKt("flame_squat_lobster") { ItemFlameSquatLobster() }
-    @JvmField val OBSIDIAN_SWORD_FISH = REGISTER.registerKt("obsidian_sword_fish") { ItemObsidianSwordFish() }
-    @JvmField val STEAM_FLYING_FISH = REGISTER.registerKt("steam_flying_fish") { ItemSteamFlyingFish() }
-    @JvmField val AGNI_FISH = REGISTER.registerKt("agni_fish") { ItemAgniFish() }
-
-    @JvmField val AROWANA_FISH = REGISTER.registerKt("arowana_fish") { ItemLavaFish() }
-    @JvmField val QUARTZ_FISH = REGISTER.registerKt("quartz_fish") { ItemLavaFish() }
-    @JvmField val SCALY_FOOT_SNAIL = REGISTER.registerKt("scaly_foot_snail") { ItemLavaFish(SMALL_FISH_RAW) }
-    @JvmField val YETI_CRAB = REGISTER.registerKt("yeti_crab") { ItemLavaFish(SMALL_FISH_RAW) }
-    @JvmField val LAVA_LAMPREY = REGISTER.registerKt("lava_lamprey") { ItemLavaFish() }
-
-
-    // FISH_DATA
-    // TODO
-    fun registerFishData() {
-        REGISTER.entries.map { it.get() }.filterIsInstance<ItemLavaFish>().forEach {
-            AquacultureAPI.FISH_DATA.add(it, 100.0, 200.0, it.filletAmount)
-        }
-    }
+    @JvmField val FLAME_SQUAT_LOBSTER = registerFish("flame_squat_lobster", FishType.SMALL) { ItemFlameSquatLobster() }
+    @JvmField val OBSIDIAN_SWORD_FISH = registerFish("obsidian_sword_fish", FishType.MEDIUM) { ItemObsidianSwordFish() }
+    @JvmField val STEAM_FLYING_FISH = registerFish("steam_flying_fish", FishType.MEDIUM) { ItemSteamFlyingFish() }
+    @JvmField val AGNI_FISH = registerFish("agni_fish", FishType.MEDIUM) { ItemAgniFish() }
+    @JvmField val AROWANA_FISH = registerFish("arowana_fish", FishType.MEDIUM) { ItemLavaFish() }
+    @JvmField val QUARTZ_FISH = registerFish("quartz_fish", FishType.MEDIUM) { ItemLavaFish() }
+    @JvmField val SCALY_FOOT_SNAIL = registerFish("scaly_foot_snail", FishType.SMALL) { ItemLavaFish(SMALL_FISH_RAW) }
+    @JvmField val YETI_CRAB = registerFish("yeti_crab", FishType.SMALL) { ItemLavaFish(SMALL_FISH_RAW) }
+    @JvmField val LAVA_LAMPREY = registerFish("lava_lamprey", FishType.MEDIUM) { ItemLavaFish() }
 
     // Food
     val SPICY_FISH_FILLET = REGISTER.registerKt("spicy_fish_fillet") { ItemSpicyFishFillet() }
@@ -110,5 +106,24 @@ object ModItems {
         BlockItemWithoutLevelRenderer(ModBlocks.PROMETHEUS_BOUNTY.get(), Properties().fireResistant()) {
             BlockEntityPrometheusBounty(BlockPos.ZERO, ModBlocks.PROMETHEUS_BOUNTY.get().defaultBlockState())
         }
+    }
+
+    private fun registerFish(
+        name: String,
+        fishType: FishType,
+        itemSupplier: () -> ItemLavaFish,
+    ): RegistryObject<ItemLavaFish> {
+        val fish = ModEntityTypes.register(name) {
+            EntityType.Builder.of(
+                { f: EntityType<EntityLavaFish>, w: Level -> EntityLavaFish(f, w, fishType) }, MobCategory.WATER_AMBIENT
+            ).sized(fishType.width, fishType.height).build(BuildConstants.MOD_ID + ":" + name)
+        }
+
+        //Registers fish buckets
+        REGISTER.registerKt<Item, Item>(name + "_bucket") {
+            MobBucketItem({ fish.get() }, { Fluids.LAVA }, { SoundEvents.BUCKET_EMPTY_FISH }, Properties().stacksTo(1))
+        }
+
+        return REGISTER.registerKt(name) { itemSupplier() }
     }
 }
