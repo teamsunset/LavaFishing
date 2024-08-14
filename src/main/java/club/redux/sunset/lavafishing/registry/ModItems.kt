@@ -18,7 +18,6 @@ import club.redux.sunset.lavafishing.util.registerKt
 import com.teammetallurgy.aquaculture.api.AquacultureAPI
 import com.teammetallurgy.aquaculture.entity.FishType
 import com.teammetallurgy.aquaculture.item.FishItem.SMALL_FISH_RAW
-import com.teammetallurgy.aquaculture.item.SimpleItem
 import net.minecraft.core.BlockPos
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntityType
@@ -50,12 +49,6 @@ object ModItems {
     val SPICY_FISH_FILLET = REGISTER.registerKt("spicy_fish_fillet") { ItemSpicyFishFillet() }
 
     // Armor
-    @JvmField val PROMETHIUM_INGOT = REGISTER.registerKt("promethium_ingot") {
-        SimpleItem(Properties().fireResistant())
-    }
-    @JvmField val PROMETHIUM_NUGGET = REGISTER.registerKt("promethium_nugget") {
-        SimpleItem(Properties().fireResistant())
-    }
     @JvmField val PROMETHIUM_HELMET = REGISTER.registerKt("promethium_helmet") {
         ItemPromethiumArmor(ModArmorMaterials.PROMETHIUM, ArmorItem.Type.HELMET).setArmorTexture("promethium_layer_1")
     }
@@ -76,32 +69,32 @@ object ModItems {
     @JvmField val NEPTUNIUM_SLINGSHOT = REGISTER.registerKt("neptunium_slingshot") {
         ItemNeptuniumSlingshot()
     }
-
     @JvmField val PROMETHIUM_SLINGSHOT = REGISTER.registerKt("promethium_slingshot") {
         ItemPromethiumSlingshot()
     }
-
     @JvmField val STONE_BULLET = REGISTER.registerKt("stone_bullet") {
         ItemBullet(Tiers.STONE, Properties()) { ModEntityTypes.STONE_BULLET.get() }
     }
-
     @JvmField val IRON_BULLET = REGISTER.registerKt("iron_bullet") {
         ItemBullet(Tiers.IRON, Properties()) { ModEntityTypes.IRON_BULLET.get() }
     }
-
     @JvmField val NEPTUNIUM_BULLET = REGISTER.registerKt("neptunium_bullet") {
         ItemBullet(AquacultureAPI.MATS.NEPTUNIUM, Properties()) { ModEntityTypes.NEPTUNIUM_BULLET.get() }
     }
-
     @JvmField val PROMETHIUM_BULLET = REGISTER.registerKt("promethium_bullet") {
         ItemBullet(ModTiers.PROMETHIUM, Properties()) { ModEntityTypes.PROMETHIUM_BULLET.get() }
     }
 
     // other
+    @JvmField val PROMETHIUM_INGOT = REGISTER.registerKt("promethium_ingot") {
+        Item(Properties().fireResistant())
+    }
+    @JvmField val PROMETHIUM_NUGGET = REGISTER.registerKt("promethium_nugget") {
+        Item(Properties().fireResistant())
+    }
     @JvmField val PROMETHIUM_BLOCK = REGISTER.registerKt("promethium_block") {
         BlockItem(ModBlocks.PROMETHIUM_BLOCK.get(), Properties().fireResistant())
     }
-
     @JvmField val PROMETHEUS_BOUNTY = REGISTER.registerKt("prometheus_bounty") {
         BlockItemWithoutLevelRenderer(ModBlocks.PROMETHEUS_BOUNTY.get(), Properties().fireResistant()) {
             BlockEntityPrometheusBounty(BlockPos.ZERO, ModBlocks.PROMETHEUS_BOUNTY.get().defaultBlockState())
@@ -120,7 +113,7 @@ object ModItems {
         }
 
         //Registers fish buckets
-        REGISTER.registerKt<Item, Item>(name + "_bucket") {
+        REGISTER.registerKt(name + "_bucket") {
             MobBucketItem({ fish.get() }, { Fluids.LAVA }, { SoundEvents.BUCKET_EMPTY_FISH }, Properties().stacksTo(1))
         }
 

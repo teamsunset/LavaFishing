@@ -1,5 +1,6 @@
 package club.redux.sunset.lavafishing.datagenerator
 
+import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import club.redux.sunset.lavafishing.registry.ModItems
 import com.teammetallurgy.aquaculture.init.AquaItems
 import net.minecraft.advancements.critereon.ItemPredicate
@@ -93,7 +94,7 @@ class ModRecipeProvider(pOutput: PackOutput) : RecipeProvider(pOutput) {
                 ModItems.PROMETHIUM_LEGGINGS.get(),
                 ModItems.PROMETHIUM_BOOTS.get()
             )
-        ).save(pWriter, ModItems.PROMETHIUM_NUGGET.get().descriptionId + "_smelting")
+        ).save(pWriter, ModResourceLocation(ModItems.PROMETHIUM_NUGGET.get().descriptionId + "_smelting"))
     }
 
     private fun buildMisc(pWriter: Consumer<FinishedRecipe>) {
@@ -119,7 +120,7 @@ class ModRecipeProvider(pOutput: PackOutput) : RecipeProvider(pOutput) {
         ShapelessRecipeBuilder.shapeless(category, ModItems.PROMETHIUM_INGOT.get(), 9)
             .requires(ModItems.PROMETHIUM_BLOCK.get())
             .unlockedBy("has_item", has(ModItems.PROMETHIUM_INGOT.get()))
-            .save(pWriter, ModItems.PROMETHIUM_INGOT.get().descriptionId + "_from_block")
+            .save(pWriter, ModResourceLocation(ModItems.PROMETHIUM_INGOT.get().descriptionId + "_from_block"))
 
         val bulletPattern = { itemLike: ItemLike, ingredient: ItemLike ->
             ShapelessRecipeBuilder.shapeless(category, itemLike)

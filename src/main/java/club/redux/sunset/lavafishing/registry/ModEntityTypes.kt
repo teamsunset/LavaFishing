@@ -11,6 +11,7 @@ import net.minecraft.world.entity.MobCategory
 import net.minecraft.world.level.Level
 import net.minecraftforge.registries.ForgeRegistries
 import net.minecraftforge.registries.RegistryObject
+import kotlin.reflect.full.isSubclassOf
 
 object ModEntityTypes {
     @JvmField val REGISTER = UtilRegister.create(ForgeRegistries.ENTITY_TYPES, BuildConstants.MOD_ID)
@@ -30,7 +31,7 @@ object ModEntityTypes {
     @Suppress("UNCHECKED_CAST")
     fun <T : Entity> getEntriesByEntityParentClass(clazz: Class<T>): List<RegistryObject<EntityType<T>>> {
         return REGISTER.entries.filter {
-            clazz.isAssignableFrom(TYPE_MAP[it] ?: return@filter false)
+            TYPE_MAP[it]?.kotlin?.isSubclassOf(clazz.kotlin) ?: false
         } as List<RegistryObject<EntityType<T>>>
     }
 
