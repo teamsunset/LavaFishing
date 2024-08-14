@@ -34,6 +34,7 @@ open class ItemSlingshot(
      * 抄原版的
      */
     override fun releaseUsing(pStack: ItemStack, pLevel: Level, pEntityLiving: LivingEntity, pTimeLeft: Int) {
+
         // 如果实体不是玩家则直接返回
         if (pEntityLiving !is Player) return
 
@@ -74,9 +75,9 @@ open class ItemSlingshot(
 
         // 仅在服务器端执行发射逻辑
         if (pLevel.isServerSide()) {
-            // 创建箭矢实体并赋予初始属性
+            // 创建弹丸实体并赋予初始属性
             val itemBullet = itemStack.item as ItemBullet
-            val bullet = customArrow(itemBullet.createArrow(pLevel, itemStack, pEntityLiving)).apply {
+            val bullet = customBullet(itemBullet.createBullet(pLevel, itemStack, pEntityLiving)).apply {
                 shootFromRotation(
                     pEntityLiving,
                     pEntityLiving.getXRot(),
@@ -85,7 +86,7 @@ open class ItemSlingshot(
                     timePower * 3.0f,
                     1.0f
                 )
-            } as EntityBullet
+            }
 
             // 如果力量值为最大，则设置有暴击尾迹
             if (timePower == 1.0f) {
@@ -153,6 +154,8 @@ open class ItemSlingshot(
      *
      * 大概是forge的钩子，之前createArrow作为这里的参数传入
      * createArrow的结果可以在这里顶掉
+     *
+     * 仅用于兼容原版调用
      */
     @Deprecated("不建议用", ReplaceWith("this.customBullet(bullet)"))
     override fun customArrow(arrow: AbstractArrow): AbstractArrow {
