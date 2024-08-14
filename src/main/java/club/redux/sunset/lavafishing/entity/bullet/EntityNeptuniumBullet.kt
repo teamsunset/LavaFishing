@@ -68,7 +68,7 @@ open class EntityNeptuniumBullet : EntityBullet {
                     this.inGround = false
                     this.deltaMovement = this.getDirection(entity).scale(1.0)
                 }
-            } else {
+            } else if (this.deltaMovement.length() > 0.8) {
                 fishes(this.range / 2).minByOrNull { this.distanceTo(it) }?.let {
                     this.deltaMovement = this.trace(it)
                 } ?: fishes(this.range).maxByOrNull { this.getDirection(it).dot(this.trace(it).normalize()) }?.let {

@@ -115,6 +115,11 @@ class ModLanguageProvider(
             )
         }
 
+        // FishEntity
+        fishMap.forEach { (fish, pairs) ->
+            "entity${fish.descriptionId.substring(fish.descriptionId.indexOf('.'))}".addToTranslation(*pairs)
+        }
+
 
         // Tool
         ModItems.OBSIDIAN_FISHING_ROD.get().addToTranslation(
