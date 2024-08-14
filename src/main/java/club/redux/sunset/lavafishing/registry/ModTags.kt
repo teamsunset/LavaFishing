@@ -27,9 +27,9 @@ object ModTags {
             INGOTS("ingots"), NUGGETS("nuggets"), STORAGE_BLOCKS("storage_blocks")
         }
 
-        val PROMETHIUM_INGOT = tagKey(OreDirectoryType.INGOTS, "promethium")
-        val PROMETHIUM_NUGGET = tagKey(OreDirectoryType.NUGGETS, "promethium")
-        val PROMETHIUM_BLOCK = tagKey(OreDirectoryType.STORAGE_BLOCKS, "promethium")
+        @JvmField val PROMETHIUM_INGOT = tagKey(OreDirectoryType.INGOTS, "promethium")
+        @JvmField val PROMETHIUM_NUGGET = tagKey(OreDirectoryType.NUGGETS, "promethium")
+        @JvmField val PROMETHIUM_BLOCK = tagKey(OreDirectoryType.STORAGE_BLOCKS, "promethium")
 
         private fun tagKey(type: OreDirectoryType, path: String): TagKey<Item> =
             ItemTags.create(ResourceLocation("forge", "${type.type}/${path}"))
