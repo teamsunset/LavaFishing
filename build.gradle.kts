@@ -108,6 +108,7 @@ dependencies {
     val jeiCommonApi = "mezz.jei:jei-${minecraftVersion}-common-api:${jeiVersion}"
     val jeiForgeApi = "mezz.jei:jei-${minecraftVersion}-forge-api:${jeiVersion}"
     val jei = "mezz.jei:jei-${minecraftVersion}-forge:${jeiVersion}"
+    val configured = "curse.maven:configured-457570:5180900"
 
     val jable = "com.github.dsx137:jable:1.0.10"
 
@@ -121,11 +122,6 @@ dependencies {
     implementation(aquaculture)
     compileMaven(aquaculture)
 
-    // Jei
-    compileOnly(fg.deobf(jeiCommonApi))
-    compileOnly(fg.deobf(jeiForgeApi))
-    runtimeOnly(fg.deobf(jei))
-
     // Kotlin for Forge
     implementation(kotlinforforge)
     compileMaven(kotlinforforge)
@@ -133,6 +129,14 @@ dependencies {
     // Jable
     minecraftLibrary(jable)
     shade(jable)
+
+    // Jei
+    compileOnly(fg.deobf(jeiCommonApi))
+    compileOnly(fg.deobf(jeiForgeApi))
+    runtimeOnly(fg.deobf(jei))
+
+    // Configured
+    implementation(fg.deobf(configured))
 }
 
 minecraft {

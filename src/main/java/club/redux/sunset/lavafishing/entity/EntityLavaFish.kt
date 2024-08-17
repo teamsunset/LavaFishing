@@ -5,6 +5,7 @@ import club.redux.sunset.lavafishing.api.mixin.IMixinProxyAbstractFish
 import club.redux.sunset.lavafishing.client.renderer.EntityRendererLavaFish
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import club.redux.sunset.lavafishing.util.castToProxy
+import club.redux.sunset.lavafishing.util.isInFluid
 import com.teammetallurgy.aquaculture.entity.AquaFishEntity
 import com.teammetallurgy.aquaculture.entity.FishType
 import com.teammetallurgy.aquaculture.entity.ai.goal.FollowTypeSchoolLeaderGoal
@@ -17,6 +18,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
+import net.minecraft.tags.FluidTags
 import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import net.minecraft.world.InteractionHand
@@ -26,8 +28,10 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.ai.goal.FollowFlockLeaderGoal
+import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal
 import net.minecraft.world.entity.ai.goal.WrappedGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
+import net.minecraft.world.entity.ai.util.DefaultRandomPos
 import net.minecraft.world.entity.animal.AbstractFish
 import net.minecraft.world.entity.animal.AbstractSchoolingFish
 import net.minecraft.world.entity.animal.Cat
@@ -62,17 +66,22 @@ class EntityLavaFish(
 
     init {
         this.setPathfindingMalus(BlockPathTypes.LAVA, 0.0f)
-        this.moveControl = FishMoveControl(this)
+        this.moveControl = MoveControlLavaFish(this)
     }
 
     override fun registerGoals() {
         super.registerGoals()
 
-        goalSelector.availableGoals.forEach { prioritizedGoal: WrappedGoal ->  //Removes vanilla schooling goal
-            if (prioritizedGoal.goal.javaClass == FollowFlockLeaderGoal::class.java) {
-                goalSelector.removeGoal(prioritizedGoal.goal)
+        goalSelector.availableGoals.forEach { wrappedGoal: WrappedGoal ->  //Removes vanilla schooling goal
+            if (
+                wrappedGoal.goal.javaClass == FollowFlockLeaderGoal::class.java ||
+                wrappedGoal.goal.javaClass == RandomSwimmingGoal::class.java ||
+                wrappedGoal.goal.javaClass == FollowTypeSchoolLeaderGoal::class.java
+            ) {
+                goalSelector.removeGoal(wrappedGoal.goal)
             }
         }
+        goalSelector.addGoal(4, GoalLavaFishSwim(this))
         goalSelector.addGoal(5, FollowTypeSchoolLeaderGoal(this))
     }
 
@@ -138,7 +147,7 @@ class EntityLavaFish(
     }
 
     override fun aiStep() {
-        if (!acceptedFluids.any { this.isInFluidType(it.fluidType) } && this.onGround() && this.verticalCollision) {
+        if (!acceptedFluids.any { this.isInFluid(it) } && this.onGround() && this.verticalCollision) {
             this.deltaMovement = deltaMovement.add(
                 ((random.nextFloat() * 2.0f - 1.0f) * 0.05f).toDouble(),
                 0.4000000059604645,
@@ -152,7 +161,7 @@ class EntityLavaFish(
     }
 
     override fun travel(pTravelVector: Vec3) {
-        if (this.isEffectiveAi && acceptedFluids.any { this.isInFluidType(it.fluidType) }) {
+        if (this.isEffectiveAi && acceptedFluids.any { this.isInFluid(it) }) {
             this.moveRelative(0.01f, pTravelVector)
             this.move(MoverType.SELF, this.deltaMovement)
             this.deltaMovement = deltaMovement.scale(0.9)
@@ -180,9 +189,24 @@ class EntityLavaFish(
     override fun createNavigation(pLevel: Level): PathNavigation = LavaBoundPathNavigation(this, pLevel)
 
     companion object {
-        val acceptedFluids = arrayOf(Fluids.LAVA, Fluids.WATER)
+        val acceptedFluids = arrayOf(FluidTags.LAVA, FluidTags.WATER)
 
-        class FishMoveControl internal constructor(private val fish: AbstractFish) : MoveControl(fish) {
+        class GoalLavaFishSwim(private val fish: AbstractFish) : RandomSwimmingGoal(fish, 1.0, 40) {
+            override fun getPosition(): Vec3? {
+                val isAcceptedFluids = { p: BlockPos -> acceptedFluids.any { fish.level().getFluidState(p).`is`(it) } }
+                val randomPos = { DefaultRandomPos.getPos(fish, 10, 7) }
+
+                var vec3 = randomPos()
+                var i = 0
+                while (vec3 != null && !isAcceptedFluids(BlockPos.containing(vec3)) && i++ < 10) {
+                    vec3 = randomPos()
+                }
+
+                return vec3
+            }
+        }
+
+        class MoveControlLavaFish internal constructor(private val fish: AbstractFish) : MoveControl(fish) {
             override fun tick() {
                 if (fish.isEyeInFluidType(Fluids.LAVA.fluidType)) {
                     fish.deltaMovement = fish.deltaMovement.add(0.0, 0.005, 0.0)

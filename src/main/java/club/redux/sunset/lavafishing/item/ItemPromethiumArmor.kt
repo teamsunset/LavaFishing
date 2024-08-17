@@ -3,8 +3,8 @@ package club.redux.sunset.lavafishing.item
 import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModMobEffects
-import club.redux.sunset.lavafishing.util.toBlockPos
 import net.minecraft.client.Minecraft
+import net.minecraft.core.BlockPos
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectInstance
@@ -52,7 +52,8 @@ class ItemPromethiumArmor(
                     val applyEffect = { effect: MobEffect ->
                         event.entity.addEffect(MobEffectInstance(effect, 20, 0, false, false, true))
                     }
-                    val futureBlockPos = event.entity.position().add(event.entity.deltaMovement.scale(1.5)).toBlockPos()
+                    val futureBlockPos =
+                        BlockPos.containing(event.entity.position().add(event.entity.deltaMovement.scale(1.5)))
                     if (event.entity.isOnFire ||
                         level.getBlockState(event.entity.onPos).`is`(Blocks.LAVA) ||
                         level.getBlockState(futureBlockPos).`is`(Blocks.LAVA)
@@ -69,8 +70,10 @@ class ItemPromethiumArmor(
 
         fun onFogRender(event: ViewportEvent.RenderFog) {
             val player = Minecraft.getInstance().player ?: return
-            if (event.type == FogType.LAVA && player.getItemBySlot(EquipmentSlot.HEAD)
-                    .`is`(ModItems.PROMETHIUM_HELMET.get())
+            if (
+                event.type == FogType.LAVA &&
+                player.getItemBySlot(EquipmentSlot.HEAD).`is`(ModItems.PROMETHIUM_HELMET.get()) &&
+                !player.isSpectator
             ) {
                 event.nearPlaneDistance = 0.0f
                 event.farPlaneDistance = 20.0f

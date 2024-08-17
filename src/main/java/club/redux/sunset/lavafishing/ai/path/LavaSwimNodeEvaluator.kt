@@ -121,8 +121,7 @@ class LavaSwimNodeEvaluator(private val allowBreaching: Boolean) : NodeEvaluator
     override fun getBlockPathType(pLevel: BlockGetter, pX: Int, pY: Int, pZ: Int, pMob: Mob): BlockPathTypes {
         val blockPos = MutableBlockPos()
 
-        val acceptedFluids = EntityLavaFish.acceptedFluids
-        val isInAcceptedFluids = { p: BlockPos -> acceptedFluids.any { pLevel.getFluidState(p).`is`(it) } }
+        val isAcceptedFluids = { p: BlockPos -> EntityLavaFish.acceptedFluids.any { pLevel.getFluidState(p).`is`(it) } }
 
         for (i in pX until pX + this.entityWidth) {
             for (j in pY until pY + this.entityHeight) {
@@ -130,19 +129,19 @@ class LavaSwimNodeEvaluator(private val allowBreaching: Boolean) : NodeEvaluator
                     blockPos.set(i, j, k)
                     if (
                         pLevel.getFluidState(blockPos).isEmpty &&
-                        isInAcceptedFluids(blockPos.below()) &&
+                        isAcceptedFluids(blockPos.below()) &&
                         pLevel.getBlockState(blockPos).isAir
                     ) {
                         return BlockPathTypes.BREACH
                     }
 
-                    if (!isInAcceptedFluids(blockPos)) {
+                    if (!isAcceptedFluids(blockPos)) {
                         return BlockPathTypes.BLOCKED
                     }
                 }
             }
         }
 
-        return if (isInAcceptedFluids(blockPos.below())) BlockPathTypes.LAVA else BlockPathTypes.BLOCKED
+        return if (isAcceptedFluids(blockPos)) BlockPathTypes.LAVA else BlockPathTypes.BLOCKED
     }
 }

@@ -34,7 +34,9 @@ object ModTags {
 
     object OreDirectories {
         enum class OreDirectoryType(val type: String) {
-            INGOTS("ingots"), NUGGETS("nuggets"), STORAGE_BLOCKS("storage_blocks")
+            INGOTS("ingots"),
+            NUGGETS("nuggets"),
+            STORAGE_BLOCKS("storage_blocks")
         }
 
         @JvmField val PROMETHIUM_INGOT = tagKey(OreDirectoryType.INGOTS, "promethium")
