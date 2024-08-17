@@ -1,6 +1,0 @@
-{
-  "parent": "lavafishing:item/template/slingshot",
-  "textures": {
-    "layer0": "lavafishing:item/neptunium_slingshot_pulling_0"
-  }
-}

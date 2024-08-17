@@ -74,7 +74,7 @@ class ModDataProviderLanguage(
             ModItems.STEAM_FLYING_FISH.get() to arrayOf(
                 Locale.PRC to "蒸汽飞鱼",
                 Locale.US to "Steam Flying Fish"
-            )
+            ),
         )
 
         // Fish
@@ -101,7 +101,12 @@ class ModDataProviderLanguage(
             Locale.PRC to "黑曜石鱼竿",
             Locale.US to "Obsidian Fishing Rod"
         )
+        ModItems.NETHERITE_FISHING_ROD.get().addToTranslation(
+            Locale.PRC to "下界合金鱼竿",
+            Locale.US to "Netherite Fishing Rod"
+        )
 
+        // Armor
         ModItems.PROMETHIUM_BOOTS.get().addToTranslation(
             Locale.PRC to "钷靴子",
             Locale.US to "Promethium Boots"
