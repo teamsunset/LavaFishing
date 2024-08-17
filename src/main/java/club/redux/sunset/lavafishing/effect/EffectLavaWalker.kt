@@ -1,7 +1,7 @@
 package club.redux.sunset.lavafishing.effect
 
 import club.redux.sunset.lavafishing.registry.ModMobEffects
-import club.redux.sunset.lavafishing.util.toBlockPos
+import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.tags.FluidTags
@@ -29,7 +29,7 @@ class EffectLavaWalker : MobEffect(MobEffectCategory.BENEFICIAL, 0xCC3300) {
             val pos = pLivingEntity.position()
             val movement = pLivingEntity.deltaMovement
             val onPos = pLivingEntity.onPos
-            val futureBlockPos = pos.add(movement.scale(1.5)).toBlockPos()
+            val futureBlockPos = BlockPos.containing(pos.add(movement.scale(1.5)))
             val level = pLivingEntity.level()
 
             if (pLivingEntity.isInLava) {

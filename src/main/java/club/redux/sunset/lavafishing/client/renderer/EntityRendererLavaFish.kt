@@ -2,6 +2,7 @@ package club.redux.sunset.lavafishing.client.renderer
 
 import club.redux.sunset.lavafishing.client.renderlayer.RenderLayerJellyfish
 import club.redux.sunset.lavafishing.entity.EntityLavaFish
+import club.redux.sunset.lavafishing.util.isInFluid
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
 import com.teammetallurgy.aquaculture.Aquaculture
@@ -96,7 +97,7 @@ class EntityRendererLavaFish(
             if (fishType == FishType.LONGNOSE) {
                 matrixStack.translate(0.0f, 0.0f, -0.4f)
             }
-            if (!EntityLavaFish.acceptedFluids.any { fishEntity.isInFluidType(it.fluidType) } && fishType != FishType.HALIBUT) {
+            if (!EntityLavaFish.acceptedFluids.any { fishEntity.isInFluid(it) } && fishType != FishType.HALIBUT) {
                 if (fishType == FishType.MEDIUM || fishType == FishType.LARGE || fishType == FishType.CATFISH) {
                     matrixStack.translate(0.1f, 0.1f, -0.1f)
                 } else {
