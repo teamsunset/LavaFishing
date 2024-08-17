@@ -1,11 +1,9 @@
 package club.redux.sunset.lavafishing.event
 
-import club.redux.sunset.lavafishing.datagenerator.ModItemModelProvider
-import club.redux.sunset.lavafishing.datagenerator.ModItemTagProvider
-import club.redux.sunset.lavafishing.datagenerator.ModLootTableProvider
-import club.redux.sunset.lavafishing.datagenerator.ModRecipeProvider
+import club.redux.sunset.lavafishing.datagenerator.*
 import net.minecraft.data.tags.TagsProvider
 import net.minecraftforge.data.event.GatherDataEvent
+import java.util.*
 import java.util.concurrent.CompletableFuture
 
 object EventDataGenerator {
@@ -24,6 +22,8 @@ object EventDataGenerator {
             )
             addProvider(event.includeServer(), ModLootTableProvider(packOutput))
             addProvider(event.includeClient(), ModItemModelProvider(packOutput, event.existingFileHelper))
+            addProvider(true, ModLanguageProvider(packOutput, Locale.PRC))
+            addProvider(true, ModLanguageProvider(packOutput, Locale.US))
         }
     }
 }

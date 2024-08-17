@@ -114,7 +114,12 @@ object ModItems {
 
         //Registers fish buckets
         REGISTER.registerKt(name + "_bucket") {
-            MobBucketItem({ fish.get() }, { Fluids.LAVA }, { SoundEvents.BUCKET_EMPTY_FISH }, Properties().stacksTo(1))
+            MobBucketItem(
+                { fish.get() },
+                { Fluids.LAVA },
+                { SoundEvents.BUCKET_EMPTY_FISH },
+                Properties().stacksTo(1)
+            )
         }
 
         return REGISTER.registerKt(name) { itemSupplier() }
