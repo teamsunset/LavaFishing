@@ -15,6 +15,7 @@ import club.redux.sunset.lavafishing.misc.ModTiers
 import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt
 import com.teammetallurgy.aquaculture.api.AquacultureAPI
+import com.teammetallurgy.aquaculture.client.ClientHandler
 import com.teammetallurgy.aquaculture.entity.FishType
 import com.teammetallurgy.aquaculture.item.AquaFishingRodItem
 import com.teammetallurgy.aquaculture.item.FishItem.SMALL_FISH_RAW
@@ -26,6 +27,7 @@ import net.minecraft.world.item.*
 import net.minecraft.world.item.Item.Properties
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.material.Fluids
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 import net.minecraftforge.registries.ForgeRegistries
 import net.minecraftforge.registries.RegistryObject
 
@@ -128,5 +130,11 @@ object ModItems {
         }
 
         return REGISTER.registerKt(name) { itemSupplier() }
+    }
+
+    fun onClientSetup(event: FMLClientSetupEvent) {
+        REGISTER.entries.map { it.get() }.filterIsInstance<FishingRodItem>().forEach {
+            event.enqueueWork { ClientHandler.registerFishingRodModelProperties(it) }
+        }
     }
 }
