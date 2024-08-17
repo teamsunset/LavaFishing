@@ -13,6 +13,4 @@ object UtilMixin {
     }
 }
 
-fun <T1, T2 : IMixinProxy<T1>> T1.castToProxy(clazz: Class<T2>): T2 {
-    return UtilMixin.castToProxy(this, clazz)
-}
+fun <T1, T2 : IMixinProxy<T1>> T1.castToProxy(clazz: Class<T2>): T2 = UtilMixin.castToProxy(this, clazz)

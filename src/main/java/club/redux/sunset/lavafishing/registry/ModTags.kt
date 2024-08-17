@@ -1,10 +1,12 @@
 package club.redux.sunset.lavafishing.registry
 
 import club.redux.sunset.lavafishing.misc.ModResourceLocation
+import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.BlockTags
 import net.minecraft.tags.ItemTags
 import net.minecraft.tags.TagKey
+import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 
@@ -16,11 +18,19 @@ object ModTags {
 
     }
 
+    object EntityTypes {
+        @JvmField val LAVA_FISH = tag("lava_fish")
+
+        private fun tag(path: String): TagKey<EntityType<*>> =
+            TagKey.create(Registries.ENTITY_TYPE, ModResourceLocation(path))
+    }
+
     object Items {
         @JvmField val TOOLTIP = tag("tooltip")
 
         private fun tag(path: String): TagKey<Item> = ItemTags.create(ModResourceLocation(path))
     }
+
 
     object OreDirectories {
         enum class OreDirectoryType(val type: String) {

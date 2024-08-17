@@ -10,20 +10,22 @@ object EventDataGenerator {
     @JvmStatic
     fun onGatherData(event: GatherDataEvent) {
         event.generator.apply {
-            addProvider(true, ModRecipeProvider(packOutput))
+            addProvider(true, ModDataProviderRecipe(packOutput))
             addProvider(
                 event.includeServer(),
-                ModItemTagProvider(
+                ModDataProviderItemTags(
                     packOutput,
                     event.lookupProvider,
                     CompletableFuture.completedFuture(TagsProvider.TagLookup.empty()),
                     event.existingFileHelper
                 )
             )
-            addProvider(event.includeServer(), ModLootTableProvider(packOutput))
-            addProvider(event.includeClient(), ModItemModelProvider(packOutput, event.existingFileHelper))
-            addProvider(true, ModLanguageProvider(packOutput, Locale.PRC))
-            addProvider(true, ModLanguageProvider(packOutput, Locale.US))
+            addProvider(event.includeServer(), ModDataProviderLootTable(packOutput))
+            addProvider(event.includeClient(), ModDataProviderItemModel(packOutput, event.existingFileHelper))
+            addProvider(true, ModDataProviderLanguage(packOutput, Locale.PRC))
+            addProvider(true, ModDataProviderLanguage(packOutput, Locale.US))
+            addProvider(true, ModDataProviderBiomeModifier(packOutput))
+            addProvider(true, ModDataProviderEntityTypeTags(packOutput, event.lookupProvider, event.existingFileHelper))
         }
     }
 }

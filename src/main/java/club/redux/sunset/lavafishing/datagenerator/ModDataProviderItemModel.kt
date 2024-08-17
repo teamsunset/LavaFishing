@@ -11,7 +11,7 @@ import net.minecraftforge.client.model.generators.ItemModelProvider
 import net.minecraftforge.common.data.ExistingFileHelper
 import org.slf4j.LoggerFactory
 
-class ModItemModelProvider(
+class ModDataProviderItemModel(
     packOutput: PackOutput,
     existingFileHelper: ExistingFileHelper,
 ) : ItemModelProvider(packOutput, BuildConstants.MOD_ID, existingFileHelper) {

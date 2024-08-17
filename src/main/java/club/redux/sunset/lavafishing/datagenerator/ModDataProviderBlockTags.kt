@@ -7,7 +7,7 @@ import net.minecraftforge.common.data.BlockTagsProvider
 import net.minecraftforge.common.data.ExistingFileHelper
 import java.util.concurrent.CompletableFuture
 
-class ModBlockTagsProvider(
+class ModDataProviderBlockTags(
     packOutput: PackOutput,
     lookupProvider: CompletableFuture<HolderLookup.Provider>,
     existingFileHelper: ExistingFileHelper,

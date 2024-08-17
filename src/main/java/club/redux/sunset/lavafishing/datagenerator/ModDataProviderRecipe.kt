@@ -11,7 +11,7 @@ import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.level.ItemLike
 import java.util.function.Consumer
 
-class ModRecipeProvider(pOutput: PackOutput) : RecipeProvider(pOutput) {
+class ModDataProviderRecipe(pOutput: PackOutput) : RecipeProvider(pOutput) {
     override fun buildRecipes(pWriter: Consumer<FinishedRecipe>) {
         this.buildTools(pWriter)
         this.buildArmors(pWriter)
