@@ -18,7 +18,6 @@ import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModLootTables
 import club.redux.sunset.lavafishing.registry.ModParticleTypes
 import club.redux.sunset.lavafishing.registry.ModPotions
-import com.teammetallurgy.aquaculture.client.ClientHandler
 import net.minecraft.client.particle.SpriteSet
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.client.event.EntityRenderersEvent
@@ -127,7 +126,7 @@ class EventHandler {
         @SubscribeEvent
         fun onClientSetup(event: FMLClientSetupEvent) {
             ItemSlingshot.onClientSetup(event)
-            event.enqueueWork { ClientHandler.registerFishingRodModelProperties(ModItems.OBSIDIAN_FISHING_ROD.get()) }
+            ModItems.onClientSetup(event)
         }
 
         @SubscribeEvent
