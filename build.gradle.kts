@@ -219,7 +219,6 @@ project.eclipse.synchronizationTasks(generateTemplates)
 // 同一流程中只有一个processResources任务，所以runData必须和其他任务分开执行
 tasks.processResources {
     val targets = listOf("META-INF/mods.toml", "pack.mcmeta")
-
     inputs.properties(props)
 
     filesMatching(targets) {
@@ -273,9 +272,9 @@ tasks.jar {
     }
 }
 
-tasks.compileJava {
-    outputs.upToDateWhen { false }
-}
+//tasks.compileJava {
+//    outputs.upToDateWhen { false }
+//}
 
 tasks.withType(GenerateModuleMetadata::class.java) {
     enabled = false

@@ -96,7 +96,7 @@ class EntityRendererLavaFish(
             if (fishType == FishType.LONGNOSE) {
                 matrixStack.translate(0.0f, 0.0f, -0.4f)
             }
-            if (!fishEntity.isInLava && fishType != FishType.HALIBUT) {
+            if (!EntityLavaFish.acceptedFluids.any { fishEntity.isInFluidType(it.fluidType) } && fishType != FishType.HALIBUT) {
                 if (fishType == FishType.MEDIUM || fishType == FishType.LARGE || fishType == FishType.CATFISH) {
                     matrixStack.translate(0.1f, 0.1f, -0.1f)
                 } else {

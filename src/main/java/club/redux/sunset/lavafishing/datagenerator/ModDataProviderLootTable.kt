@@ -16,7 +16,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition
 import net.minecraftforge.registries.ForgeRegistries
 
-class ModLootTableProvider(
+class ModDataProviderLootTable(
     pOutput: PackOutput,
 ) : LootTableProvider(pOutput, emptySet(), emptyList()) {
     override fun getTables(): MutableList<SubProviderEntry> {

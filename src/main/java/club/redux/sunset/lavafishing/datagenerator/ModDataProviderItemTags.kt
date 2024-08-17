@@ -13,7 +13,7 @@ import net.minecraftforge.common.Tags
 import net.minecraftforge.common.data.ExistingFileHelper
 import java.util.concurrent.CompletableFuture
 
-class ModItemTagProvider(
+class ModDataProviderItemTags(
     packOutput: PackOutput,
     lookupProvider: CompletableFuture<HolderLookup.Provider>,
     blockTags: CompletableFuture<TagLookup<Block>>,

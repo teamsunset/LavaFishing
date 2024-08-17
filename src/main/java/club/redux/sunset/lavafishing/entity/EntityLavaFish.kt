@@ -1,5 +1,6 @@
 package club.redux.sunset.lavafishing.entity
 
+import club.redux.sunset.lavafishing.ai.path.LavaBoundPathNavigation
 import club.redux.sunset.lavafishing.api.mixin.IMixinProxyAbstractFish
 import club.redux.sunset.lavafishing.client.renderer.EntityRendererLavaFish
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
@@ -9,7 +10,6 @@ import com.teammetallurgy.aquaculture.entity.FishType
 import com.teammetallurgy.aquaculture.entity.ai.goal.FollowTypeSchoolLeaderGoal
 import com.teammetallurgy.aquaculture.init.AquaItems
 import com.teammetallurgy.aquaculture.init.AquaSounds
-import com.teammetallurgy.aquaculture.misc.AquaConfig
 import com.teammetallurgy.aquaculture.misc.StackHelper
 import net.minecraft.advancements.CriteriaTriggers
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -27,6 +27,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.ai.goal.FollowFlockLeaderGoal
 import net.minecraft.world.entity.ai.goal.WrappedGoal
+import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.animal.AbstractFish
 import net.minecraft.world.entity.animal.AbstractSchoolingFish
 import net.minecraft.world.entity.animal.Cat
@@ -50,7 +51,6 @@ import net.minecraftforge.event.entity.EntityAttributeCreationEvent
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
 import net.minecraftforge.registries.ForgeRegistries
-import java.util.function.Consumer
 import kotlin.math.sqrt
 
 class EntityLavaFish(
@@ -58,6 +58,8 @@ class EntityLavaFish(
     level: Level,
     private val fishType: FishType,
 ) : AquaFishEntity(entityType, level, fishType) {
+    private var freezeTick = 0
+
     init {
         this.setPathfindingMalus(BlockPathTypes.LAVA, 0.0f)
         this.moveControl = FishMoveControl(this)
@@ -66,11 +68,11 @@ class EntityLavaFish(
     override fun registerGoals() {
         super.registerGoals()
 
-        goalSelector.availableGoals.forEach(Consumer { prioritizedGoal: WrappedGoal ->  //Removes vanilla schooling goal
+        goalSelector.availableGoals.forEach { prioritizedGoal: WrappedGoal ->  //Removes vanilla schooling goal
             if (prioritizedGoal.goal.javaClass == FollowFlockLeaderGoal::class.java) {
                 goalSelector.removeGoal(prioritizedGoal.goal)
             }
-        })
+        }
         goalSelector.addGoal(5, FollowTypeSchoolLeaderGoal(this))
     }
 
@@ -116,6 +118,14 @@ class EntityLavaFish(
     }
 
     override fun handleAirSupply(pAirSupply: Int) {
+        if (this.isAlive && this.isInWater) {
+            this.freezeTick--
+            if (this.freezeTick == -10) {
+                this.freezeTick = 0
+                this.hurt(this.damageSources().freeze(), 1.0f)
+            }
+        }
+
         if (this.isAlive && !this.isInLava) {
             this.airSupply = pAirSupply - 1
             if (this.airSupply == -20) {
@@ -128,7 +138,7 @@ class EntityLavaFish(
     }
 
     override fun aiStep() {
-        if (!this.isInLava && this.onGround() && this.verticalCollision) {
+        if (!acceptedFluids.any { this.isInFluidType(it.fluidType) } && this.onGround() && this.verticalCollision) {
             this.deltaMovement = deltaMovement.add(
                 ((random.nextFloat() * 2.0f - 1.0f) * 0.05f).toDouble(),
                 0.4000000059604645,
@@ -142,7 +152,7 @@ class EntityLavaFish(
     }
 
     override fun travel(pTravelVector: Vec3) {
-        if (this.isEffectiveAi && this.isInLava) {
+        if (this.isEffectiveAi && acceptedFluids.any { this.isInFluidType(it.fluidType) }) {
             this.moveRelative(0.01f, pTravelVector)
             this.move(MoverType.SELF, this.deltaMovement)
             this.deltaMovement = deltaMovement.scale(0.9)
@@ -154,6 +164,12 @@ class EntityLavaFish(
         }
     }
 
+    override fun stopFollowing() {
+        if (this.leader != null) {
+            super.stopFollowing()
+        }
+    }
+
     override fun getAmbientSound(): SoundEvent = AquaSounds.FISH_AMBIENT.get()
     override fun getDeathSound(): SoundEvent = AquaSounds.FISH_DEATH.get()
     override fun getHurtSound(damageSource: DamageSource): SoundEvent = AquaSounds.FISH_HURT.get()
@@ -161,15 +177,11 @@ class EntityLavaFish(
     override fun playerTouch(player: Player) = super.playerTouch(player)
     override fun fireImmune(): Boolean = true
 
-
-    override fun stopFollowing() {
-        if (this.leader != null) {
-            super.stopFollowing()
-        }
-    }
-
+    override fun createNavigation(pLevel: Level): PathNavigation = LavaBoundPathNavigation(this, pLevel)
 
     companion object {
+        val acceptedFluids = arrayOf(Fluids.LAVA, Fluids.WATER)
+
         class FishMoveControl internal constructor(private val fish: AbstractFish) : MoveControl(fish) {
             override fun tick() {
                 if (fish.isEyeInFluidType(Fluids.LAVA.fluidType)) {
@@ -177,7 +189,8 @@ class EntityLavaFish(
                 }
 
                 if (this.operation == Operation.MOVE_TO && !fish.navigation.isDone) {
-                    val targetSpeed = (this.speedModifier * fish.getAttributeValue(Attributes.MOVEMENT_SPEED)).toFloat()
+                    val targetSpeed =
+                        (this.speedModifier * fish.getAttributeValue(Attributes.MOVEMENT_SPEED)).toFloat()
                     fish.speed = Mth.lerp(0.125f, fish.speed, targetSpeed)
                     val deltaX = this.wantedX - fish.x
                     val deltaY = this.wantedY - fish.y
@@ -211,7 +224,8 @@ class EntityLavaFish(
             random: RandomSource,
         ): Boolean {
             val seaLevel = serverLevelAccessor.level.seaLevel
-            val minY = seaLevel - AquaConfig.BASIC_OPTIONS.fishSpawnLevelModifier.get()
+//            val minY = seaLevel - AquaConfig.BASIC_OPTIONS.fishSpawnLevelModifier.get()
+            val minY = 0
             val isAllNeighborsSource =
                 isSourceBlock(serverLevelAccessor, pos.north()) &&
                         isSourceBlock(serverLevelAccessor, pos.south()) &&
@@ -243,12 +257,13 @@ class EntityLavaFish(
 
         fun onEntityAttributeCreation(event: EntityAttributeCreationEvent) {
             ModEntityTypes.getEntriesByEntityParentClass(EntityLavaFish::class.java).forEach {
-                event.put(it.get(), createAttributes().build())
+                event.put(it.get(), AbstractFish.createAttributes().build())
             }
         }
 
         fun onSetup(event: FMLCommonSetupEvent) {
             try {
+                // CatBreeding
                 val catBreedingItems = Cat.TEMPT_INGREDIENT
                 val ocelotBreedingItems = Ocelot.TEMPT_INGREDIENT
                 val lavaFish: MutableList<ItemStack> = ArrayList()
