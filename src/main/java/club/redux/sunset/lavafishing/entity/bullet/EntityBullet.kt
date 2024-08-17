@@ -5,6 +5,9 @@ import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
 import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.util.UtilEnchantment
+import net.minecraft.network.FriendlyByteBuf
+import net.minecraft.network.protocol.Packet
+import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -16,8 +19,10 @@ import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
+import net.minecraftforge.entity.IEntityAdditionalSpawnData
+import net.minecraftforge.network.NetworkHooks
 
-open class EntityBullet : AbstractArrow {
+open class EntityBullet : AbstractArrow, IEntityAdditionalSpawnData {
     private val inaccuracyMultiplier = 3.0F
     private var waterInertia = 0.6F
 
@@ -104,20 +109,20 @@ open class EntityBullet : AbstractArrow {
 
     //-----------------network----------------//
 
-//    override fun writeSpawnData(buffer: FriendlyByteBuf) {
+    override fun writeSpawnData(buffer: FriendlyByteBuf) {
 //        buffer.writeResourceLocation(this.soundEvent.location)
-//        buffer.writeFloat(this.waterInertia)
-//    }
+        buffer.writeFloat(this.waterInertia)
+    }
 
-//    override fun readSpawnData(additionalData: FriendlyByteBuf) {
+    override fun readSpawnData(additionalData: FriendlyByteBuf) {
 //        this.soundEvent =
 //            ForgeRegistries.SOUND_EVENTS.getValue(additionalData.readResourceLocation()) ?: SoundEvents.EMPTY
-//        this.waterInertia = additionalData.readFloat()
-//    }
+        this.waterInertia = additionalData.readFloat()
+    }
 
-//    override fun getAddEntityPacket(): Packet<ClientGamePacketListener> {
-//        return NetworkHooks.getEntitySpawningPacket(this)
-//    }
+    override fun getAddEntityPacket(): Packet<ClientGamePacketListener> {
+        return NetworkHooks.getEntitySpawningPacket(this)
+    }
 
     companion object {
         @JvmField val DEFAULT_TEXTURE = ModResourceLocation("textures/entity/bullet/default_bullet.png")

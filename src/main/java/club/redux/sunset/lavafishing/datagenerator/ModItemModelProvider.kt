@@ -20,18 +20,18 @@ class ModItemModelProvider(
         this.commonModels()
     }
 
+    private fun register(itemId: String) {
+        withExistingParent("item/$itemId", "item/generated")
+            .texture("layer0", "item/$itemId")
+    }
+
+    private fun registerByParentClasses(vararg parentClasses: Class<*>) {
+        ModItems.REGISTER.entries
+            .filter { entry -> parentClasses.any { parentClass -> parentClass.isInstance(entry.get()) } }
+            .forEach { register(it.key!!.location().path) }
+    }
+
     private fun commonModels() {
-        val register = { itemId: String ->
-            withExistingParent("item/$itemId", "item/generated")
-                .texture("layer0", "item/$itemId")
-        }
-
-        fun registerByParentClasses(vararg parentClasses: Class<*>) {
-            ModItems.REGISTER.entries
-                .filter { entry -> parentClasses.any { parentClass -> parentClass.isInstance(entry.get()) } }
-                .forEach { register(it.key!!.location().path) }
-        }
-
         LoggerFactory.getLogger("ModItemModelProvider").info("Registering item models...")
 
         registerByParentClasses(
