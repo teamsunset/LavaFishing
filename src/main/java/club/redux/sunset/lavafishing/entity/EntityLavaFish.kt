@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.entity
 
-import club.redux.sunset.lavafishing.ai.path.LavaBoundPathNavigation
+import club.redux.sunset.lavafishing.ai.path.PathNavigationLavaBound
 import club.redux.sunset.lavafishing.api.mixin.IMixinProxyAbstractFish
 import club.redux.sunset.lavafishing.client.renderer.EntityRendererLavaFish
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
@@ -186,7 +186,7 @@ class EntityLavaFish(
     override fun playerTouch(player: Player) = super.playerTouch(player)
     override fun fireImmune(): Boolean = true
 
-    override fun createNavigation(pLevel: Level): PathNavigation = LavaBoundPathNavigation(this, pLevel)
+    override fun createNavigation(pLevel: Level): PathNavigation = PathNavigationLavaBound(this, pLevel)
 
     companion object {
         val acceptedFluids = arrayOf(FluidTags.LAVA, FluidTags.WATER)

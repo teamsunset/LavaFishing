@@ -115,6 +115,10 @@ class ModDataProviderLanguage(
             Locale.PRC to "钷胸甲",
             Locale.US to "Promethium Chestplate"
         )
+        ModItems.PROMETHIUM_LEGGINGS.get().addToTranslation(
+            Locale.PRC to "钷护腿",
+            Locale.US to "Promethium Leggings"
+        )
         ModItems.PROMETHIUM_HELMET.get().addToTranslation(
             Locale.PRC to "钷头盔",
             Locale.US to "Promethium Helmet"

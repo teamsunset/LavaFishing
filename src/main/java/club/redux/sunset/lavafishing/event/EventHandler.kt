@@ -2,7 +2,7 @@ package club.redux.sunset.lavafishing.event
 
 
 import club.redux.sunset.lavafishing.BuildConstants
-import club.redux.sunset.lavafishing.ai.goal.SlingshotGoal
+import club.redux.sunset.lavafishing.ai.goal.GoalSlingshot
 import club.redux.sunset.lavafishing.behavior.BehaviorDispenserBullet
 import club.redux.sunset.lavafishing.client.model.ModelBullet
 import club.redux.sunset.lavafishing.client.particle.ParticleFirePunch
@@ -72,7 +72,7 @@ class EventHandler {
 
         @SubscribeEvent
         fun onEntityJoinLevel(event: EntityJoinLevelEvent) {
-            SlingshotGoal.onEntityJoinLevel(event)
+            GoalSlingshot.onEntityJoinLevel(event)
         }
 
         @SubscribeEvent

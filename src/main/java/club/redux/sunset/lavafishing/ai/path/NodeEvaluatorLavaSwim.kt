@@ -18,7 +18,7 @@ import net.minecraft.world.level.pathfinder.NodeEvaluator
 import net.minecraft.world.level.pathfinder.Target
 import kotlin.math.max
 
-class LavaSwimNodeEvaluator(private val allowBreaching: Boolean) : NodeEvaluator() {
+class NodeEvaluatorLavaSwim(private val allowBreaching: Boolean) : NodeEvaluator() {
     private val pathTypesByPosCache: Long2ObjectMap<BlockPathTypes> = Long2ObjectOpenHashMap()
 
     override fun prepare(pLevel: PathNavigationRegion, pMob: Mob) {
