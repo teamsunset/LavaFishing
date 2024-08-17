@@ -130,7 +130,7 @@ class EntityLavaFish(
             this.airSupply = pAirSupply - 1
             if (this.airSupply == -20) {
                 this.airSupply = 0
-                this.hurt(damageSources().drown(), 2.0f)
+                this.hurt(this.damageSources().drown(), 2.0f)
             }
         } else {
             this.airSupply = 300

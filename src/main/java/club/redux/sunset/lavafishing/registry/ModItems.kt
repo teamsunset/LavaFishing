@@ -3,7 +3,6 @@ package club.redux.sunset.lavafishing.registry
 import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.block.blockentity.BlockEntityPrometheusBounty
 import club.redux.sunset.lavafishing.entity.EntityLavaFish
-import club.redux.sunset.lavafishing.item.ItemObsidianFishingRod
 import club.redux.sunset.lavafishing.item.ItemPromethiumArmor
 import club.redux.sunset.lavafishing.item.block.BlockItemWithoutLevelRenderer
 import club.redux.sunset.lavafishing.item.bullet.ItemBullet
@@ -17,6 +16,7 @@ import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt
 import com.teammetallurgy.aquaculture.api.AquacultureAPI
 import com.teammetallurgy.aquaculture.entity.FishType
+import com.teammetallurgy.aquaculture.item.AquaFishingRodItem
 import com.teammetallurgy.aquaculture.item.FishItem.SMALL_FISH_RAW
 import net.minecraft.core.BlockPos
 import net.minecraft.sounds.SoundEvents
@@ -32,7 +32,12 @@ import net.minecraftforge.registries.RegistryObject
 object ModItems {
     @JvmField val REGISTER = UtilRegister.create(ForgeRegistries.ITEMS, BuildConstants.MOD_ID)
 
-    @JvmField val OBSIDIAN_FISHING_ROD = REGISTER.registerKt("obsidian_fishing_rod") { ItemObsidianFishingRod() }
+    @JvmField val OBSIDIAN_FISHING_ROD = REGISTER.registerKt("obsidian_fishing_rod") {
+        AquaFishingRodItem(ModTiers.OBSIDIAN, Properties().fireResistant().durability(128))
+    }
+    @JvmField val NETHERITE_FISHING_ROD = REGISTER.registerKt("netherite_fishing_rod") {
+        AquaFishingRodItem(Tiers.NETHERITE, Properties().fireResistant().durability(800))
+    }
 
     // Fish
     @JvmField val FLAME_SQUAT_LOBSTER = registerFish("flame_squat_lobster", FishType.SMALL) { ItemFlameSquatLobster() }
