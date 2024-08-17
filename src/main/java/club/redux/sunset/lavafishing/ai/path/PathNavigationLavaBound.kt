@@ -7,12 +7,12 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.pathfinder.PathFinder
 import net.minecraft.world.phys.Vec3
 
-class LavaBoundPathNavigation(pMob: Mob, pLevel: Level) : PathNavigation(pMob, pLevel) {
+class PathNavigationLavaBound(pMob: Mob, pLevel: Level) : PathNavigation(pMob, pLevel) {
     private var allowBreaching = false
 
     override fun createPathFinder(maxVisitedNodes: Int): PathFinder {
 //        this.allowBreaching = mob.type === EntityType.DOLPHIN
-        this.nodeEvaluator = LavaSwimNodeEvaluator(this.allowBreaching)
+        this.nodeEvaluator = NodeEvaluatorLavaSwim(this.allowBreaching)
         return PathFinder(this.nodeEvaluator, maxVisitedNodes)
     }
 

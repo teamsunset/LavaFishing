@@ -5,7 +5,7 @@ import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal
 import net.minecraft.world.entity.monster.Skeleton
 import net.minecraftforge.event.entity.EntityJoinLevelEvent
 
-class SlingshotGoal(
+class GoalSlingshot(
     private val skeleton: Skeleton,
     pSpeedModifier: Double,
     pAttackIntervalMin: Int,
@@ -21,7 +21,7 @@ class SlingshotGoal(
         fun onEntityJoinLevel(event: EntityJoinLevelEvent) {
             if (event.entity is Skeleton) {
                 val skeleton = event.entity as Skeleton
-                skeleton.goalSelector.addGoal(4, SlingshotGoal(skeleton, 1.0, 20, 15.0f))
+                skeleton.goalSelector.addGoal(4, GoalSlingshot(skeleton, 1.0, 20, 15.0f))
             }
         }
     }
