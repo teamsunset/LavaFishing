@@ -14,15 +14,16 @@ class BlockEntityRendererPrometheusBounty(
     context: BlockEntityRendererProvider.Context,
 ) : ChestRenderer<BlockEntityPrometheusBounty>(context) {
     override fun getMaterial(blockEntity: BlockEntityPrometheusBounty, chestType: ChestType): Material {
-        return Material(Sheets.CHEST_SHEET, ModResourceLocation("block/prometheus_bounty"))
+        return Material(Sheets.CHEST_SHEET, ModResourceLocation("entity/chest/prometheus_bounty"))
     }
 
     companion object {
         @JvmStatic
         fun onRegisterRenderers(event: EntityRenderersEvent.RegisterRenderers) {
-            event.registerBlockEntityRenderer(ModBlockEntityTypes.PROMETHEUS_BOUNTY.get()) {
-                BlockEntityRendererPrometheusBounty(it)
-            }
+            event.registerBlockEntityRenderer(
+                ModBlockEntityTypes.PROMETHEUS_BOUNTY.get(),
+                ::BlockEntityRendererPrometheusBounty
+            )
         }
     }
 }
