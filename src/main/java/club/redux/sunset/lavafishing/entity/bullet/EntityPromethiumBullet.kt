@@ -33,15 +33,24 @@ class EntityPromethiumBullet(
         )
     }
 
-    private fun deriveBullet(dividable: Boolean, divisionNum: Int, divisionTimes: Int): EntityPromethiumBullet {
+    private fun dividedBullet(dividable: Boolean, divisionNum: Int, divisionTimes: Int): EntityPromethiumBullet {
         return EntityPromethiumBullet(ModEntityTypes.PROMETHIUM_BULLET.get(), this.level()).also {
-            this.setPos(this.x, this.y, this.z)
-            this.dividable = dividable
-            this.divisionNum = divisionNum
-            this.divisionTimes = divisionTimes
+            it.setPos(this.x, this.y, this.z)
+            it.dividable = dividable
+            it.divisionNum = divisionNum
+            it.divisionTimes = divisionTimes
             it.owner = this.owner
             it.baseDamage = this.baseDamage
             it.remainingFireTicks = this.remainingFireTicks
+        }
+    }
+
+    private fun divide(num: Int, velocity: Double, b: Double = 1.0) {
+        Utils.generateArchimedianScrew(num, b).forEach { point ->
+            this.level().addFreshEntity(dividedBullet(false, 0, 0).also {
+                it.deltaMovement = Vec3(point.first, -3.0 * velocity, point.second)
+                it.waterInertia = this.waterInertia
+            })
         }
     }
 
@@ -85,22 +94,13 @@ class EntityPromethiumBullet(
         }
     }
 
-    private fun divide(num: Int, velocity: Double, b: Double = 1.0) {
-        Utils.generateArchimedianScrew(num, b).forEach { point ->
-            this.level().addFreshEntity(deriveBullet(false, 0, 0).also {
-                it.deltaMovement = Vec3(point.first, -3.0 * velocity, point.second)
-                it.waterInertia = this.waterInertia
-            })
-        }
-    }
-
     private fun hitDivide() {
         if (this.divisionTimes <= 1) {
             this.explode(1f)
             this.divide(this.divisionNum, -0.3, 0.5)
         } else {
             this.explode(2f)
-            this.level().addFreshEntity(deriveBullet(true, this.divisionNum, this.divisionTimes - 1).also {
+            this.level().addFreshEntity(dividedBullet(true, this.divisionNum, this.divisionTimes - 1).also {
                 it.deltaMovement = Vec3(0.0, 1.0, 0.0)
                 it.waterInertia = this.waterInertia
             })
