@@ -1,6 +1,12 @@
 package club.redux.sunset.lavafishing.entity.bullet
 
-import net.minecraft.world.entity.*
+import club.redux.sunset.lavafishing.misc.ModTiers
+import com.teammetallurgy.aquaculture.Aquaculture
+import com.teammetallurgy.aquaculture.api.AquacultureAPI
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.MobType
 import net.minecraft.world.entity.monster.Drowned
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
@@ -10,37 +16,19 @@ import kotlin.math.log
 import kotlin.math.max
 
 
-open class EntityNeptuniumBullet : EntityBullet {
+open class EntityNeptuniumBullet(
+    entityType: EntityType<out EntityNeptuniumBullet>,
+    world: Level,
+) : EntityBullet(entityType, world, AquacultureAPI.MATS.NEPTUNIUM) {
     val range = 10.0
     val baseTraceRate = 0.3
     val predicate = { entity: Entity ->
-        entity is Mob && (entity.mobType == MobType.WATER ||
-                entity is Drowned
-                )
+        entity is Mob && (entity.mobType == MobType.WATER || entity is Drowned)
     }
 
     init {
         this.waterInertia = 1.0F
     }
-
-    constructor(
-        entityType: EntityType<out EntityNeptuniumBullet>,
-        world: Level,
-    ) : super(entityType, world)
-
-    constructor(
-        entityType: EntityType<out EntityNeptuniumBullet>,
-        owner: LivingEntity,
-        level: Level,
-    ) : super(entityType, owner, level)
-
-    constructor(
-        entityType: EntityType<out EntityNeptuniumBullet>,
-        x: Double,
-        y: Double,
-        z: Double,
-        level: Level,
-    ) : super(entityType, x, y, z, level)
 
 
     override fun tick() {

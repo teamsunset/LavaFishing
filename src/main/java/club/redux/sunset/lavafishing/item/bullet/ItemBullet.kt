@@ -19,19 +19,14 @@ open class ItemBullet(
     properties: Properties,
     val entityTypeProvider: () -> EntityType<out EntityBullet>,
 ) : ArrowItem(properties) {
-    open val baseDamage = 0.5
 
     final override fun isInfinite(stack: ItemStack, bow: ItemStack, player: Player): Boolean {
         return EnchantmentHelper.getTagEnchantmentLevel(Enchantments.INFINITY_ARROWS, bow) > 0
     }
 
-    open fun attachBasePropertiesToBullet(bullet: EntityBullet) {
-        bullet.baseDamage = this.baseDamage * tier.attackDamageBonus
-    }
+    open fun attachBasePropertiesToBullet(bullet: EntityBullet) = Unit
 
-    open fun customBullet(pLevel: Level): EntityBullet {
-        return entityTypeProvider().create(pLevel)!!
-    }
+    open fun customBullet(pLevel: Level): EntityBullet = entityTypeProvider().create(pLevel)!!
 
     /**
      * # 第一步
