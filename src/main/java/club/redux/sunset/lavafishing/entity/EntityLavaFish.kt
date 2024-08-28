@@ -2,18 +2,16 @@ package club.redux.sunset.lavafishing.entity
 
 import club.redux.sunset.lavafishing.ai.path.PathNavigationLavaBound
 import club.redux.sunset.lavafishing.api.mixin.IMixinProxyAbstractFish
-import club.redux.sunset.lavafishing.client.renderer.EntityRendererLavaFish
+import club.redux.sunset.lavafishing.client.renderer.entity.EntityRendererLavaFish
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import club.redux.sunset.lavafishing.util.castToProxy
 import club.redux.sunset.lavafishing.util.isInFluid
-import com.teammetallurgy.aquaculture.entity.AquaFishEntity
 import com.teammetallurgy.aquaculture.entity.FishType
 import com.teammetallurgy.aquaculture.entity.ai.goal.FollowTypeSchoolLeaderGoal
 import com.teammetallurgy.aquaculture.init.AquaItems
 import com.teammetallurgy.aquaculture.init.AquaSounds
 import com.teammetallurgy.aquaculture.misc.StackHelper
 import net.minecraft.advancements.CriteriaTriggers
-import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
@@ -60,8 +58,8 @@ import kotlin.math.sqrt
 class EntityLavaFish(
     entityType: EntityType<out AbstractSchoolingFish>,
     level: Level,
-    private val fishType: FishType,
-) : AquaFishEntity(entityType, level, fishType) {
+    val fishType: FishType,
+) : AbstractSchoolingFish(entityType, level) {
     private var freezeTick = 0
 
     init {
@@ -118,13 +116,7 @@ class EntityLavaFish(
         }
     }
 
-    override fun getFlopSound(): SoundEvent {
-        if (this.fishType == FishType.JELLYFISH) {
-            return AquaSounds.JELLYFISH_FLOP.get()
-        }
-
-        return AquaSounds.FISH_FLOP.get()
-    }
+    override fun getFlopSound(): SoundEvent = AquaSounds.FISH_FLOP.get()
 
     override fun handleAirSupply(pAirSupply: Int) {
         if (this.isAlive && this.isInWater) {
@@ -310,10 +302,17 @@ class EntityLavaFish(
 
         fun onRegisterEntityRenderers(event: EntityRenderersEvent.RegisterRenderers) {
             ModEntityTypes.getEntriesByEntityParentClass(EntityLavaFish::class.java).forEach {
-                event.registerEntityRenderer(it.get()) { context: EntityRendererProvider.Context ->
-                    EntityRendererLavaFish(context, false)
-                }
+                event.registerEntityRenderer(it.get(), ::EntityRendererLavaFish)
             }
+        }
+
+        enum class FishType(
+            val width: Float,
+            val height: Float,
+        ) {
+            COMMON(0.5f, 0.3f),
+            SWORDFISH(0.5f, 0.3f),
+            EEL(0.5f, 0.3f),
         }
     }
 }

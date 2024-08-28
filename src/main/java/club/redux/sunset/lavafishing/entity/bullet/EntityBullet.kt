@@ -2,13 +2,11 @@ package club.redux.sunset.lavafishing.entity.bullet
 
 import club.redux.sunset.lavafishing.item.bullet.ItemBullet
 import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
-import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.util.UtilEnchantment
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntityType
@@ -105,8 +103,6 @@ open class EntityBullet : AbstractArrow, IEntityAdditionalSpawnData {
     }
 
     override fun getDefaultHitGroundSoundEvent(): SoundEvent = this.soundEvent ?: SoundEvents.EMPTY
-    open fun getTextureLocation(): ResourceLocation = DEFAULT_TEXTURE
-
     //-----------------network----------------//
 
     override fun writeSpawnData(buffer: FriendlyByteBuf) {
@@ -122,9 +118,5 @@ open class EntityBullet : AbstractArrow, IEntityAdditionalSpawnData {
 
     override fun getAddEntityPacket(): Packet<ClientGamePacketListener> {
         return NetworkHooks.getEntitySpawningPacket(this)
-    }
-
-    companion object {
-        @JvmField val DEFAULT_TEXTURE = ModResourceLocation("textures/entity/bullet/default_bullet.png")
     }
 }

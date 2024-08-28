@@ -5,6 +5,7 @@ import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.ai.goal.GoalSlingshot
 import club.redux.sunset.lavafishing.behavior.BehaviorDispenserBullet
 import club.redux.sunset.lavafishing.client.model.ModelBullet
+import club.redux.sunset.lavafishing.client.model.ModelFishTest
 import club.redux.sunset.lavafishing.client.particle.ParticleFirePunch
 import club.redux.sunset.lavafishing.client.renderer.blockentity.BlockEntityRendererPrometheusBounty
 import club.redux.sunset.lavafishing.client.renderer.entity.EntityRendererBullet
@@ -149,8 +150,9 @@ class EventHandler {
 
 
         @SubscribeEvent
-        fun onRegisterLayers(event: RegisterLayerDefinitions) {
-            ModelBullet.onRegisterLayers(event)
+        fun onRegisterLayerDefinitions(event: RegisterLayerDefinitions) {
+            ModelBullet.onRegisterLayerDefinitions(event)
+            ModelFishTest.onRegisterLayerDefinitions(event)
         }
     }
 }

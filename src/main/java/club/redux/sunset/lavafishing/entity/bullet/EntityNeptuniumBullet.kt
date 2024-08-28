@@ -1,6 +1,5 @@
 package club.redux.sunset.lavafishing.entity.bullet
 
-import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.monster.Drowned
 import net.minecraft.world.level.ClipContext
@@ -12,7 +11,6 @@ import kotlin.math.max
 
 
 open class EntityNeptuniumBullet : EntityBullet {
-    override fun getTextureLocation() = ModResourceLocation("textures/entity/bullet/neptunium_bullet.png")
     val range = 10.0
     val baseTraceRate = 0.3
     val predicate = { entity: Entity ->

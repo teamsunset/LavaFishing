@@ -1,6 +1,5 @@
 package club.redux.sunset.lavafishing.entity.bullet
 
-import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import club.redux.sunset.lavafishing.util.UtilEnchantment
 import club.redux.sunset.lavafishing.util.Utils
@@ -15,7 +14,6 @@ import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.Vec3
 
 class EntityPromethiumBullet : EntityBullet {
-    override fun getTextureLocation() = ModResourceLocation("textures/entity/bullet/promethium_bullet.png")
 
     var dividable = true
     var divisionTimes = 1
