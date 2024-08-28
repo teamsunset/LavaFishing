@@ -6,7 +6,6 @@ import club.redux.sunset.lavafishing.client.renderer.entity.EntityRendererLavaFi
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import club.redux.sunset.lavafishing.util.castToProxy
 import club.redux.sunset.lavafishing.util.isInFluid
-import com.teammetallurgy.aquaculture.entity.FishType
 import com.teammetallurgy.aquaculture.entity.ai.goal.FollowTypeSchoolLeaderGoal
 import com.teammetallurgy.aquaculture.init.AquaItems
 import com.teammetallurgy.aquaculture.init.AquaSounds
@@ -149,7 +148,7 @@ class EntityLavaFish(
             this.hasImpulse = true
             this.playSound(this.flopSound, this.soundVolume, this.voicePitch)
         }
-        this.castToProxy(IMixinProxyAbstractFish::class.java).mobAiStep()
+        this.castToProxy(IMixinProxyAbstractFish::class.java).aiStepFromMob()
     }
 
     override fun travel(pTravelVector: Vec3) {
@@ -161,7 +160,7 @@ class EntityLavaFish(
                 this.deltaMovement = deltaMovement.add(0.0, -0.005, 0.0)
             }
         } else {
-            this.castToProxy(IMixinProxyAbstractFish::class.java).livingEntityTravel(pTravelVector)
+            this.castToProxy(IMixinProxyAbstractFish::class.java).travelFromLivingEntity(pTravelVector)
         }
     }
 

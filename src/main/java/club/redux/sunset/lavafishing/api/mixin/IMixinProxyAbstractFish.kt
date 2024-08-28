@@ -4,7 +4,7 @@ import net.minecraft.world.entity.animal.AbstractFish
 import net.minecraft.world.phys.Vec3
 
 internal interface IMixinProxyAbstractFish : IMixinProxy<AbstractFish> {
-    fun mobAiStep() {}
+    fun aiStepFromMob() {}
 
-    fun livingEntityTravel(vec3: Vec3) {}
+    fun travelFromLivingEntity(vec3: Vec3) {}
 }
