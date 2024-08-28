@@ -9,12 +9,6 @@ import net.minecraft.world.level.block.state.BlockState
 class BlockEntityPrometheusBounty(
     pos: BlockPos,
     state: BlockState,
-) : ChestBlockEntity(
-    ModBlockEntityTypes.PROMETHEUS_BOUNTY.get(),
-    pos,
-    state
-) {
-    public override fun getDefaultName(): Component {
-        return Component.translatable(this.blockState.block.descriptionId)
-    }
+) : ChestBlockEntity(ModBlockEntityTypes.PROMETHEUS_BOUNTY.get(), pos, state) {
+    override fun getDefaultName(): Component = Component.translatable(this.blockState.block.descriptionId)
 }
