@@ -22,14 +22,14 @@ public abstract class MixinAbstractFish extends WaterAnimal implements Bucketabl
     @Unique
     @Override
     @SuppressWarnings("AddedMixinMembersNamePattern")
-    public void mobAiStep() {
+    public void aiStepFromMob() {
         super.aiStep();
     }
 
     @Unique
     @Override
     @SuppressWarnings("AddedMixinMembersNamePattern")
-    public void livingEntityTravel(@NotNull Vec3 vec3) {
+    public void travelFromLivingEntity(@NotNull Vec3 vec3) {
         super.travel(vec3);
     }
 }
