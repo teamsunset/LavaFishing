@@ -16,7 +16,6 @@ import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt
 import com.teammetallurgy.aquaculture.api.AquacultureAPI
 import com.teammetallurgy.aquaculture.client.ClientHandler
-import com.teammetallurgy.aquaculture.entity.FishType
 import com.teammetallurgy.aquaculture.item.AquaFishingRodItem
 import com.teammetallurgy.aquaculture.item.FishItem.SMALL_FISH_RAW
 import net.minecraft.core.BlockPos
@@ -42,15 +41,24 @@ object ModItems {
     }
 
     // Fish
-    @JvmField val FLAME_SQUAT_LOBSTER = registerFish("flame_squat_lobster", FishType.SMALL) { ItemFlameSquatLobster() }
-    @JvmField val OBSIDIAN_SWORD_FISH = registerFish("obsidian_sword_fish", FishType.MEDIUM) { ItemObsidianSwordFish() }
-    @JvmField val STEAM_FLYING_FISH = registerFish("steam_flying_fish", FishType.MEDIUM) { ItemSteamFlyingFish() }
-    @JvmField val AGNI_FISH = registerFish("agni_fish", FishType.MEDIUM) { ItemAgniFish() }
-    @JvmField val AROWANA_FISH = registerFish("arowana_fish", FishType.MEDIUM) { ItemLavaFish() }
-    @JvmField val QUARTZ_FISH = registerFish("quartz_fish", FishType.MEDIUM) { ItemLavaFish() }
-    @JvmField val SCALY_FOOT_SNAIL = registerFish("scaly_foot_snail", FishType.SMALL) { ItemLavaFish(SMALL_FISH_RAW) }
-    @JvmField val YETI_CRAB = registerFish("yeti_crab", FishType.SMALL) { ItemLavaFish(SMALL_FISH_RAW) }
-    @JvmField val LAVA_LAMPREY = registerFish("lava_lamprey", FishType.MEDIUM) { ItemLavaFish() }
+    @JvmField val FLAME_SQUAT_LOBSTER =
+        registerFish("flame_squat_lobster", EntityLavaFish.Companion.FishType.COMMON) { ItemFlameSquatLobster() }
+    @JvmField val OBSIDIAN_SWORD_FISH =
+        registerFish("obsidian_sword_fish", EntityLavaFish.Companion.FishType.COMMON) { ItemObsidianSwordFish() }
+    @JvmField val STEAM_FLYING_FISH =
+        registerFish("steam_flying_fish", EntityLavaFish.Companion.FishType.COMMON) { ItemSteamFlyingFish() }
+    @JvmField val AGNI_FISH =
+        registerFish("agni_fish", EntityLavaFish.Companion.FishType.COMMON) { ItemAgniFish() }
+    @JvmField val AROWANA_FISH =
+        registerFish("arowana_fish", EntityLavaFish.Companion.FishType.COMMON) { ItemLavaFish() }
+    @JvmField val QUARTZ_FISH =
+        registerFish("quartz_fish", EntityLavaFish.Companion.FishType.COMMON) { ItemLavaFish() }
+    @JvmField val SCALY_FOOT_SNAIL =
+        registerFish("scaly_foot_snail", EntityLavaFish.Companion.FishType.COMMON) { ItemLavaFish(SMALL_FISH_RAW) }
+    @JvmField val YETI_CRAB =
+        registerFish("yeti_crab", EntityLavaFish.Companion.FishType.COMMON) { ItemLavaFish(SMALL_FISH_RAW) }
+    @JvmField val LAVA_LAMPREY =
+        registerFish("lava_lamprey", EntityLavaFish.Companion.FishType.COMMON) { ItemLavaFish() }
 
     // Food
     val SPICY_FISH_FILLET = REGISTER.registerKt("spicy_fish_fillet") { ItemSpicyFishFillet() }
@@ -110,7 +118,7 @@ object ModItems {
 
     private fun registerFish(
         name: String,
-        fishType: FishType,
+        fishType: EntityLavaFish.Companion.FishType,
         itemSupplier: () -> ItemLavaFish,
     ): RegistryObject<ItemLavaFish> {
         val fish = ModEntityTypes.register(name) {

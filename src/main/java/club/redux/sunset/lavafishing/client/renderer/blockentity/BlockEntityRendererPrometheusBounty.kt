@@ -14,7 +14,7 @@ class BlockEntityRendererPrometheusBounty(
     context: BlockEntityRendererProvider.Context,
 ) : ChestRenderer<BlockEntityPrometheusBounty>(context) {
     override fun getMaterial(blockEntity: BlockEntityPrometheusBounty, chestType: ChestType): Material {
-        return Material(Sheets.CHEST_SHEET, ModResourceLocation("entity/chest/prometheus_bounty"))
+        return Material(Sheets.CHEST_SHEET, ModResourceLocation("block/prometheus_bounty"))
     }
 
     companion object {

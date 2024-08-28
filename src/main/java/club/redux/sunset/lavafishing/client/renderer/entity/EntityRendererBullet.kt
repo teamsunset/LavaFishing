@@ -2,7 +2,9 @@ package club.redux.sunset.lavafishing.client.renderer.entity
 
 import club.redux.sunset.lavafishing.client.model.ModelBullet
 import club.redux.sunset.lavafishing.entity.bullet.EntityBullet
+import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
+import club.redux.sunset.lavafishing.util.getTexture
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
 import net.minecraft.client.renderer.MultiBufferSource
@@ -20,7 +22,9 @@ class EntityRendererBullet<T : EntityBullet>(
 
     private var model: ModelBullet = ModelBullet(context.bakeLayer(ModelBullet.LAYER_LOCATION))
 
-    override fun getTextureLocation(pEntity: T): ResourceLocation = pEntity.getTextureLocation()
+    override fun getTextureLocation(pEntity: T): ResourceLocation {
+        return pEntity.getTexture(ModResourceLocation("textures/entity/bullet/default_bullet.png"))
+    }
 
     override fun render(
         pEntity: T,

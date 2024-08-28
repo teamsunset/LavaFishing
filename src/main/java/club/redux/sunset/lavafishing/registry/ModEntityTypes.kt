@@ -1,7 +1,9 @@
 package club.redux.sunset.lavafishing.registry
 
 import club.redux.sunset.lavafishing.BuildConstants
-import club.redux.sunset.lavafishing.entity.bullet.*
+import club.redux.sunset.lavafishing.entity.bullet.EntityBullet
+import club.redux.sunset.lavafishing.entity.bullet.EntityNeptuniumBullet
+import club.redux.sunset.lavafishing.entity.bullet.EntityPromethiumBullet
 import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt
@@ -20,9 +22,9 @@ object ModEntityTypes {
 
     // EntityTypes
     @JvmField
-    val STONE_BULLET = registerBullet("stone_bullet", ::EntityStoneBullet)
+    val STONE_BULLET = registerBullet("stone_bullet", ::EntityBullet)
 
-    @JvmField val IRON_BULLET = registerBullet("iron_bullet", ::EntityIronBullet)
+    @JvmField val IRON_BULLET = registerBullet("iron_bullet", ::EntityBullet)
 
     @JvmField val NEPTUNIUM_BULLET = registerBullet("neptunium_bullet", ::EntityNeptuniumBullet)
 

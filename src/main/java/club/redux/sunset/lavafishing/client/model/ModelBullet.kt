@@ -60,7 +60,7 @@ class ModelBullet(
             return LayerDefinition.create(meshDefinition, 16, 16)
         }
 
-        fun onRegisterLayers(event: RegisterLayerDefinitions) {
+        fun onRegisterLayerDefinitions(event: RegisterLayerDefinitions) {
             event.registerLayerDefinition(LAYER_LOCATION) { createBodyLayer() }
         }
     }
