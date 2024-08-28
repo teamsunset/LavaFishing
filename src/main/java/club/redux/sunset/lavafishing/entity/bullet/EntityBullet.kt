@@ -13,6 +13,8 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.projectile.AbstractArrow
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Tier
+import net.minecraft.world.item.Tiers
 import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.BlockHitResult
@@ -20,32 +22,20 @@ import net.minecraft.world.phys.EntityHitResult
 import net.minecraftforge.entity.IEntityAdditionalSpawnData
 import net.minecraftforge.network.NetworkHooks
 
-open class EntityBullet : AbstractArrow, IEntityAdditionalSpawnData {
-    private val inaccuracyMultiplier = 3.0F
-    private var waterInertia = 0.6F
+open class EntityBullet(
+    entityType: EntityType<out EntityBullet>,
+    level: Level,
+    private val tier: Tier = Tiers.STONE,
+) : AbstractArrow(entityType, level), IEntityAdditionalSpawnData {
+    private val inaccuracyMultiplier: Float = 3.0F
+    private var waterInertia: Float = 0.6F
 
     init {
         this.setSoundEvent(SoundEvents.MUD_HIT)
+        this.baseDamage = this.calculateBaseDamage()
     }
 
-    constructor(
-        entityType: EntityType<out EntityBullet>,
-        level: Level,
-    ) : super(entityType, level)
-
-    constructor(
-        entityType: EntityType<out EntityBullet>,
-        owner: LivingEntity,
-        level: Level,
-    ) : super(entityType, owner, level)
-
-    constructor(
-        entityType: EntityType<out EntityBullet>,
-        x: Double,
-        y: Double,
-        z: Double,
-        level: Level,
-    ) : super(entityType, x, y, z, level)
+    open fun calculateBaseDamage(): Double = 0.5 * this.tier.attackDamageBonus
 
     /**
      * # 击中实体

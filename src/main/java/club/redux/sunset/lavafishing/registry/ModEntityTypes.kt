@@ -10,6 +10,7 @@ import club.redux.sunset.lavafishing.util.registerKt
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
+import net.minecraft.world.item.Tiers
 import net.minecraft.world.level.Level
 import net.minecraftforge.registries.ForgeRegistries
 import net.minecraftforge.registries.RegistryObject
@@ -22,9 +23,13 @@ object ModEntityTypes {
 
     // EntityTypes
     @JvmField
-    val STONE_BULLET = registerBullet("stone_bullet", ::EntityBullet)
+    val STONE_BULLET = registerBullet("stone_bullet") { entityType: EntityType<EntityBullet>, level: Level ->
+        EntityBullet(entityType, level, Tiers.STONE)
+    }
 
-    @JvmField val IRON_BULLET = registerBullet("iron_bullet", ::EntityBullet)
+    @JvmField val IRON_BULLET = registerBullet("iron_bullet") { entityType: EntityType<EntityBullet>, level: Level ->
+        EntityBullet(entityType, level, Tiers.IRON)
+    }
 
     @JvmField val NEPTUNIUM_BULLET = registerBullet("neptunium_bullet", ::EntityNeptuniumBullet)
 

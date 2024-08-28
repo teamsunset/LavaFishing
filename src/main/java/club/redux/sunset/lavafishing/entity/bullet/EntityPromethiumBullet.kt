@@ -1,11 +1,11 @@
 package club.redux.sunset.lavafishing.entity.bullet
 
+import club.redux.sunset.lavafishing.misc.ModTiers
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import club.redux.sunset.lavafishing.util.UtilEnchantment
 import club.redux.sunset.lavafishing.util.Utils
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
@@ -13,39 +13,15 @@ import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.Vec3
 
-class EntityPromethiumBullet : EntityBullet {
-
+class EntityPromethiumBullet(
+    entityType: EntityType<out EntityBullet>,
+    level: Level,
+) : EntityBullet(entityType, level, ModTiers.PROMETHIUM) {
     var dividable = true
     var divisionTimes = 1
     var divisionNum = 3
 
-    constructor(
-        entityType: EntityType<out EntityBullet>,
-        level: Level,
-    ) : super(entityType, level)
-
-    constructor(
-        entityType: EntityType<out EntityBullet>,
-        owner: LivingEntity,
-        level: Level,
-    ) : super(entityType, owner, level)
-
-    constructor(
-        entityType: EntityType<out EntityBullet>,
-        x: Double,
-        y: Double,
-        z: Double,
-        level: Level,
-        dividable: Boolean = false,
-        divisionNum: Int = 3,
-        divisionTimes: Int = 3,
-    ) : super(entityType, x, y, z, level) {
-        this.dividable = dividable
-        this.divisionNum = divisionNum
-        this.divisionTimes = divisionTimes
-    }
-
-    private val explode = { radius: Float ->
+    private fun explode(radius: Float) {
         this.level().explode(
             this.owner,
             this.x,
@@ -56,17 +32,13 @@ class EntityPromethiumBullet : EntityBullet {
             Level.ExplosionInteraction.NONE
         )
     }
-    private val newBullet = { division: Boolean, divisionNum: Int, divisionCount: Int ->
-        EntityPromethiumBullet(
-            ModEntityTypes.PROMETHIUM_BULLET.get(),
-            this.x,
-            this.y,
-            this.z,
-            this.level(),
-            division,
-            divisionNum,
-            divisionCount
-        ).also {
+
+    private fun deriveBullet(dividable: Boolean, divisionNum: Int, divisionTimes: Int): EntityPromethiumBullet {
+        return EntityPromethiumBullet(ModEntityTypes.PROMETHIUM_BULLET.get(), this.level()).also {
+            this.setPos(this.x, this.y, this.z)
+            this.dividable = dividable
+            this.divisionNum = divisionNum
+            this.divisionTimes = divisionTimes
             it.owner = this.owner
             it.baseDamage = this.baseDamage
             it.remainingFireTicks = this.remainingFireTicks
@@ -115,7 +87,7 @@ class EntityPromethiumBullet : EntityBullet {
 
     private fun divide(num: Int, velocity: Double, b: Double = 1.0) {
         Utils.generateArchimedianScrew(num, b).forEach { point ->
-            this.level().addFreshEntity(newBullet(false, 0, 0).also {
+            this.level().addFreshEntity(deriveBullet(false, 0, 0).also {
                 it.deltaMovement = Vec3(point.first, -3.0 * velocity, point.second)
                 it.waterInertia = this.waterInertia
             })
@@ -128,7 +100,7 @@ class EntityPromethiumBullet : EntityBullet {
             this.divide(this.divisionNum, -0.3, 0.5)
         } else {
             this.explode(2f)
-            this.level().addFreshEntity(newBullet(true, this.divisionNum, this.divisionTimes - 1).also {
+            this.level().addFreshEntity(deriveBullet(true, this.divisionNum, this.divisionTimes - 1).also {
                 it.deltaMovement = Vec3(0.0, 1.0, 0.0)
                 it.waterInertia = this.waterInertia
             })
