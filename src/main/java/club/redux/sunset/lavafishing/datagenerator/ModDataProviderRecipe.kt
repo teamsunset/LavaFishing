@@ -33,14 +33,19 @@ class ModDataProviderRecipe(pOutput: PackOutput) : RecipeProvider(pOutput) {
 
     private fun buildTools(pWriter: Consumer<FinishedRecipe>) {
         val category = RecipeCategory.TOOLS
-        ShapedRecipeBuilder.shaped(category, ModItems.OBSIDIAN_FISHING_ROD.get())
-            .define('s', Items.STRING)
-            .define('o', Items.OBSIDIAN)
-            .define('t', Items.STICK)
-            .pattern("  o")
-            .pattern(" os")
-            .pattern("t s")
-            .unlockedBy("has_item", has(Items.OBSIDIAN))
+        val fishingRodPattern = { result: ItemLike, ingredient: ItemLike ->
+            ShapedRecipeBuilder.shaped(category, result)
+                .define('s', Items.STRING)
+                .define('i', ingredient)
+                .define('t', Items.STICK)
+                .pattern("  i")
+                .pattern(" is")
+                .pattern("t s")
+                .unlockedBy("has_item", has(ingredient))
+        }
+        fishingRodPattern(ModItems.OBSIDIAN_FISHING_ROD.get(), Items.OBSIDIAN)
+            .save(pWriter)
+        fishingRodPattern(ModItems.NETHERITE_FISHING_ROD.get(), Items.NETHERITE_INGOT)
             .save(pWriter)
 
         val slingshotPattern = { result: ItemLike, ingredient: ItemLike ->
