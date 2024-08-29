@@ -3,7 +3,7 @@ package club.redux.sunset.lavafishing.client.model
 import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
-import net.minecraft.client.model.HierarchicalModel
+import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.model.geom.PartPose
@@ -12,7 +12,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraftforge.client.event.EntityRenderersEvent
 
 
-class ModelFishTest<T : Entity>(val root: ModelPart) : HierarchicalModel<T>() {
+class ModelFishTest<T : Entity>(val root: ModelPart) : EntityModel<T>() {
     private val body: ModelPart = root.getChild("body")
     private val tail: ModelPart = root.getChild("tail")
     private val finTop: ModelPart = root.getChild("finTop")
@@ -33,8 +33,6 @@ class ModelFishTest<T : Entity>(val root: ModelPart) : HierarchicalModel<T>() {
         finTop.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha)
         finSide.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha)
     }
-
-    override fun root(): ModelPart = this.root
 
     override fun setupAnim(
         pEntity: T,

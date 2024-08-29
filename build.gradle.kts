@@ -120,11 +120,9 @@ dependencies {
 
     // Aquaculture2
     implementation(aquaculture)
-    compileMaven(aquaculture)
 
     // Kotlin for Forge
     implementation(kotlinforforge)
-    compileMaven(kotlinforforge)
 
     // Jable
     minecraftLibrary(jable)
