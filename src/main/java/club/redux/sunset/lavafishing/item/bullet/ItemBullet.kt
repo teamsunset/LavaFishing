@@ -36,7 +36,12 @@ open class ItemBullet(
      * 仅用于兼容原版调用
      */
     @Deprecated("不建议用", ReplaceWith("this.createBullet(pLevel, pStack, pShooter)"))
-    override fun createArrow(pLevel: Level, pStack: ItemStack, pShooter: LivingEntity): AbstractArrow {
+    override fun createArrow(
+        pLevel: Level,
+        pStack: ItemStack,
+        pShooter: LivingEntity,
+        weapon: ItemStack?,
+    ): AbstractArrow {
         return this.createBullet(pLevel, pStack, pShooter)
     }
 

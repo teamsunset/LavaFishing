@@ -1,11 +1,15 @@
 package club.redux.sunset.lavafishing
 
 import club.redux.sunset.lavafishing.registry.*
+import net.minecraft.resources.ResourceLocation
 import net.neoforged.fml.common.Mod
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 
 @Mod(BuildConstants.MOD_ID)
-class LavaFishing {
+object LavaFishing {
+    fun resourceLocation(path: String): ResourceLocation =
+        ResourceLocation.fromNamespaceAndPath(BuildConstants.MOD_ID, path)
+
     init {
 //        val eventBus = FMLJavaModLoadingContext.get().modEventBus
         ModBlocks.REGISTER.register(MOD_BUS)

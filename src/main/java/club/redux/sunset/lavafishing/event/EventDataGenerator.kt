@@ -2,7 +2,7 @@ package club.redux.sunset.lavafishing.event
 
 import club.redux.sunset.lavafishing.datagenerator.*
 import net.minecraft.data.tags.TagsProvider
-import net.minecraftforge.data.event.GatherDataEvent
+import net.neoforged.neoforge.data.event.GatherDataEvent
 import java.util.*
 import java.util.concurrent.CompletableFuture
 

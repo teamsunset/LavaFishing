@@ -20,13 +20,13 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
 import net.minecraftforge.event.ForgeEventFactory
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import java.util.function.Predicate
 
 open class ItemSlingshot(
     open val tier: Tier,
     properties: Properties,
-) : BowItem(properties.defaultDurability((BASE_DURABILITY * tier.uses).toInt())) {
+) : BowItem(properties.durability((BASE_DURABILITY * tier.uses).toInt())) {
 
     /**
      * # 释放
@@ -158,7 +158,7 @@ open class ItemSlingshot(
      * 仅用于兼容原版调用
      */
     @Deprecated("不建议用", ReplaceWith("this.customBullet(bullet)"))
-    override fun customArrow(arrow: AbstractArrow): AbstractArrow {
+    override fun customArrow(arrow: AbstractArrow, projectileStack: ItemStack, weaponStack: ItemStack): AbstractArrow {
         return this.customBullet(
             if (arrow is EntityBullet) arrow
             else ModItems.STONE_BULLET.get().createBullet(arrow.level()).apply {
@@ -181,14 +181,22 @@ open class ItemSlingshot(
         fun onClientSetup(event: FMLClientSetupEvent) {
             event.enqueueWork {
                 ModItems.REGISTER.entries.map { it.get() }.filterIsInstance<ItemSlingshot>().forEach { item ->
-                    ItemProperties.register(item, ResourceLocation("pull")) { pStack, _, pEntity, _ ->
+                    ItemProperties.register(
+                        item,
+                        ResourceLocation.withDefaultNamespace("pull")
+                    ) { pStack, _, pEntity, _ ->
                         if (pEntity == null || pEntity.useItem != pStack) {
                             0f
                         } else {
-                            (pStack.useDuration - pEntity.useItemRemainingTicks) / 20f * item.getChargeMultiplier(pStack)
+                            (pStack.getUseDuration(pEntity) - pEntity.useItemRemainingTicks) / 20f * item.getChargeMultiplier(
+                                pStack
+                            )
                         }
                     }
-                    ItemProperties.register(item, ResourceLocation("pulling")) { pStack, _, pEntity, _ ->
+                    ItemProperties.register(
+                        item,
+                        ResourceLocation.withDefaultNamespace("pulling")
+                    ) { pStack, _, pEntity, _ ->
                         if (pEntity != null && pEntity.isUsingItem && pEntity.useItem === pStack) {
                             1f
                         } else {

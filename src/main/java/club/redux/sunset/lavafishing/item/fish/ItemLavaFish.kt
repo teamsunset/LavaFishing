@@ -19,6 +19,7 @@ open class ItemLavaFish : FishItem {
 
     override fun isFireResistant(): Boolean = true
 
+
     companion object {
         // FISH_DATA
         // TODO

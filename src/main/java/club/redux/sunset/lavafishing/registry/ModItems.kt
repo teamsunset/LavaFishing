@@ -27,8 +27,8 @@ import net.minecraft.world.item.*
 import net.minecraft.world.item.Item.Properties
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.material.Fluids
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
-import net.minecraftforge.registries.RegistryObject
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
+import net.neoforged.neoforge.registries.DeferredHolder
 
 object ModItems {
     @JvmField val REGISTER = UtilRegister.create(BuiltInRegistries.ITEM, BuildConstants.MOD_ID)
@@ -120,7 +120,7 @@ object ModItems {
         name: String,
         fishType: EntityLavaFish.Companion.FishType,
         itemSupplier: () -> ItemLavaFish,
-    ): RegistryObject<ItemLavaFish> {
+    ): DeferredHolder<Item, ItemLavaFish> {
         val fish = ModEntityTypes.register(name) {
             EntityType.Builder.of(
                 { f: EntityType<EntityLavaFish>, w: Level -> EntityLavaFish(f, w, fishType) }, MobCategory.WATER_AMBIENT
@@ -130,9 +130,9 @@ object ModItems {
         //Registers fish buckets
         REGISTER.registerKt(name + "_bucket") {
             MobBucketItem(
-                { fish.get() },
-                { Fluids.LAVA },
-                { SoundEvents.BUCKET_EMPTY_FISH },
+                fish.get(),
+                Fluids.LAVA,
+                SoundEvents.BUCKET_EMPTY_FISH,
                 Properties().stacksTo(1)
             )
         }

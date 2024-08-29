@@ -10,11 +10,8 @@ import net.minecraft.core.BlockPos.MutableBlockPos
 import net.minecraft.core.Direction
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Mob
-import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.PathNavigationRegion
-import net.minecraft.world.level.pathfinder.Node
-import net.minecraft.world.level.pathfinder.NodeEvaluator
-import net.minecraft.world.level.pathfinder.PathType
+import net.minecraft.world.level.pathfinder.*
 import net.minecraft.world.level.pathfinder.Target
 import kotlin.math.max
 
@@ -45,9 +42,7 @@ class NodeEvaluatorLavaSwim(private val allowBreaching: Boolean) : NodeEvaluator
     /**
      * 这个Target类是启发式搜索的目标，之后要重复利用（不断更新）
      */
-    override fun getGoal(pX: Double, pY: Double, pZ: Double): Target {
-        return this.getTargetFromNode(this.getNode(Mth.floor(pX), Mth.floor(pY), Mth.floor(pZ)))
-    }
+    override fun getTarget(x: Double, y: Double, z: Double): Target = this.getTargetNodeAt(x, y, z)
 
     override fun getNeighbors(pOutputArray: Array<Node>, pNode: Node): Int {
         var i = 0
@@ -91,11 +86,11 @@ class NodeEvaluatorLavaSwim(private val allowBreaching: Boolean) : NodeEvaluator
         val blockPathTypes = this.getCachedBlockType(pX, pY, pZ)
         if (this.allowBreaching && blockPathTypes == PathType.BREACH || blockPathTypes == PathType.LAVA) {
             if (mob.getPathfindingMalus(blockPathTypes) >= 0.0f) {
-                return this.getNode(pX, pY, pZ).apply {
-                    type = blockPathTypes
-                    costMalus = max(costMalus.toDouble(), f.toDouble()).toFloat()
-                    if (level.getFluidState(BlockPos(pX, pY, pZ)).isEmpty) {
-                        costMalus += 8.0f
+                return this.getNode(pX, pY, pZ).also {
+                    it.type = blockPathTypes
+                    it.costMalus = max(it.costMalus.toDouble(), it.f.toDouble()).toFloat()
+                    if (this.currentContext.level().getFluidState(BlockPos(pX, pY, pZ)).isEmpty) {
+                        it.costMalus += 8.0f
                     }
                 }
             }
@@ -104,33 +99,34 @@ class NodeEvaluatorLavaSwim(private val allowBreaching: Boolean) : NodeEvaluator
         return null
     }
 
-    private fun getCachedBlockType(pX: Int, pY: Int, pZ: Int): PathType {
+    private fun getCachedBlockType(x: Int, y: Int, z: Int): PathType {
         return pathTypesByPosCache.computeIfAbsent(
-            BlockPos.asLong(pX, pY, pZ),
-            Long2ObjectFunction { this.getBlockPathType(this.level, pX, pY, pZ) }
-        )
+            BlockPos.asLong(x, y, z),
+            Long2ObjectFunction { _: Long -> this.getPathType(this.currentContext, x, y, z) }
+        ) as PathType
     }
 
     /**
      * 将下面的块考虑在内，返回指定位置的节点类型
      */
-    override fun getBlockPathType(pLevel: BlockGetter, pX: Int, pY: Int, pZ: Int): PathType {
-        return this.getBlockPathType(pLevel, pX, pY, pZ, this.mob)
+    override fun getPathType(context: PathfindingContext, pX: Int, pY: Int, pZ: Int): PathType {
+        return this.getPathTypeOfMob(context, pX, pY, pZ, this.mob)
     }
 
-    override fun getBlockPathType(pLevel: BlockGetter, pX: Int, pY: Int, pZ: Int, pMob: Mob): PathType {
+    override fun getPathTypeOfMob(context: PathfindingContext, pX: Int, pY: Int, pZ: Int, pMob: Mob): PathType {
         val blockPos = MutableBlockPos()
 
-        val isAcceptedFluids = { p: BlockPos -> EntityLavaFish.acceptedFluids.any { pLevel.getFluidState(p).`is`(it) } }
+        val isAcceptedFluids =
+            { p: BlockPos -> EntityLavaFish.acceptedFluids.any { context.level().getFluidState(p).`is`(it) } }
 
         for (i in pX until pX + this.entityWidth) {
             for (j in pY until pY + this.entityHeight) {
                 for (k in pZ until pZ + this.entityDepth) {
                     blockPos.set(i, j, k)
                     if (
-                        pLevel.getFluidState(blockPos).isEmpty &&
+                        context.level().getFluidState(blockPos).isEmpty &&
                         isAcceptedFluids(blockPos.below()) &&
-                        pLevel.getBlockState(blockPos).isAir
+                        context.level().getBlockState(blockPos).isAir
                     ) {
                         return PathType.BREACH
                     }

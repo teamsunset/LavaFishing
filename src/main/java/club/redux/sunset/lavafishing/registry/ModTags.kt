@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.registry
 
-import club.redux.sunset.lavafishing.misc.ModResourceLocation
+import club.redux.sunset.lavafishing.LavaFishing
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.BlockTags
@@ -14,7 +14,7 @@ object ModTags {
     object Blocks {
         @JvmField val TEST_TAG = tag("test")
 
-        private fun tag(path: String): TagKey<Block> = BlockTags.create(ModResourceLocation(path))
+        private fun tag(path: String): TagKey<Block> = BlockTags.create(LavaFishing.resourceLocation(path))
 
     }
 
@@ -22,13 +22,13 @@ object ModTags {
         @JvmField val LAVA_FISH = tag("lava_fish")
 
         private fun tag(path: String): TagKey<EntityType<*>> =
-            TagKey.create(Registries.ENTITY_TYPE, ModResourceLocation(path))
+            TagKey.create(Registries.ENTITY_TYPE, LavaFishing.resourceLocation(path))
     }
 
     object Items {
         @JvmField val TOOLTIP = tag("tooltip")
 
-        private fun tag(path: String): TagKey<Item> = ItemTags.create(ModResourceLocation(path))
+        private fun tag(path: String): TagKey<Item> = ItemTags.create(LavaFishing.resourceLocation(path))
     }
 
 
@@ -44,6 +44,6 @@ object ModTags {
         @JvmField val PROMETHIUM_BLOCK = tagKey(OreDirectoryType.STORAGE_BLOCKS, "promethium")
 
         private fun tagKey(type: OreDirectoryType, path: String): TagKey<Item> =
-            ItemTags.create(ResourceLocation("forge", "${type.type}/${path}"))
+            ItemTags.create(ResourceLocation.fromNamespaceAndPath("forge", "${type.type}/${path}"))
     }
 }

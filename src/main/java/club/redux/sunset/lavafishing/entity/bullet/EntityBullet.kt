@@ -4,9 +4,12 @@ import club.redux.sunset.lavafishing.item.bullet.ItemBullet
 import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.util.UtilEnchantment
-import net.minecraft.network.FriendlyByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.protocol.Packet
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.network.protocol.game.ClientGamePacketListener
+import net.minecraft.server.level.ServerEntity
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntityType
@@ -19,14 +22,15 @@ import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
-import net.minecraftforge.entity.IEntityAdditionalSpawnData
 import net.minecraftforge.network.NetworkHooks
+import net.neoforged.neoforge.entity.IEntityWithComplexSpawn
+import java.util.function.Consumer
 
 open class EntityBullet(
     entityType: EntityType<out EntityBullet>,
     level: Level,
     private val tier: Tier = Tiers.STONE,
-) : AbstractArrow(entityType, level), IEntityAdditionalSpawnData {
+) : AbstractArrow(entityType, level), IEntityWithComplexSpawn {
     private val inaccuracyMultiplier: Float = 3.0F
     private var waterInertia: Float = 0.6F
 
@@ -71,9 +75,12 @@ open class EntityBullet(
     }
 
     open fun attachEnchantment(stack: ItemStack) {
-        UtilEnchantment.hasThen(Enchantments.POWER_ARROWS, stack) { this.baseDamage += it * 0.5 + 0.5 }
-        UtilEnchantment.hasThen(Enchantments.PUNCH_ARROWS, stack) { this.knockback = it }
-        UtilEnchantment.hasThen(Enchantments.FLAMING_ARROWS, stack) { this.setSecondsOnFire(100) }
+        this.level().registryAccess().holder(Enchantments.POWER).ifPresent { enchantment ->
+            UtilEnchantment.hasThen(enchantment, stack) { this.baseDamage += it * 0.5 + 0.5 }
+        }
+        UtilEnchantment.hasThen(Enchantments.POWER, stack) { this.baseDamage += it * 0.5 + 0.5 }
+        UtilEnchantment.hasThen(Enchantments.PUNCH, stack) { this.knockback = it }
+        UtilEnchantment.hasThen(Enchantments.FLAME, stack) { this.setSecondsOnFire(100) }
     }
 
     override fun shoot(pX: Double, pY: Double, pZ: Double, pVelocity: Float, pInaccuracy: Float) {
@@ -86,6 +93,9 @@ open class EntityBullet(
             .let { ItemStack(it) }
     }
 
+    override fun getDefaultPickupItem(): ItemStack = super.getPickupItem()
+
+
     public override fun getWaterInertia(): Float = this.waterInertia
 
     open fun setWaterInertia(value: Float) {
@@ -95,18 +105,14 @@ open class EntityBullet(
     override fun getDefaultHitGroundSoundEvent(): SoundEvent = this.soundEvent ?: SoundEvents.EMPTY
     //-----------------network----------------//
 
-    override fun writeSpawnData(buffer: FriendlyByteBuf) {
+    override fun writeSpawnData(buffer: RegistryFriendlyByteBuf) {
 //        buffer.writeResourceLocation(this.soundEvent.location)
         buffer.writeFloat(this.waterInertia)
     }
 
-    override fun readSpawnData(additionalData: FriendlyByteBuf) {
+    override fun readSpawnData(additionalData: RegistryFriendlyByteBuf) {
 //        this.soundEvent =
 //            ForgeRegistries.SOUND_EVENTS.getValue(additionalData.readResourceLocation()) ?: SoundEvents.EMPTY
         this.waterInertia = additionalData.readFloat()
-    }
-
-    override fun getAddEntityPacket(): Packet<ClientGamePacketListener> {
-        return NetworkHooks.getEntitySpawningPacket(this)
     }
 }

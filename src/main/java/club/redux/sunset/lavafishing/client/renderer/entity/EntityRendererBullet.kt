@@ -1,8 +1,8 @@
 package club.redux.sunset.lavafishing.client.renderer.entity
 
+import club.redux.sunset.lavafishing.LavaFishing
 import club.redux.sunset.lavafishing.client.model.ModelBullet
 import club.redux.sunset.lavafishing.entity.bullet.EntityBullet
-import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import club.redux.sunset.lavafishing.util.getTexture
 import com.mojang.blaze3d.vertex.PoseStack
@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth
-import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers
+import net.neoforged.neoforge.client.event.EntityRenderersEvent
 
 class EntityRendererBullet<T : EntityBullet>(
     context: EntityRendererProvider.Context,
@@ -23,7 +23,7 @@ class EntityRendererBullet<T : EntityBullet>(
     private var model: ModelBullet = ModelBullet(context.bakeLayer(ModelBullet.LAYER_LOCATION))
 
     override fun getTextureLocation(pEntity: T): ResourceLocation {
-        return pEntity.getTexture(ModResourceLocation("textures/entity/bullet/default_bullet.png"))
+        return pEntity.getTexture(LavaFishing.resourceLocation("textures/entity/bullet/default_bullet.png"))
     }
 
     override fun render(
@@ -43,11 +43,7 @@ class EntityRendererBullet<T : EntityBullet>(
             pPoseStack,
             vertexConsumer,
             pPackedLight,
-            OverlayTexture.NO_OVERLAY,
-            1.0f,
-            1.0f,
-            1.0f,
-            1.0f
+            OverlayTexture.NO_OVERLAY
         )
         pPoseStack.popPose()
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight)
@@ -55,7 +51,7 @@ class EntityRendererBullet<T : EntityBullet>(
 
     companion object {
         @JvmStatic
-        fun onRegisterRenderers(event: RegisterRenderers) {
+        fun onRegisterRenderers(event: EntityRenderersEvent.RegisterRenderers) {
             ModEntityTypes.getEntriesByEntityParentClass(EntityBullet::class.java).map { it.get() }
                 .forEach { entityType ->
                     event.registerEntityRenderer(entityType) { EntityRendererBullet(it) }

@@ -1,10 +1,10 @@
 package club.redux.sunset.lavafishing.registry
 
 import club.redux.sunset.lavafishing.BuildConstants
+import club.redux.sunset.lavafishing.LavaFishing
 import club.redux.sunset.lavafishing.entity.bullet.EntityBullet
 import club.redux.sunset.lavafishing.entity.bullet.EntityNeptuniumBullet
 import club.redux.sunset.lavafishing.entity.bullet.EntityPromethiumBullet
-import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt
 import net.minecraft.core.registries.BuiltInRegistries
@@ -58,7 +58,7 @@ object ModEntityTypes {
                 .sized(0.5f, 0.5f)
                 .clientTrackingRange(4)
                 .updateInterval(10)
-                .build(ModResourceLocation(name).toString())
+                .build(LavaFishing.resourceLocation(name).toString())
         }
     }
 }

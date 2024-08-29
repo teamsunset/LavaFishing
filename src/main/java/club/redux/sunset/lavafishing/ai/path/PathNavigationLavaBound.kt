@@ -19,7 +19,7 @@ class PathNavigationLavaBound(pMob: Mob, pLevel: Level) : PathNavigation(pMob, p
     /**
      * If on ground or swimming and can swim
      */
-    override fun canUpdatePath(): Boolean = this.allowBreaching || this.isInLiquid
+    override fun canUpdatePath(): Boolean = this.allowBreaching || this.mob.isInLiquid
     override fun getTempMobPos(): Vec3 = Vec3(this.mob.x, this.mob.getY(0.5), this.mob.z)
     override fun getGroundY(pVec: Vec3): Double = pVec.y
 

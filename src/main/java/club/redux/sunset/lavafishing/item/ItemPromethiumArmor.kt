@@ -1,29 +1,32 @@
 package club.redux.sunset.lavafishing.item
 
-import club.redux.sunset.lavafishing.BuildConstants
+import club.redux.sunset.lavafishing.LavaFishing
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModMobEffects
 import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Holder
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ArmorItem
 import net.minecraft.world.item.ArmorMaterial
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.material.FogType
-import net.minecraftforge.client.event.ViewportEvent
-import net.minecraftforge.event.entity.living.LivingAttackEvent
-import net.minecraftforge.event.entity.living.LivingDamageEvent
-import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent
+import net.neoforged.neoforge.client.event.ViewportEvent
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent
+import net.neoforged.neoforge.event.tick.EntityTickEvent
 
 class ItemPromethiumArmor(
-    armorMaterial: ArmorMaterial,
+    armorMaterial: Holder<ArmorMaterial>,
     type: Type,
 ) : ArmorItem(armorMaterial, type, Properties().fireResistant()) {
 
@@ -35,22 +38,30 @@ class ItemPromethiumArmor(
     }
 
     // 这玩意居然是实时的
-    override fun getArmorTexture(stack: ItemStack, entity: Entity, slot: EquipmentSlot, type: String?): String {
-        return BuildConstants.MOD_ID + ":textures/armor/" + this.texture + ".png"
+    override fun getArmorTexture(
+        stack: ItemStack,
+        entity: Entity,
+        slot: EquipmentSlot,
+        layer: ArmorMaterial.Layer,
+        innerModel: Boolean,
+    ): ResourceLocation {
+        return LavaFishing.resourceLocation("textures/armor/" + this.texture + ".png")
     }
 
-    override fun getXpRepairRatio(stack: ItemStack?): Float {
-        return super.getXpRepairRatio(stack)
-    }
+    override fun getXpRepairRatio(stack: ItemStack): Float = super.getXpRepairRatio(stack)
+    
 
     companion object {
-        fun onLivingTick(event: LivingTickEvent) {
-            val level = event.entity.level()
-            for (itemStack in event.entity.armorSlots) {
+        fun onEntityTickPost(event: EntityTickEvent.Post) {
+            val entity = event.entity
+            if (entity !is LivingEntity) return
+
+            val level = entity.level()
+            for (itemStack in entity.armorSlots) {
                 val item = itemStack.item
                 if (item is ItemPromethiumArmor) {
-                    val applyEffect = { effect: MobEffect ->
-                        event.entity.addEffect(MobEffectInstance(effect, 20, 0, false, false, true))
+                    val applyEffect = { effect: Holder<MobEffect> ->
+                        entity.addEffect(MobEffectInstance(effect, 20, 0, false, false, true))
                     }
                     val futureBlockPos =
                         BlockPos.containing(event.entity.position().add(event.entity.deltaMovement.scale(1.5)))
@@ -81,8 +92,8 @@ class ItemPromethiumArmor(
             }
         }
 
-        fun onEntityDamage(event: LivingDamageEvent) {
-            val damage = event.amount
+        fun onLivingDamagePre(event: LivingDamageEvent.Pre) {
+            val damage = event.newDamage
             if (
                 event.source.`is`(DamageTypes.LAVA) ||
                 event.source.`is`(DamageTypes.IN_FIRE) ||
@@ -92,14 +103,14 @@ class ItemPromethiumArmor(
                 for (itemStack in event.entity.armorSlots) {
                     val item = itemStack.item
                     if (item is ItemPromethiumArmor) {
-                        event.amount -= 1f / 4 * damage
+                        event.newDamage -= 1f / 4 * damage
                         promethiumArmorCount++
                     }
                 }
             }
         }
 
-        fun onEntityAttack(event: LivingAttackEvent) {
+        fun onLivingIncomingDamage(event: LivingIncomingDamageEvent) {
             val armorItems = event.entity.armorSlots.map { it.item }.filterIsInstance<ItemPromethiumArmor>()
 
             if (

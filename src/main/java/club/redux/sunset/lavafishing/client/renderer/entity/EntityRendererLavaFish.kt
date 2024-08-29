@@ -1,8 +1,8 @@
 package club.redux.sunset.lavafishing.client.renderer.entity
 
+import club.redux.sunset.lavafishing.LavaFishing
 import club.redux.sunset.lavafishing.client.model.ModelFishTest
 import club.redux.sunset.lavafishing.entity.EntityLavaFish
-import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import club.redux.sunset.lavafishing.util.getTexture
 import club.redux.sunset.lavafishing.util.isInFluid
 import com.mojang.blaze3d.vertex.PoseStack
@@ -47,18 +47,19 @@ class EntityRendererLavaFish(
     }
 
     override fun getTextureLocation(fish: EntityLavaFish): ResourceLocation {
-        return fish.getTexture(ModResourceLocation("textures/entity/fish/atlantic_cod.png"))
+        return fish.getTexture(LavaFishing.resourceLocation("textures/entity/fish/atlantic_cod.png"))
     }
 
     override fun setupRotations(
         fishEntity: EntityLavaFish,
         matrixStack: PoseStack,
-        ageInTicks: Float,
-        rotationYaw: Float,
-        partialTicks: Float,
+        bob: Float,
+        yBodyRot: Float,
+        partialTick: Float,
+        scale: Float,
     ) {
-        super.setupRotations(fishEntity, matrixStack, ageInTicks, rotationYaw, partialTicks)
-        val fishRotation = 4.3f * Mth.sin(0.6f * ageInTicks)
+        super.setupRotations(fishEntity, matrixStack, bob, yBodyRot, partialTick, scale)
+        val fishRotation = 4.3f * Mth.sin(0.6f * partialTick)
 
         matrixStack.mulPose(Axis.YP.rotationDegrees(fishRotation))
         if (!EntityLavaFish.acceptedFluids.any { fishEntity.isInFluid(it) }) {

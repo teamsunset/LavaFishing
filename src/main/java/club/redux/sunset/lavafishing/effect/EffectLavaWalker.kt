@@ -10,7 +10,7 @@ import net.minecraft.world.effect.MobEffectCategory
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
-import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
+import net.neoforged.neoforge.event.entity.player.PlayerEvent
 import kotlin.math.max
 import kotlin.math.pow
 
@@ -24,7 +24,7 @@ class EffectLavaWalker : MobEffect(MobEffectCategory.BENEFICIAL, 0xCC3300) {
         }
     }
 
-    override fun applyEffectTick(pLivingEntity: LivingEntity, pAmplifier: Int) {
+    override fun applyEffectTick(pLivingEntity: LivingEntity, pAmplifier: Int): Boolean {
         if (!pLivingEntity.isSpectator && !pLivingEntity.isShiftKeyDown) {
             val pos = pLivingEntity.position()
             val movement = pLivingEntity.deltaMovement
@@ -43,17 +43,13 @@ class EffectLavaWalker : MobEffect(MobEffectCategory.BENEFICIAL, 0xCC3300) {
                 val multiplier = max(0.5, 20.0.pow(movement.y()))
                 pLivingEntity.setDeltaMovement(movement.x(), max(movement.y(), movement.y() * multiplier), movement.z())
             }
-            super.applyEffectTick(pLivingEntity, pAmplifier)
         }
-    }
-
-    override fun isDurationEffectTick(pDuration: Int, pAmplifier: Int): Boolean {
         return true
     }
 
     companion object {
         @JvmStatic
-        fun onBreakSpeed(event: BreakSpeed) {
+        fun onBreakSpeed(event: PlayerEvent.BreakSpeed) {
             if (event.entity.hasEffect(ModMobEffects.LAVA_WALKER.get()) && event.entity.level()
                     .getFluidState(event.entity.onPos).`is`(FluidTags.LAVA)
             ) {
