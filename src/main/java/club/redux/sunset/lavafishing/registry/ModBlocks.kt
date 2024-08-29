@@ -4,14 +4,14 @@ import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.block.BlockPrometheusBounty
 import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.material.MapColor
-import net.minecraftforge.registries.ForgeRegistries
 
 object ModBlocks {
-    @JvmField val REGISTER = UtilRegister.create(ForgeRegistries.BLOCKS, BuildConstants.MOD_ID)
+    @JvmField val REGISTER = UtilRegister.create(BuiltInRegistries.BLOCK, BuildConstants.MOD_ID)
 
     @JvmField val PROMETHIUM_BLOCK = REGISTER.registerKt("promethium_block") {
         Block(

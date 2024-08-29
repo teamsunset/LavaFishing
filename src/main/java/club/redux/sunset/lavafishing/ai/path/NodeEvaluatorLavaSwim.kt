@@ -12,14 +12,14 @@ import net.minecraft.util.Mth
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.PathNavigationRegion
-import net.minecraft.world.level.pathfinder.BlockPathTypes
 import net.minecraft.world.level.pathfinder.Node
 import net.minecraft.world.level.pathfinder.NodeEvaluator
+import net.minecraft.world.level.pathfinder.PathType
 import net.minecraft.world.level.pathfinder.Target
 import kotlin.math.max
 
 class NodeEvaluatorLavaSwim(private val allowBreaching: Boolean) : NodeEvaluator() {
-    private val pathTypesByPosCache: Long2ObjectMap<BlockPathTypes> = Long2ObjectOpenHashMap()
+    private val pathTypesByPosCache: Long2ObjectMap<PathType> = Long2ObjectOpenHashMap()
 
     override fun prepare(pLevel: PathNavigationRegion, pMob: Mob) {
         super.prepare(pLevel, pMob)
@@ -89,7 +89,7 @@ class NodeEvaluatorLavaSwim(private val allowBreaching: Boolean) : NodeEvaluator
 
     private fun findAcceptedNode(pX: Int, pY: Int, pZ: Int): Node? {
         val blockPathTypes = this.getCachedBlockType(pX, pY, pZ)
-        if (this.allowBreaching && blockPathTypes == BlockPathTypes.BREACH || blockPathTypes == BlockPathTypes.LAVA) {
+        if (this.allowBreaching && blockPathTypes == PathType.BREACH || blockPathTypes == PathType.LAVA) {
             if (mob.getPathfindingMalus(blockPathTypes) >= 0.0f) {
                 return this.getNode(pX, pY, pZ).apply {
                     type = blockPathTypes
@@ -104,7 +104,7 @@ class NodeEvaluatorLavaSwim(private val allowBreaching: Boolean) : NodeEvaluator
         return null
     }
 
-    private fun getCachedBlockType(pX: Int, pY: Int, pZ: Int): BlockPathTypes {
+    private fun getCachedBlockType(pX: Int, pY: Int, pZ: Int): PathType {
         return pathTypesByPosCache.computeIfAbsent(
             BlockPos.asLong(pX, pY, pZ),
             Long2ObjectFunction { this.getBlockPathType(this.level, pX, pY, pZ) }
@@ -114,11 +114,11 @@ class NodeEvaluatorLavaSwim(private val allowBreaching: Boolean) : NodeEvaluator
     /**
      * 将下面的块考虑在内，返回指定位置的节点类型
      */
-    override fun getBlockPathType(pLevel: BlockGetter, pX: Int, pY: Int, pZ: Int): BlockPathTypes {
+    override fun getBlockPathType(pLevel: BlockGetter, pX: Int, pY: Int, pZ: Int): PathType {
         return this.getBlockPathType(pLevel, pX, pY, pZ, this.mob)
     }
 
-    override fun getBlockPathType(pLevel: BlockGetter, pX: Int, pY: Int, pZ: Int, pMob: Mob): BlockPathTypes {
+    override fun getBlockPathType(pLevel: BlockGetter, pX: Int, pY: Int, pZ: Int, pMob: Mob): PathType {
         val blockPos = MutableBlockPos()
 
         val isAcceptedFluids = { p: BlockPos -> EntityLavaFish.acceptedFluids.any { pLevel.getFluidState(p).`is`(it) } }
@@ -132,16 +132,16 @@ class NodeEvaluatorLavaSwim(private val allowBreaching: Boolean) : NodeEvaluator
                         isAcceptedFluids(blockPos.below()) &&
                         pLevel.getBlockState(blockPos).isAir
                     ) {
-                        return BlockPathTypes.BREACH
+                        return PathType.BREACH
                     }
 
                     if (!isAcceptedFluids(blockPos)) {
-                        return BlockPathTypes.BLOCKED
+                        return PathType.BLOCKED
                     }
                 }
             }
         }
 
-        return if (isAcceptedFluids(blockPos)) BlockPathTypes.LAVA else BlockPathTypes.BLOCKED
+        return if (isAcceptedFluids(blockPos)) PathType.LAVA else PathType.BLOCKED
     }
 }

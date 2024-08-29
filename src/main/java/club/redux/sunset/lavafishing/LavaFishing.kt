@@ -1,8 +1,8 @@
 package club.redux.sunset.lavafishing
 
 import club.redux.sunset.lavafishing.registry.*
-import net.minecraftforge.fml.common.Mod
-import thedarkcolour.kotlinforforge.forge.MOD_BUS
+import net.neoforged.fml.common.Mod
+import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 
 @Mod(BuildConstants.MOD_ID)
 class LavaFishing {

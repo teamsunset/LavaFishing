@@ -12,7 +12,7 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder
 import net.minecraft.client.model.geom.builders.LayerDefinition
 import net.minecraft.client.model.geom.builders.MeshDefinition
 import net.minecraft.resources.ResourceLocation
-import net.minecraftforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions
+import net.neoforged.neoforge.client.event.EntityRenderersEvent
 
 
 class ModelBullet(
@@ -60,7 +60,7 @@ class ModelBullet(
             return LayerDefinition.create(meshDefinition, 16, 16)
         }
 
-        fun onRegisterLayerDefinitions(event: RegisterLayerDefinitions) {
+        fun onRegisterLayerDefinitions(event: EntityRenderersEvent.RegisterLayerDefinitions) {
             event.registerLayerDefinition(LAYER_LOCATION) { createBodyLayer() }
         }
     }

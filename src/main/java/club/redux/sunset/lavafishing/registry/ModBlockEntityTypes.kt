@@ -5,13 +5,13 @@ import club.redux.sunset.lavafishing.block.blockentity.BlockEntityPrometheusBoun
 import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt
 import net.minecraft.core.BlockPos
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraftforge.registries.ForgeRegistries
 
 object ModBlockEntityTypes {
-    @JvmField val REGISTER = UtilRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, BuildConstants.MOD_ID)
+    @JvmField val REGISTER = UtilRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, BuildConstants.MOD_ID)
 
     @JvmField val PROMETHEUS_BOUNTY = REGISTER.registerKt("prometheus_bounty") {
         BlockEntityType.Builder.of(

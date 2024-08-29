@@ -21,7 +21,7 @@ open class ItemBullet(
 ) : ArrowItem(properties) {
 
     final override fun isInfinite(stack: ItemStack, bow: ItemStack, player: Player): Boolean {
-        return EnchantmentHelper.getTagEnchantmentLevel(Enchantments.INFINITY_ARROWS, bow) > 0
+        return EnchantmentHelper.getTagEnchantmentLevel(Enchantments.INFINITY, bow) > 0
     }
 
     open fun attachBasePropertiesToBullet(bullet: EntityBullet) = Unit

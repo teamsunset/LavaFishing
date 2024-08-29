@@ -4,7 +4,7 @@ import club.redux.sunset.lavafishing.registry.ModItems.REGISTER
 import com.teammetallurgy.aquaculture.api.AquacultureAPI
 import com.teammetallurgy.aquaculture.item.FishItem
 import net.minecraft.world.food.FoodProperties
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 
 open class ItemLavaFish : FishItem {
     var filletAmount = 0

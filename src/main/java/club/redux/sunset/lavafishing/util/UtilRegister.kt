@@ -2,12 +2,11 @@ package club.redux.sunset.lavafishing.util
 
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
-import net.minecraftforge.registries.DeferredRegister
-import net.minecraftforge.registries.IForgeRegistry
-import net.minecraftforge.registries.RegistryObject
+import net.neoforged.neoforge.registries.DeferredHolder
+import net.neoforged.neoforge.registries.DeferredRegister
 
 object UtilRegister {
-    fun <T> create(reg: IForgeRegistry<T>, modId: String): DeferredRegister<T> {
+    fun <T> create(reg: Registry<T>, modId: String): DeferredRegister<T> {
         return DeferredRegister.create(reg, modId)
     }
 
@@ -16,6 +15,6 @@ object UtilRegister {
     }
 }
 
-fun <T, R : T> DeferredRegister<T>.registerKt(name: String, supplier: () -> R): RegistryObject<R> {
+fun <T, R : T> DeferredRegister<T>.registerKt(name: String, supplier: () -> R): DeferredHolder<T, R> {
     return this.register(name, supplier)
 }

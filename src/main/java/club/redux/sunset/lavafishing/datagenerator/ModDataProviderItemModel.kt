@@ -12,9 +12,9 @@ import net.minecraft.data.PackOutput
 import net.minecraft.world.item.FishingRodItem
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.MobBucketItem
-import net.minecraftforge.client.model.generators.ItemModelProvider
 import net.minecraftforge.client.model.generators.ModelFile
-import net.minecraftforge.common.data.ExistingFileHelper
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider
+import net.neoforged.neoforge.common.data.ExistingFileHelper
 import org.slf4j.LoggerFactory
 
 class ModDataProviderItemModel(
