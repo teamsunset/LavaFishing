@@ -218,8 +218,7 @@ sourceSets["main"].java.srcDirs(generateTemplates.map { it.destinationDir })
 rootProject.idea.project.settings.taskTriggers.afterSync(generateTemplates)
 project.eclipse.synchronizationTasks(generateTemplates)
 
-// 同一流程中只有一个processResources任务，所以runData必须和其他任务分开执行
-tasks.processResources {
+val processResourceConfig: ProcessResources.() -> Unit = {
     val targets = listOf("META-INF/mods.toml", "pack.mcmeta")
     inputs.properties(props)
 
@@ -227,6 +226,9 @@ tasks.processResources {
         expand(props)
     }
 }
+
+// 同一流程中只有一个processResources任务，所以runData必须和其他任务分开执行
+tasks.processResources(processResourceConfig)
 
 tasks.jar {
     manifest {
@@ -259,8 +261,7 @@ tasks.shadowJar {
     relocate("com.github", "${modGroupId}.${modId}.shadowed.com.github")
 }
 
-val reobfShadowJar = reobf.create("shadowJar") {
-}
+val reobfShadowJar = reobf.create("shadowJar")
 
 tasks.jar {
     doFirst {
@@ -273,10 +274,6 @@ tasks.jar {
         )
     }
 }
-
-//tasks.compileJava {
-//    outputs.upToDateWhen { false }
-//}
 
 tasks.withType(GenerateModuleMetadata::class.java) {
     enabled = false
@@ -319,4 +316,12 @@ publishing {
             }
         }
     }
+}
+
+/*---TeaCon---*/
+
+val oneStepBuild = tasks.create("oneStepBuild", ProcessResources::class) {
+    dependsOn("runData")
+    finalizedBy("build")
+    processResourceConfig()
 }
