@@ -3,7 +3,7 @@ package club.redux.sunset.lavafishing.entity.bullet
 import club.redux.sunset.lavafishing.item.bullet.ItemBullet
 import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
 import club.redux.sunset.lavafishing.registry.ModItems
-import club.redux.sunset.lavafishing.util.UtilEnchantment
+import club.redux.sunset.lavafishing.util.hasEnchantmentThen
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
@@ -71,9 +71,9 @@ open class EntityBullet(
     }
 
     open fun attachEnchantment(stack: ItemStack) {
-        UtilEnchantment.hasThen(Enchantments.POWER_ARROWS, stack) { this.baseDamage += it * 0.5 + 0.5 }
-        UtilEnchantment.hasThen(Enchantments.PUNCH_ARROWS, stack) { this.knockback = it }
-        UtilEnchantment.hasThen(Enchantments.FLAMING_ARROWS, stack) { this.setSecondsOnFire(100) }
+        stack.hasEnchantmentThen(Enchantments.POWER_ARROWS) { this.baseDamage += it * 0.5 + 0.5 }
+        stack.hasEnchantmentThen(Enchantments.PUNCH_ARROWS) { this.knockback = it }
+        stack.hasEnchantmentThen(Enchantments.FLAMING_ARROWS) { this.setSecondsOnFire(100) }
     }
 
     override fun shoot(pX: Double, pY: Double, pZ: Double, pVelocity: Float, pInaccuracy: Float) {
