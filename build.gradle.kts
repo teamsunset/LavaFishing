@@ -1,6 +1,5 @@
 import groovy.util.Node
 import groovy.util.NodeList
-import net.minecraftforge.gradle.common.util.RunConfig
 import org.jetbrains.gradle.ext.settings
 import org.jetbrains.gradle.ext.taskTriggers
 import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
@@ -10,12 +9,13 @@ import java.util.*
 
 val minecraftVersion: String by project
 val minecraftVersionRange: String by project
-val forgeVersion: String by project
-val forgeVersionRange: String by project
+val neoforgeVersion: String by project
+val neoforgeVersionRange: String by project
 val modLoader: String by project
 val modLoaderVersionRange: String by project
 val minecraftMappingChannel: String by project
 val minecraftMappingVersion: String by project
+val aquacultureVersion: String by project
 val aquacultureVersionRange: String by project
 val kotlinForForgeVersionRange: String by project
 val jeiVersion: String by project
@@ -35,7 +35,7 @@ val runtimeMaven: Configuration by configurations.creating
 val providedMaven: Configuration by configurations.creating
 val compileMaven: Configuration by configurations.creating
 
-val javaVersion = JavaLanguageVersion.of(17)
+val javaVersion = JavaLanguageVersion.of(21)
 
 version = "$minecraftVersion-$modVersion"
 group = modGroupId
@@ -43,6 +43,13 @@ group = modGroupId
 base.archivesName.set(modId)
 java.toolchain.languageVersion.set(javaVersion)
 kapt.keepJavacAnnotationProcessors = true
+
+idea {
+    module {
+        isDownloadJavadoc = true
+        isDownloadSources = true
+    }
+}
 
 buildscript {
     repositories {
@@ -63,11 +70,11 @@ plugins {
     eclipse
     idea
     `maven-publish`
-    id("net.minecraftforge.gradle") version "[6.0,6.2)"
-    id("org.parchmentmc.librarian.forgegradle") version "1.+"
+    `java-library`
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
+    id("net.neoforged.moddev") version "1.0.17"
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("org.spongepowered.mixin") version "0.7.+"
+//    id("org.spongepowered.mixin") version "0.7.+"
     kotlin("jvm") version "1.9.23"
     kotlin("kapt") version "1.9.23"
     kotlin("plugin.serialization") version "1.9.23"
@@ -90,6 +97,13 @@ repositories {
     maven("Jared's maven") {
         url = uri("https://maven.blamejared.com/")
     }
+    maven("Aquaculture") {
+        url = uri("https://girafi.dk/maven/")
+    }
+    maven("ModMaven") {
+        // location of a maven mirror for JEI files, as a fallback
+        url = uri("https://modmaven.dev")
+    }
     maven {
         url = uri("https://www.cursemaven.com")
         content {
@@ -101,19 +115,16 @@ repositories {
 }
 
 dependencies {
-    val mc = "net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}"
     val mixinProcessor = "org.spongepowered:mixin:0.8.5:processor"
-    val aquaculture = "com.github.teamsunset:aquaculture:0bba648c2f"
-    val kotlinforforge = "thedarkcolour:kotlinforforge:4.10.0"
+    val aquaculture =
+        "com.teammetallurgy.aquaculture:aquaculture2_${minecraftVersion}:${minecraftVersion}-${aquacultureVersion}"
+    val kotlinforforge = "thedarkcolour:kotlinforforge-neoforge:4.10.0"
     val jeiCommonApi = "mezz.jei:jei-${minecraftVersion}-common-api:${jeiVersion}"
-    val jeiForgeApi = "mezz.jei:jei-${minecraftVersion}-forge-api:${jeiVersion}"
-    val jei = "mezz.jei:jei-${minecraftVersion}-forge:${jeiVersion}"
-    val configured = "curse.maven:configured-457570:5180900"
+    val jeiForgeApi = "mezz.jei:jei-${minecraftVersion}-neoforge-api:${jeiVersion}"
+    val jei = "mezz.jei:jei-${minecraftVersion}-neoforge:${jeiVersion}"
+    val configured = "curse.maven:configured-457570:5441234"
 
     val jable = "com.github.dsx137:jable:1.0.10"
-
-    // Minecraft
-    minecraft(mc)
 
     // Mixin
     annotationProcessor(mixinProcessor)
@@ -125,72 +136,84 @@ dependencies {
     implementation(kotlinforforge)
 
     // Jable
-    minecraftLibrary(jable)
+    implementation(jable)
     shade(jable)
 
     // Jei
-    compileOnly(fg.deobf(jeiCommonApi))
-    compileOnly(fg.deobf(jeiForgeApi))
-    runtimeOnly(fg.deobf(jei))
+    compileOnly(jeiCommonApi)
+    compileOnly(jeiForgeApi)
+    runtimeOnly(jei)
 
     // Configured
-    implementation(fg.deobf(configured))
+    implementation(configured)
 }
 
-minecraft {
-    mappings(minecraftMappingChannel, minecraftMappingVersion)
 
-    copyIdeResources = true
 
-    accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg"))
+neoForge {
+    version = neoforgeVersion
 
-    fun createMinecraftRun(vararg names: String, additionalConfig: RunConfig.() -> Unit = { }) {
-        for (name in names) {
-            minecraft.runs.create(name) {
-                workingDirectory(project.file("run"))
+    accessTransformers { file("src/main/resources/META-INF/accesstransformer.cfg") }
 
-                property("forge.logging.markers", "REGISTRIES")
-                property("forge.logging.console.level", "debug")
+    parchment.let {
+        it.mappingsVersion = minecraftMappingVersion
+        it.minecraftVersion = minecraftVersion
+    }
 
-                this.additionalConfig()
+    runs {
+        create("client") {
+            client()
+            systemProperty("neoforge.enabledGameTestNamespaces", modId)
+        }
 
-                mods {
-                    create(modId) {
-                        source(sourceSets["main"])
-                    }
-                }
-            }
+        create("server") {
+            server()
+            programArgument("--nogui")
+            systemProperty("neoforge.enabledGameTestNamespaces", modId)
+        }
+
+        create("gameTestServer") {
+            type = "gameTestServer"
+            systemProperty("neoforge.enabledGameTestNamespaces", modId)
+        }
+
+        create("data") {
+            data()
+            programArguments.addAll(
+                "--mod",
+                modId,
+                "--all",
+                "--output",
+                file("src/generated/resources/").absolutePath,
+                "--existing",
+                file("src/main/resources/").absolutePath
+            )
+        }
+
+        configureEach {
+            systemProperty("forge.logging.markers", "REGISTRIES")
+            logLevel = org.slf4j.event.Level.DEBUG
         }
     }
-
-    createMinecraftRun("client", "server", "gameTestServer") {
-        property("forge.enabledGameTestNamespaces", modId)
-    }
-
-    createMinecraftRun("data") {
-        args(
-            "--mod",
-            modId,
-            "--all",
-            "--output",
-            file("src/generated/resources/"),
-            "--existing",
-            file("src/main/resources/")
-        )
+    mods {
+        create(modId) {
+            sourceSet(sourceSets.main.get())
+        }
     }
 }
 sourceSets["main"].resources.srcDirs("src/generated/resources")
 
-mixin {
-    add(sourceSets.main.get(), "${modId}.refmap.json")
-    config("${modId}.mixins.json")
-}
+//mixin {
+//    add(sourceSets.main.get(), "${modId}.refmap.json")
+//    config("${modId}.mixins.json")
+//}
+
 
 val props = mapOf(
     "minecraft_version" to minecraftVersion,
     "minecraft_version_range" to minecraftVersionRange,
-    "forge_version" to forgeVersion,
-    "forge_version_range" to forgeVersionRange,
+    "forge_version" to neoforgeVersion,
+    "forge_version_range" to neoforgeVersionRange,
     "mod_loader" to modLoader,
     "mod_loader_version_range" to modLoaderVersionRange,
     "mod_id" to modId,
@@ -218,8 +241,12 @@ sourceSets["main"].java.srcDirs(generateTemplates.map { it.destinationDir })
 rootProject.idea.project.settings.taskTriggers.afterSync(generateTemplates)
 project.eclipse.synchronizationTasks(generateTemplates)
 
+tasks.withType(JavaCompile::class.java).configureEach {
+    options.encoding = "UTF-8"
+}
+
 val processResourceConfig: ProcessResources.() -> Unit = {
-    val targets = listOf("META-INF/mods.toml", "pack.mcmeta")
+    val targets = listOf("META-INF/neoforge.mods.toml", "pack.mcmeta")
     inputs.properties(props)
 
     filesMatching(targets) {
@@ -261,7 +288,7 @@ tasks.shadowJar {
     relocate("com.github", "${modGroupId}.${modId}.shadowed.com.github")
 }
 
-val reobfShadowJar = reobf.create("shadowJar")
+//val reobfShadowJar = reobf.create("shadowJar")
 
 tasks.jar {
     doFirst {

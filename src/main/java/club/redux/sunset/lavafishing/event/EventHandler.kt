@@ -20,30 +20,28 @@ import club.redux.sunset.lavafishing.registry.ModLootTables
 import club.redux.sunset.lavafishing.registry.ModParticleTypes
 import club.redux.sunset.lavafishing.registry.ModPotions
 import net.minecraft.client.particle.SpriteSet
-import net.minecraftforge.api.distmarker.Dist
-import net.minecraftforge.client.event.EntityRenderersEvent
-import net.minecraftforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions
-import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent
-import net.minecraftforge.client.event.ViewportEvent
-import net.minecraftforge.data.event.GatherDataEvent
-import net.minecraftforge.event.LootTableLoadEvent
 import net.minecraftforge.event.TickEvent
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent
-import net.minecraftforge.event.entity.EntityJoinLevelEvent
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent
 import net.minecraftforge.event.entity.living.LivingAttackEvent
-import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent
 import net.minecraftforge.event.entity.player.ItemTooltipEvent
-import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
-import net.minecraftforge.eventbus.api.SubscribeEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
+import net.neoforged.api.distmarker.Dist
+import net.neoforged.bus.api.SubscribeEvent
+import net.neoforged.fml.common.EventBusSubscriber
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
+import net.neoforged.neoforge.client.event.EntityRenderersEvent
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent
+import net.neoforged.neoforge.client.event.ViewportEvent
+import net.neoforged.neoforge.data.event.GatherDataEvent
+import net.neoforged.neoforge.event.LootTableLoadEvent
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent
+import net.neoforged.neoforge.event.entity.player.PlayerEvent
 
 class EventHandler {
-    @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.FORGE)
+    @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
     object ForgeEventBoth {
         @SubscribeEvent
         fun onEntityDamage(event: LivingDamageEvent) {
@@ -52,7 +50,7 @@ class EventHandler {
         }
 
         @SubscribeEvent
-        fun onBreakSpeed(event: BreakSpeed) {
+        fun onBreakSpeed(event: PlayerEvent.BreakSpeed) {
             EffectLavaWalker.onBreakSpeed(event)
         }
 
@@ -82,7 +80,7 @@ class EventHandler {
         }
     }
 
-    @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.FORGE, value = [Dist.CLIENT])
+    @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = [Dist.CLIENT])
     object ForgeEventClient {
         @SubscribeEvent
         fun onItemTooltip(event: ItemTooltipEvent) {
@@ -131,7 +129,7 @@ class EventHandler {
         }
 
         @SubscribeEvent
-        fun onRegisterRenderers(event: RegisterRenderers) {
+        fun onRegisterRenderers(event: EntityRenderersEvent.RegisterRenderers) {
             BlockEntityRendererPrometheusBounty.onRegisterRenderers(event)
             EntityRendererBullet.onRegisterRenderers(event)
         }
@@ -150,7 +148,7 @@ class EventHandler {
 
 
         @SubscribeEvent
-        fun onRegisterLayerDefinitions(event: RegisterLayerDefinitions) {
+        fun onRegisterLayerDefinitions(event: EntityRenderersEvent.RegisterLayerDefinitions) {
             ModelBullet.onRegisterLayerDefinitions(event)
             ModelFishTest.onRegisterLayerDefinitions(event)
         }

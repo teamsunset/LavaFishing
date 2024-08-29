@@ -9,7 +9,7 @@ import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.DispenserBlock
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 
 class BehaviorDispenserBullet : AbstractProjectileDispenseBehavior() {
     override fun getProjectile(pLevel: Level, pPosition: Position, pStack: ItemStack): Projectile {

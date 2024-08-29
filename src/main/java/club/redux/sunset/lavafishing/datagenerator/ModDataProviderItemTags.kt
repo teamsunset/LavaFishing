@@ -9,8 +9,8 @@ import net.minecraft.data.PackOutput
 import net.minecraft.data.tags.ItemTagsProvider
 import net.minecraft.tags.ItemTags
 import net.minecraft.world.level.block.Block
-import net.minecraftforge.common.Tags
-import net.minecraftforge.common.data.ExistingFileHelper
+import net.neoforged.neoforge.common.Tags
+import net.neoforged.neoforge.common.data.ExistingFileHelper
 import java.util.concurrent.CompletableFuture
 
 class ModDataProviderItemTags(
@@ -32,12 +32,12 @@ class ModDataProviderItemTags(
         tag(Tags.Items.NUGGETS).addTags(ModTags.OreDirectories.PROMETHIUM_NUGGET)
         tag(Tags.Items.STORAGE_BLOCKS).addTags(ModTags.OreDirectories.PROMETHIUM_BLOCK)
 
-        tag(Tags.Items.ARMORS_HELMETS).add(ModItems.PROMETHIUM_HELMET.get())
-        tag(Tags.Items.ARMORS_CHESTPLATES).add(ModItems.PROMETHIUM_CHESTPLATE.get())
-        tag(Tags.Items.ARMORS_LEGGINGS).add(ModItems.PROMETHIUM_LEGGINGS.get())
-        tag(Tags.Items.ARMORS_BOOTS).add(ModItems.PROMETHIUM_BOOTS.get())
+        tag(Tags.Items.ARMORS).add(ModItems.PROMETHIUM_HELMET.get())
+        tag(Tags.Items.ARMORS).add(ModItems.PROMETHIUM_CHESTPLATE.get())
+        tag(Tags.Items.ARMORS).add(ModItems.PROMETHIUM_LEGGINGS.get())
+        tag(Tags.Items.ARMORS).add(ModItems.PROMETHIUM_BOOTS.get())
 
         tag(Tags.Items.CHESTS).add(ModItems.PROMETHEUS_BOUNTY.get())
-        tag(Tags.Items.TOOLS_FISHING_RODS).add(ModItems.PROMETHEUS_BOUNTY.get())
+        tag(Tags.Items.TOOLS_FISHING_ROD).add(ModItems.PROMETHEUS_BOUNTY.get())
     }
 }

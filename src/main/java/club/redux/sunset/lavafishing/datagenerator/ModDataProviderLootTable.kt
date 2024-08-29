@@ -3,6 +3,7 @@ package club.redux.sunset.lavafishing.datagenerator
 import club.redux.sunset.lavafishing.entity.EntityLavaFish
 import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.data.PackOutput
 import net.minecraft.data.loot.LootTableProvider
 import net.minecraft.data.loot.LootTableSubProvider
@@ -14,7 +15,6 @@ import net.minecraft.world.level.storage.loot.entries.LootItem
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition
-import net.minecraftforge.registries.ForgeRegistries
 
 class ModDataProviderLootTable(
     pOutput: PackOutput,
@@ -37,7 +37,7 @@ class ModDataProviderLootTable(
                     ModResourceLocation("entities/${location.path}"),
                     LootTable.lootTable().withPool(
                         LootPool.lootPool()
-                            .add(LootItem.lootTableItem(ForgeRegistries.ITEMS.getValue(location)!!))
+                            .add(LootItem.lootTableItem(BuiltInRegistries.ITEM.get(location)))
                     ).withPool(
                         LootPool.lootPool()
                             .add(LootItem.lootTableItem(Items.BONE_MEAL))

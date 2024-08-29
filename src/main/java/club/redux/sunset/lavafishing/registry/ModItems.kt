@@ -19,6 +19,7 @@ import com.teammetallurgy.aquaculture.client.ClientHandler
 import com.teammetallurgy.aquaculture.item.AquaFishingRodItem
 import com.teammetallurgy.aquaculture.item.FishItem.SMALL_FISH_RAW
 import net.minecraft.core.BlockPos
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
@@ -27,11 +28,10 @@ import net.minecraft.world.item.Item.Properties
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.material.Fluids
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
-import net.minecraftforge.registries.ForgeRegistries
 import net.minecraftforge.registries.RegistryObject
 
 object ModItems {
-    @JvmField val REGISTER = UtilRegister.create(ForgeRegistries.ITEMS, BuildConstants.MOD_ID)
+    @JvmField val REGISTER = UtilRegister.create(BuiltInRegistries.ITEM, BuildConstants.MOD_ID)
 
     @JvmField val OBSIDIAN_FISHING_ROD = REGISTER.registerKt("obsidian_fishing_rod") {
         AquaFishingRodItem(ModTiers.OBSIDIAN, Properties().fireResistant().durability(128))

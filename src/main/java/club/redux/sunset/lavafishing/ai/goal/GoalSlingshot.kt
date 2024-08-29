@@ -3,7 +3,7 @@ package club.redux.sunset.lavafishing.ai.goal
 import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
 import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal
 import net.minecraft.world.entity.monster.Skeleton
-import net.minecraftforge.event.entity.EntityJoinLevelEvent
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent
 
 class GoalSlingshot(
     private val skeleton: Skeleton,

@@ -20,8 +20,8 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.ChestType
 import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.level.material.MapColor
-import net.minecraftforge.api.distmarker.Dist
-import net.minecraftforge.api.distmarker.OnlyIn
+import net.neoforged.api.distmarker.Dist
+import net.neoforged.api.distmarker.OnlyIn
 import java.util.function.Supplier
 
 class BlockPrometheusBounty : ChestBlock(
