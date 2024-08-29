@@ -6,7 +6,7 @@ import net.minecraft.world.entity.LivingEntity
 
 class EffectBlessed : MobEffect(MobEffectCategory.NEUTRAL, 0xCC3300) {
 
-    override fun applyEffectTick(pLivingEntity: LivingEntity, pAmplifier: Int) {
+    override fun applyEffectTick(pLivingEntity: LivingEntity, pAmplifier: Int): Boolean {
         pLivingEntity.apply {
             remainingFireTicks = 20
             heal(0.4f)
@@ -17,10 +17,7 @@ class EffectBlessed : MobEffect(MobEffectCategory.NEUTRAL, 0xCC3300) {
             hurt(damageSources().onFire(), 0.1f)
         }
 
-        super.applyEffectTick(pLivingEntity, pAmplifier)
-    }
-
-    override fun isDurationEffectTick(pDuration: Int, pAmplifier: Int): Boolean {
         return true
     }
+
 }

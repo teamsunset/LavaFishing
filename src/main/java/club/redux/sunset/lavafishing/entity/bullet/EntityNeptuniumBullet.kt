@@ -22,6 +22,7 @@ open class EntityNeptuniumBullet(
 ) : EntityBullet(entityType, world, AquacultureAPI.MATS.NEPTUNIUM) {
     val range = 10.0
     val baseTraceRate = 0.3
+
     val predicate = { entity: Entity ->
         entity is Mob && (entity.mobType == MobType.WATER || entity is Drowned)
     }

@@ -1,5 +1,6 @@
 package club.redux.sunset.lavafishing.client.model
 
+import club.redux.sunset.lavafishing.LavaFishing
 import club.redux.sunset.lavafishing.entity.bullet.EntityPromethiumBullet
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
@@ -11,7 +12,6 @@ import net.minecraft.client.model.geom.builders.CubeDeformation
 import net.minecraft.client.model.geom.builders.CubeListBuilder
 import net.minecraft.client.model.geom.builders.LayerDefinition
 import net.minecraft.client.model.geom.builders.MeshDefinition
-import net.minecraft.resources.ResourceLocation
 import net.neoforged.neoforge.client.event.EntityRenderersEvent
 
 
@@ -35,16 +35,14 @@ class ModelBullet(
         vertexConsumer: VertexConsumer,
         packedLight: Int,
         packedOverlay: Int,
-        red: Float,
-        green: Float,
-        blue: Float,
-        alpha: Float,
+        color: Int,
     ) {
-        this.whole.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha)
+        this.whole.render(poseStack, vertexConsumer, packedLight, packedOverlay, color)
     }
 
     companion object {
-        @JvmField val LAYER_LOCATION: ModelLayerLocation = ModelLayerLocation(ResourceLocation("bullet"), "main")
+        @JvmField val LAYER_LOCATION: ModelLayerLocation =
+            ModelLayerLocation(LavaFishing.resourceLocation("bullet"), "main")
 
         fun createBodyLayer(): LayerDefinition {
             val meshDefinition = MeshDefinition()

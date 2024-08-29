@@ -13,6 +13,7 @@ import club.redux.sunset.lavafishing.effect.EffectEndlessFlame
 import club.redux.sunset.lavafishing.effect.EffectLavaWalker
 import club.redux.sunset.lavafishing.entity.EntityLavaFish
 import club.redux.sunset.lavafishing.item.ItemPromethiumArmor
+import club.redux.sunset.lavafishing.item.block.BlockItemWithoutLevelRenderer
 import club.redux.sunset.lavafishing.item.fish.ItemLavaFish
 import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
 import club.redux.sunset.lavafishing.registry.ModItems
@@ -20,11 +21,6 @@ import club.redux.sunset.lavafishing.registry.ModLootTables
 import club.redux.sunset.lavafishing.registry.ModParticleTypes
 import club.redux.sunset.lavafishing.registry.ModPotions
 import net.minecraft.client.particle.SpriteSet
-import net.minecraftforge.event.TickEvent
-import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent
-import net.minecraftforge.event.entity.living.LivingAttackEvent
-import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent
-import net.minecraftforge.event.entity.player.ItemTooltipEvent
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
@@ -33,20 +29,26 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 import net.neoforged.neoforge.client.event.EntityRenderersEvent
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent
 import net.neoforged.neoforge.client.event.ViewportEvent
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
 import net.neoforged.neoforge.data.event.GatherDataEvent
 import net.neoforged.neoforge.event.LootTableLoadEvent
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent
+import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent
 import net.neoforged.neoforge.event.entity.player.PlayerEvent
+import net.neoforged.neoforge.event.tick.EntityTickEvent
+import net.neoforged.neoforge.event.tick.PlayerTickEvent
 
 class EventHandler {
     @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
     object ForgeEventBoth {
         @SubscribeEvent
-        fun onEntityDamage(event: LivingDamageEvent) {
-            EffectEndlessFlame.onEntityDamage(event)
-            ItemPromethiumArmor.onEntityDamage(event)
+        fun onLivingDamagePre(event: LivingDamageEvent.Pre) {
+            EffectEndlessFlame.onLivingDamagePre(event)
+            ItemPromethiumArmor.onLivingDamagePre(event)
         }
 
         @SubscribeEvent
@@ -55,13 +57,13 @@ class EventHandler {
         }
 
         @SubscribeEvent
-        fun onEntityTick(event: LivingTickEvent) {
-            ItemPromethiumArmor.onLivingTick(event)
+        fun onEntityTickPost(event: EntityTickEvent.Post) {
+            ItemPromethiumArmor.onEntityTickPost(event)
         }
 
         @SubscribeEvent
-        fun onEntityAttack(event: LivingAttackEvent) {
-            ItemPromethiumArmor.onEntityAttack(event)
+        fun onLivingIncomingDamage(event: LivingIncomingDamageEvent) {
+            ItemPromethiumArmor.onLivingIncomingDamage(event)
         }
 
         @SubscribeEvent
@@ -75,8 +77,7 @@ class EventHandler {
         }
 
         @SubscribeEvent
-        fun onPlayerTick(event: TickEvent.PlayerTickEvent) {
-
+        fun onPlayerTick(event: PlayerTickEvent) {
         }
     }
 
@@ -100,12 +101,11 @@ class EventHandler {
             BehaviorDispenserBullet.onSetup(event)
             ModPotions.onCommonSetupEvent(event)
             ItemLavaFish.onSetup(event)
-            EntityLavaFish.onSetup(event)
         }
 
         @SubscribeEvent
-        fun onSpawnPlacementRegister(event: SpawnPlacementRegisterEvent) {
-            EntityLavaFish.onSpawnPlacementRegister(event)
+        fun onRegisterSpawnPlacements(event: RegisterSpawnPlacementsEvent) {
+            EntityLavaFish.onRegisterSpawnPlacements(event)
         }
 
         @SubscribeEvent
@@ -146,11 +146,15 @@ class EventHandler {
             }
         }
 
-
         @SubscribeEvent
         fun onRegisterLayerDefinitions(event: EntityRenderersEvent.RegisterLayerDefinitions) {
             ModelBullet.onRegisterLayerDefinitions(event)
             ModelFishTest.onRegisterLayerDefinitions(event)
+        }
+
+        @SubscribeEvent
+        fun onRegisterClientExtensions(event: RegisterClientExtensionsEvent) {
+            BlockItemWithoutLevelRenderer.onRegisterClientExtensions(event)
         }
     }
 }

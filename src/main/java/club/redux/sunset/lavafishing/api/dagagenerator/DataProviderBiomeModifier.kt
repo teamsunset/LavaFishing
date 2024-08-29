@@ -30,7 +30,11 @@ open class DataProviderBiomeModifier(
     override fun run(pOutput: CachedOutput): CompletableFuture<*> {
         this.addModifiers()
         return CompletableFuture.allOf(*this.modifiers.map { (name: String, modifier: Modifier) ->
-            return DataProvider.saveStable(pOutput, modifier.toJson(), pathProvider.json(ResourceLocation(modId, name)))
+            return DataProvider.saveStable(
+                pOutput,
+                modifier.toJson(),
+                pathProvider.json(ResourceLocation.fromNamespaceAndPath(modId, name))
+            )
         }.toTypedArray())
     }
 

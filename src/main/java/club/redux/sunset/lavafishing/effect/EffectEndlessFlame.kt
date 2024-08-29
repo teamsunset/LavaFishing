@@ -9,11 +9,11 @@ import net.minecraft.world.effect.MobEffectCategory
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.Items
-import net.minecraftforge.event.entity.living.LivingDamageEvent
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent
 
 class EffectEndlessFlame : MobEffect(MobEffectCategory.HARMFUL, 0xCC3300) {
 
-    override fun applyEffectTick(pLivingEntity: LivingEntity, pAmplifier: Int) {
+    override fun applyEffectTick(pLivingEntity: LivingEntity, pAmplifier: Int): Boolean {
         pLivingEntity.apply {
             remainingFireTicks = 20
             setSharedFlagOnFire(true)
@@ -23,16 +23,12 @@ class EffectEndlessFlame : MobEffect(MobEffectCategory.HARMFUL, 0xCC3300) {
             hurt(pLivingEntity.damageSources().onFire(), 0.1f)
         }
 
-        super.applyEffectTick(pLivingEntity, pAmplifier)
-    }
-
-    override fun isDurationEffectTick(pDuration: Int, pAmplifier: Int): Boolean {
         return true
     }
 
     companion object {
         @JvmStatic
-        fun onEntityDamage(event: LivingDamageEvent) {
+        fun onLivingDamagePre(event: LivingDamageEvent.Pre) {
             val source = event.source
             val target = event.entity
             val sourceEntity = source.entity

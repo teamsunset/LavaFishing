@@ -6,16 +6,16 @@ import com.mojang.blaze3d.platform.InputConstants
 import com.teammetallurgy.aquaculture.Aquaculture
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
-import net.minecraftforge.event.entity.player.ItemTooltipEvent
-import net.minecraftforge.registries.ForgeRegistries
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent
 import org.lwjgl.glfw.GLFW
 
 object EventTooltip {
     fun onItemTooltip(event: ItemTooltipEvent) {
         if (event.itemStack.isEmpty) return
         if (!event.itemStack.`is`(ModTags.Items.TOOLTIP)) return
-        val id = ForgeRegistries.ITEMS.getKey(event.itemStack.item) ?: return
+        val id = BuiltInRegistries.ITEM.getKey(event.itemStack.item) ?: return
         val tooltipPath = "${BuildConstants.MOD_ID}.${id.path}.tooltip"
         val key = if (InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_LEFT_SHIFT)) {
             "$tooltipPath.desc"

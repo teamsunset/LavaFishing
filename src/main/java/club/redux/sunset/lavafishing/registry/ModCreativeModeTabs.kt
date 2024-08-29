@@ -7,10 +7,7 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-import net.minecraftforge.registries.RegistryObject
-import java.util.function.Consumer
 
 object ModCreativeModeTabs {
     @JvmField val REGISTER = UtilRegister.create(Registries.CREATIVE_MODE_TAB, BuildConstants.MOD_ID)
@@ -20,12 +17,7 @@ object ModCreativeModeTabs {
             .title(Component.translatable("itemGroup." + BuildConstants.MOD_ID))
             .icon { ItemStack(ModItems.OBSIDIAN_FISHING_ROD.get()) }
             .displayItems { p: ItemDisplayParameters?, o: CreativeModeTab.Output ->
-                ModItems.REGISTER.entries.forEach(
-                    Consumer { i: RegistryObject<Item?> ->
-                        o.accept(
-                            i.get()
-                        )
-                    })
+                ModItems.REGISTER.entries.forEach { o.accept(it.get()) }
             }
             .build()
     }

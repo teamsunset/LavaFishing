@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.client.model
 
-import club.redux.sunset.lavafishing.misc.ModResourceLocation
+import club.redux.sunset.lavafishing.LavaFishing
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import net.minecraft.client.model.EntityModel
@@ -9,7 +9,7 @@ import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.model.geom.PartPose
 import net.minecraft.client.model.geom.builders.*
 import net.minecraft.world.entity.Entity
-import net.minecraftforge.client.event.EntityRenderersEvent
+import net.neoforged.neoforge.client.event.EntityRenderersEvent
 
 
 class ModelFishTest<T : Entity>(val root: ModelPart) : EntityModel<T>() {
@@ -23,15 +23,12 @@ class ModelFishTest<T : Entity>(val root: ModelPart) : EntityModel<T>() {
         vertexConsumer: VertexConsumer,
         packedLight: Int,
         packedOverlay: Int,
-        red: Float,
-        green: Float,
-        blue: Float,
-        alpha: Float,
+        color: Int,
     ) {
-        body.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha)
-        tail.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha)
-        finTop.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha)
-        finSide.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha)
+        body.render(poseStack, vertexConsumer, packedLight, packedOverlay, color)
+        tail.render(poseStack, vertexConsumer, packedLight, packedOverlay, color)
+        finTop.render(poseStack, vertexConsumer, packedLight, packedOverlay, color)
+        finSide.render(poseStack, vertexConsumer, packedLight, packedOverlay, color)
     }
 
     override fun setupAnim(
@@ -47,7 +44,9 @@ class ModelFishTest<T : Entity>(val root: ModelPart) : EntityModel<T>() {
 
     companion object {
 
-        @JvmField val LAYER_LOCATION: ModelLayerLocation = ModelLayerLocation(ModResourceLocation("fish"), "main")
+        @JvmField val LAYER_LOCATION: ModelLayerLocation =
+            ModelLayerLocation(LavaFishing.resourceLocation("fish"), "main")
+
         fun createBodyLayer(): LayerDefinition {
             val meshDefinition = MeshDefinition()
             val partDefinition = meshDefinition.root

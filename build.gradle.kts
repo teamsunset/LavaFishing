@@ -148,8 +148,6 @@ dependencies {
     implementation(configured)
 }
 
-
-
 neoForge {
     version = neoforgeVersion
 

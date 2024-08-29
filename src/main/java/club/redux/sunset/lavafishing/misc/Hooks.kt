@@ -5,9 +5,9 @@ import com.teammetallurgy.aquaculture.api.fishing.Hook
 import com.teammetallurgy.aquaculture.api.fishing.Hook.HookBuilder
 import net.minecraft.ChatFormatting
 import net.minecraft.tags.FluidTags
-import net.minecraftforge.fml.common.Mod
+import net.neoforged.fml.common.EventBusSubscriber
 
-@Mod.EventBusSubscriber(modid = BuildConstants.MOD_ID) // 使Forge加载这个类
+@EventBusSubscriber(modid = BuildConstants.MOD_ID) // 使Forge加载这个类
 object Hooks {
     @JvmField val OBSIDIAN: Hook = HookBuilder("obsidian")
         .setColor(ChatFormatting.DARK_PURPLE)

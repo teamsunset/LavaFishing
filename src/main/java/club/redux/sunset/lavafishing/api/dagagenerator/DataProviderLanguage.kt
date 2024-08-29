@@ -24,15 +24,4 @@ abstract class DataProviderLanguage(
     protected fun String.addToTranslation(vararg pairs: Pair<Locale, String>) = add(this, choose(*pairs))
     protected fun ItemStack.addToTranslation(vararg pairs: Pair<Locale, String>) = add(this, choose(*pairs))
     protected fun MobEffect.addToTranslation(vararg pairs: Pair<Locale, String>) = add(this, choose(*pairs))
-
-    //    inner class PlaceHolder(private vararg val pairs: Pair<Locale, String>) {
-    //        override fun toString(): String {
-    //            return choose(*pairs)
-    //        }
-    //    }
-    //
-    //    val fish = PlaceHolder(
-    //        Locale.PRC to "鱼",
-    //        Locale.US to "Fish"
-    //    )
 }

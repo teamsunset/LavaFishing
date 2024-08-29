@@ -5,11 +5,12 @@ import club.redux.sunset.lavafishing.registry.ModBlockEntityTypes
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.context.BlockPlaceContext
-import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.block.ChestBlock
 import net.minecraft.world.level.block.SoundType
@@ -59,16 +60,13 @@ class BlockPrometheusBounty : ChestBlock(
     @OnlyIn(Dist.CLIENT)
     override fun appendHoverText(
         stack: ItemStack,
-        pLevel: BlockGetter?,
-        tooltip: MutableList<Component>,
-        flag: TooltipFlag,
+        context: Item.TooltipContext,
+        tooltipComponents: MutableList<Component>,
+        tooltipFlag: TooltipFlag,
     ) {
-        super.appendHoverText(stack, pLevel, tooltip, flag)
-        val tag = stack.getTagElement("BlockEntityTag")
-        if (tag != null) {
-            if (tag.contains("Items", 9)) {
-                tooltip.add(Component.literal("???????").withStyle(ChatFormatting.ITALIC))
-            }
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag)
+        if (stack.has(DataComponents.CONTAINER_LOOT)) {
+            tooltipComponents.add(Component.literal("???????").withStyle(ChatFormatting.ITALIC))
         }
     }
 }
