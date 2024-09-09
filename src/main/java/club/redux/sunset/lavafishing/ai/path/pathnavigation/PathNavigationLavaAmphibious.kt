@@ -26,7 +26,9 @@ open class PathNavigationLavaAmphibious(mob: Mob, level: Level) : PathNavigation
      * 检查指定的实体是否可以安全地走到指定位置。
      */
     override fun canMoveDirectly(fromPos: Vec3, toPos: Vec3): Boolean {
-        return if (this.isInLiquid) isClearForMovementBetween(this.mob, fromPos, toPos, false) else false
+        return if (this.mob.isInLava)
+            isClearForMovementBetween(this.mob, fromPos, toPos, false)
+        else false
     }
 
     override fun isStableDestination(blockPos: BlockPos): Boolean {

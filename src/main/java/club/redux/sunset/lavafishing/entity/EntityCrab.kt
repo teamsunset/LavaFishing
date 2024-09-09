@@ -4,7 +4,6 @@ import club.redux.sunset.lavafishing.ai.path.pathnavigation.PathNavigationLavaAm
 import club.redux.sunset.lavafishing.api.mixin.IMixinProxyAbstractFish
 import club.redux.sunset.lavafishing.misc.LavaFishType
 import club.redux.sunset.lavafishing.util.castToProxy
-import club.redux.sunset.lavafishing.util.isInFluid
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
@@ -24,7 +23,7 @@ class EntityCrab(
     override fun aiStep() {
         this.castToProxy(IMixinProxyAbstractFish::class.java).aiStepFromMob()
         this.speed =
-            if (acceptedFluids.any(this::isInFluid)) 1F
+            if (this.isInLava) 1F
             else 0.1F
     }
 

@@ -6,7 +6,6 @@ import club.redux.sunset.lavafishing.client.renderer.entity.EntityRendererLavaFi
 import club.redux.sunset.lavafishing.misc.LavaFishType
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import club.redux.sunset.lavafishing.util.castToProxy
-import club.redux.sunset.lavafishing.util.isInFluid
 import com.teammetallurgy.aquaculture.init.AquaItems
 import com.teammetallurgy.aquaculture.init.AquaSounds
 import com.teammetallurgy.aquaculture.misc.StackHelper
@@ -15,7 +14,6 @@ import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
-import net.minecraft.tags.FluidTags
 import net.minecraft.util.RandomSource
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -107,7 +105,7 @@ open class EntityLavaFish(
     override fun handleAirSupply(pAirSupply: Int) {
         if (this.isAlive && this.isInWater) {
             this.freezeTick--
-            if (this.freezeTick == -10) {
+            if (this.freezeTick == -20) {
                 this.freezeTick = 0
                 this.hurt(this.damageSources().freeze(), 1.0f)
             }
@@ -115,7 +113,7 @@ open class EntityLavaFish(
     }
 
     override fun travel(pTravelVector: Vec3) {
-        if (this.isEffectiveAi && acceptedFluids.any { this.isInFluid(it) }) {
+        if (this.isEffectiveAi && this.isInLava) {
             this.moveRelative(0.01f, pTravelVector)
             this.move(MoverType.SELF, this.deltaMovement)
             this.deltaMovement = deltaMovement.scale(0.9)
@@ -143,8 +141,6 @@ open class EntityLavaFish(
     override fun createNavigation(pLevel: Level): PathNavigation = PathNavigationLavaBound(this, pLevel)
 
     companion object {
-        val acceptedFluids = arrayOf(FluidTags.LAVA, FluidTags.WATER)
-
         fun canSpawnHere(
             fish: EntityType<out AbstractFish>,
             serverLevelAccessor: ServerLevelAccessor,
