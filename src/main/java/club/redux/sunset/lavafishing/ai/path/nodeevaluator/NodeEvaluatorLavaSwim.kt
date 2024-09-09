@@ -1,4 +1,4 @@
-package club.redux.sunset.lavafishing.ai.path
+package club.redux.sunset.lavafishing.ai.path.nodeevaluator
 
 import club.redux.sunset.lavafishing.entity.EntityLavaFish
 import com.google.common.collect.Maps
@@ -23,6 +23,8 @@ class NodeEvaluatorLavaSwim(private val allowBreaching: Boolean) : NodeEvaluator
 
     override fun prepare(pLevel: PathNavigationRegion, pMob: Mob) {
         super.prepare(pLevel, pMob)
+        pMob.setPathfindingMalus(BlockPathTypes.LAVA, 0.0f)
+
         pathTypesByPosCache.clear()
     }
 
@@ -121,7 +123,7 @@ class NodeEvaluatorLavaSwim(private val allowBreaching: Boolean) : NodeEvaluator
     override fun getBlockPathType(pLevel: BlockGetter, pX: Int, pY: Int, pZ: Int, pMob: Mob): BlockPathTypes {
         val blockPos = MutableBlockPos()
 
-        val isAcceptedFluids = { p: BlockPos -> EntityLavaFish.acceptedFluids.any { pLevel.getFluidState(p).`is`(it) } }
+        val isAcceptedFluids = { p: BlockPos -> EntityLavaFish.acceptedFluids.any(pLevel.getFluidState(p)::`is`) }
 
         for (i in pX until pX + this.entityWidth) {
             for (j in pY until pY + this.entityHeight) {
