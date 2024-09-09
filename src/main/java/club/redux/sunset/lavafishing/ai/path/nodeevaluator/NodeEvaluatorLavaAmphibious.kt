@@ -1,10 +1,9 @@
 package club.redux.sunset.lavafishing.ai.path.nodeevaluator
 
-import club.redux.sunset.lavafishing.entity.EntityLavaFish
-import club.redux.sunset.lavafishing.util.isInFluid
 import net.minecraft.core.BlockPos
 import net.minecraft.core.BlockPos.MutableBlockPos
 import net.minecraft.core.Direction
+import net.minecraft.tags.FluidTags
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.level.BlockGetter
@@ -63,7 +62,7 @@ class NodeEvaluatorLavaAmphibious(private val prefersShallowSwimming: Boolean) :
      * @return 根据实体是否在液体中而不同计算得出的起始节点。
      */
     override fun getStart(): Node {
-        return if (!EntityLavaFish.acceptedFluids.any(mob::isInFluid))
+        return if (!this.mob.isInLava)
             super.getStart()
         else this.getStartNode(
             BlockPos(
@@ -180,9 +179,8 @@ class NodeEvaluatorLavaAmphibious(private val prefersShallowSwimming: Boolean) :
      */
     override fun getBlockPathType(pLevel: BlockGetter, pX: Int, pY: Int, pZ: Int): BlockPathTypes {
         val mutableBlockPos = MutableBlockPos()
-        val isAcceptedFluids = { p: BlockPos -> EntityLavaFish.acceptedFluids.any(pLevel.getFluidState(p)::`is`) }
-
-        if (isAcceptedFluids(mutableBlockPos.set(pX, pY, pZ))) {
+        val fluidState = pLevel.getFluidState(mutableBlockPos.set(pX, pY, pZ))
+        if (fluidState.`is`(FluidTags.LAVA)) {
             // 遍历方向，检查周围是否有阻碍类型，如果有，则将路径类型更改为水边。
             for (direction in Direction.entries) {
                 val blockPathTypeAround = getBlockPathTypeRaw(pLevel, mutableBlockPos.set(pX, pY, pZ).move(direction))
@@ -190,11 +188,14 @@ class NodeEvaluatorLavaAmphibious(private val prefersShallowSwimming: Boolean) :
                     return BlockPathTypes.WATER_BORDER
                 }
             }
-            // 如果周围没有阻碍，则路径类型保持为水。
+            // 如果周围没有阻碍，则路径类型保持为岩浆。
             return BlockPathTypes.LAVA
         } else {
-            // 如果当前位置不是水，则根据下方方块类型获取路径类型。
-            return getBlockPathTypeStatic(pLevel, mutableBlockPos)
+            // 如果当前位置不是岩浆，则根据下方方块类型获取路径类型。
+            val staticBlockPathType = getBlockPathTypeStatic(pLevel, mutableBlockPos)
+            return if (staticBlockPathType == BlockPathTypes.WATER)
+                BlockPathTypes.BLOCKED
+            else staticBlockPathType
         }
     }
 }

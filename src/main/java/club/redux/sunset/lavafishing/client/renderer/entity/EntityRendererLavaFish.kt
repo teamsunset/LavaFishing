@@ -6,7 +6,6 @@ import club.redux.sunset.lavafishing.entity.EntityLavaFish
 import club.redux.sunset.lavafishing.misc.LavaFishType
 import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import club.redux.sunset.lavafishing.util.getTexture
-import club.redux.sunset.lavafishing.util.isInFluid
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
 import com.teammetallurgy.aquaculture.client.ClientHandler
@@ -67,7 +66,7 @@ class EntityRendererLavaFish(
                 val fishRotation = 4.3f * Mth.sin(0.6f * ageInTicks)
 
                 matrixStack.mulPose(Axis.YP.rotationDegrees(fishRotation))
-                if (!EntityLavaFish.acceptedFluids.any { fishEntity.isInFluid(it) }) {
+                if (!fishEntity.isInLava) {
                     matrixStack.translate(0.1f, 0.1f, -0.1f)
                     matrixStack.mulPose(Axis.ZP.rotationDegrees(90f))
                 }

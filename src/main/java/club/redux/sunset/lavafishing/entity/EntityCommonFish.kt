@@ -4,7 +4,6 @@ import club.redux.sunset.lavafishing.ai.goal.GoalLavaFishSwim
 import club.redux.sunset.lavafishing.api.mixin.IMixinProxyAbstractFish
 import club.redux.sunset.lavafishing.misc.LavaFishType
 import club.redux.sunset.lavafishing.util.castToProxy
-import club.redux.sunset.lavafishing.util.isInFluid
 import com.teammetallurgy.aquaculture.entity.ai.goal.FollowTypeSchoolLeaderGoal
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.EntityType
@@ -41,7 +40,7 @@ class EntityCommonFish(
     }
 
     override fun aiStep() {
-        if (!acceptedFluids.any { this.isInFluid(it) } && this.onGround() && this.verticalCollision) {
+        if (!this.isInLava && this.onGround() && this.verticalCollision) {
             this.deltaMovement = deltaMovement.add(
                 ((random.nextFloat() * 2.0f - 1.0f) * 0.05f).toDouble(),
                 0.4000000059604645,
