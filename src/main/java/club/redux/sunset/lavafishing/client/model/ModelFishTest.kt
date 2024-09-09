@@ -12,7 +12,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraftforge.client.event.EntityRenderersEvent
 
 
-class ModelFishTest<T : Entity>(val root: ModelPart) : EntityModel<T>() {
+class ModelFishTest<T : Entity>(root: ModelPart) : EntityModel<T>() {
     private val body: ModelPart = root.getChild("body")
     private val tail: ModelPart = root.getChild("tail")
     private val finTop: ModelPart = root.getChild("finTop")
