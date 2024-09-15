@@ -1,6 +1,5 @@
-package club.redux.sunset.lavafishing.ai.path
+package club.redux.sunset.lavafishing.ai.path.nodeevaluator
 
-import club.redux.sunset.lavafishing.entity.EntityLavaFish
 import com.google.common.collect.Maps
 import it.unimi.dsi.fastutil.longs.Long2ObjectFunction
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap
@@ -8,6 +7,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import net.minecraft.core.BlockPos
 import net.minecraft.core.BlockPos.MutableBlockPos
 import net.minecraft.core.Direction
+import net.minecraft.tags.FluidTags
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.level.BlockGetter
@@ -23,6 +23,8 @@ class NodeEvaluatorLavaSwim(private val allowBreaching: Boolean) : NodeEvaluator
 
     override fun prepare(pLevel: PathNavigationRegion, pMob: Mob) {
         super.prepare(pLevel, pMob)
+        pMob.setPathfindingMalus(BlockPathTypes.LAVA, 0.0f)
+
         pathTypesByPosCache.clear()
     }
 
@@ -121,27 +123,28 @@ class NodeEvaluatorLavaSwim(private val allowBreaching: Boolean) : NodeEvaluator
     override fun getBlockPathType(pLevel: BlockGetter, pX: Int, pY: Int, pZ: Int, pMob: Mob): BlockPathTypes {
         val blockPos = MutableBlockPos()
 
-        val isAcceptedFluids = { p: BlockPos -> EntityLavaFish.acceptedFluids.any { pLevel.getFluidState(p).`is`(it) } }
-
         for (i in pX until pX + this.entityWidth) {
             for (j in pY until pY + this.entityHeight) {
                 for (k in pZ until pZ + this.entityDepth) {
                     blockPos.set(i, j, k)
                     if (
                         pLevel.getFluidState(blockPos).isEmpty &&
-                        isAcceptedFluids(blockPos.below()) &&
+                        pLevel.getFluidState(blockPos.below()).`is`(FluidTags.LAVA) &&
                         pLevel.getBlockState(blockPos).isAir
                     ) {
                         return BlockPathTypes.BREACH
                     }
 
-                    if (!isAcceptedFluids(blockPos)) {
+                    if (!pLevel.getFluidState(blockPos).`is`(FluidTags.LAVA)) {
                         return BlockPathTypes.BLOCKED
                     }
                 }
             }
         }
 
-        return if (isAcceptedFluids(blockPos)) BlockPathTypes.LAVA else BlockPathTypes.BLOCKED
+        return if (pLevel.getFluidState(blockPos.below()).`is`(FluidTags.LAVA))
+            BlockPathTypes.LAVA
+        else
+            BlockPathTypes.BLOCKED
     }
 }
