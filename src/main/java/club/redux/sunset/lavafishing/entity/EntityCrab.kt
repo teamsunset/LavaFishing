@@ -16,10 +16,6 @@ class EntityCrab(
     fishType: LavaFishType,
 ) : EntityLavaFish(entityType, level, fishType) {
 
-    override fun init() {
-        super.init()
-    }
-
     override fun aiStep() {
         this.castToProxy(IMixinProxyAbstractFish::class.java).aiStepFromMob()
         this.speed =
