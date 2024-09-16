@@ -1022,33 +1022,7 @@ object AnimatedEntityAnimationCrab {
             )
         )
         .addAnimation(
-            "leftClaw",
-            AnimationChannel(
-                AnimationChannel.Targets.ROTATION,
-                Keyframe(
-                    0f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
-                    AnimationChannel.Interpolations.LINEAR
-                ),
-                Keyframe(
-                    0.25f, KeyframeAnimations.degreeVec(0f, 0f, -5f),
-                    AnimationChannel.Interpolations.LINEAR
-                ),
-                Keyframe(
-                    0.5834334f, KeyframeAnimations.degreeVec(0f, 0f, 5f),
-                    AnimationChannel.Interpolations.LINEAR
-                ),
-                Keyframe(
-                    0.875f, KeyframeAnimations.degreeVec(0f, 0f, -4f),
-                    AnimationChannel.Interpolations.LINEAR
-                ),
-                Keyframe(
-                    1.1676667f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
-                    AnimationChannel.Interpolations.LINEAR
-                )
-            )
-        )
-        .addAnimation(
-            "rightClaw",
+            "right_claw",
             AnimationChannel(
                 AnimationChannel.Targets.ROTATION,
                 Keyframe(
@@ -1260,5 +1234,31 @@ object AnimatedEntityAnimationCrab {
                     AnimationChannel.Interpolations.CATMULLROM
                 )
             )
-        ).build()
+        )
+        .addAnimation(
+            "left_claw",
+            AnimationChannel(
+                AnimationChannel.Targets.ROTATION,
+                Keyframe(
+                    0f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
+                    AnimationChannel.Interpolations.LINEAR
+                ),
+                Keyframe(
+                    0.25f, KeyframeAnimations.degreeVec(0f, 0f, -5f),
+                    AnimationChannel.Interpolations.LINEAR
+                ),
+                Keyframe(
+                    0.5834334f, KeyframeAnimations.degreeVec(0f, 0f, 5f),
+                    AnimationChannel.Interpolations.LINEAR
+                ),
+                Keyframe(
+                    0.875f, KeyframeAnimations.degreeVec(0f, 0f, -4f),
+                    AnimationChannel.Interpolations.LINEAR
+                ),
+                Keyframe(
+                    1.1676667f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
+                    AnimationChannel.Interpolations.LINEAR
+                )
+            )
+        ).build();
 }

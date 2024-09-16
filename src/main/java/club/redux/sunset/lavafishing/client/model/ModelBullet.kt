@@ -45,6 +45,9 @@ class ModelBullet(
 
     companion object {
         @JvmField val LAYER_LOCATION: ModelLayerLocation = ModelLayerLocation(ResourceLocation("bullet"), "main")
+        fun onRegisterLayerDefinitions(event: RegisterLayerDefinitions) {
+            event.registerLayerDefinition(LAYER_LOCATION) { createBodyLayer() }
+        }
 
         fun createBodyLayer(): LayerDefinition {
             val meshDefinition = MeshDefinition()
@@ -58,10 +61,6 @@ class ModelBullet(
             )
 
             return LayerDefinition.create(meshDefinition, 16, 16)
-        }
-
-        fun onRegisterLayerDefinitions(event: RegisterLayerDefinitions) {
-            event.registerLayerDefinition(LAYER_LOCATION) { createBodyLayer() }
         }
     }
 }

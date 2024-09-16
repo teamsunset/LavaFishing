@@ -45,9 +45,9 @@ object ModItems {
 
     // Fish
     @JvmField val FLAME_SQUAT_LOBSTER =
-        registerFish("flame_squat_lobster", ::EntityCommonFish, LavaFishType.COMMON) { ItemFlameSquatLobster() }
+        registerFish("flame_squat_lobster", ::EntityCommonFish, LavaFishType.LOBSTER) { ItemFlameSquatLobster() }
     @JvmField val OBSIDIAN_SWORD_FISH =
-        registerFish("obsidian_sword_fish", ::EntityCommonFish, LavaFishType.COMMON) { ItemObsidianSwordFish() }
+        registerFish("obsidian_sword_fish", ::EntityCommonFish, LavaFishType.SWORDFISH) { ItemObsidianSwordFish() }
     @JvmField val STEAM_FLYING_FISH =
         registerFish("steam_flying_fish", ::EntityCommonFish, LavaFishType.COMMON) { ItemSteamFlyingFish() }
     @JvmField val AGNI_FISH =
@@ -57,11 +57,11 @@ object ModItems {
     @JvmField val QUARTZ_FISH =
         registerFish("quartz_fish", ::EntityCommonFish, LavaFishType.COMMON) { ItemLavaFish() }
     @JvmField val SCALY_FOOT_SNAIL =
-        registerFish("scaly_foot_snail", ::EntityCommonFish, LavaFishType.COMMON) { ItemLavaFish(SMALL_FISH_RAW) }
+        registerFish("scaly_foot_snail", ::EntityCommonFish, LavaFishType.SNAIL) { ItemLavaFish(SMALL_FISH_RAW) }
     @JvmField val YETI_CRAB =
         registerFish("yeti_crab", ::EntityCrab, LavaFishType.CRAB) { ItemLavaFish(SMALL_FISH_RAW) }
     @JvmField val LAVA_LAMPREY =
-        registerFish("lava_lamprey", ::EntityLavaFish, LavaFishType.COMMON) { ItemLavaFish() }
+        registerFish("lava_lamprey", ::EntityLavaFish, LavaFishType.EEL) { ItemLavaFish() }
 
     // Food
     val SPICY_FISH_FILLET = REGISTER.registerKt("spicy_fish_fillet") { ItemSpicyFishFillet() }
