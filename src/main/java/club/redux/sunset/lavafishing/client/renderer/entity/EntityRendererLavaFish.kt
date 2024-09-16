@@ -1,7 +1,9 @@
 package club.redux.sunset.lavafishing.client.renderer.entity
 
+import club.redux.sunset.lavafishing.client.model.ModelCommonFish
 import club.redux.sunset.lavafishing.client.model.ModelCrab
-import club.redux.sunset.lavafishing.client.model.ModelFishTest
+import club.redux.sunset.lavafishing.client.model.ModelSnail
+import club.redux.sunset.lavafishing.client.model.ModelSwordFish
 import club.redux.sunset.lavafishing.entity.EntityLavaFish
 import club.redux.sunset.lavafishing.misc.LavaFishType
 import club.redux.sunset.lavafishing.misc.ModResourceLocation
@@ -24,11 +26,12 @@ class EntityRendererLavaFish(
     FishMediumModel(context.bakeLayer(ClientHandler.MEDIUM_MODEL)),
     0.35f
 ) {
-    private val commonModel = ModelFishTest<EntityLavaFish>(context.bakeLayer(ModelFishTest.LAYER_LOCATION))
-    private val swordFishModel = ModelFishTest<EntityLavaFish>(context.bakeLayer(ModelFishTest.LAYER_LOCATION))
-    private val eelModel = ModelFishTest<EntityLavaFish>(context.bakeLayer(ModelFishTest.LAYER_LOCATION))
+    private val commonModel = ModelSwordFish<EntityLavaFish>(context.bakeLayer(ModelCommonFish.LAYER_LOCATION))
+    private val swordFishModel = ModelSwordFish<EntityLavaFish>(context.bakeLayer(ModelSwordFish.LAYER_LOCATION))
+    private val eelModel = ModelSwordFish<EntityLavaFish>(context.bakeLayer(ModelCommonFish.LAYER_LOCATION))
     private val crabModel = ModelCrab<EntityLavaFish>(context.bakeLayer(ModelCrab.LAYER_LOCATION))
-    private val snailModel = ModelFishTest<EntityLavaFish>(context.bakeLayer(ModelFishTest.LAYER_LOCATION))
+    private val snailModel = ModelSwordFish<EntityLavaFish>(context.bakeLayer(ModelSnail.LAYER_LOCATION))
+    private val lobsterModel = ModelSwordFish<EntityLavaFish>(context.bakeLayer(ModelCommonFish.LAYER_LOCATION))
 
     override fun render(
         fishEntity: EntityLavaFish,
@@ -43,6 +46,7 @@ class EntityRendererLavaFish(
             LavaFishType.EEL -> this.model = eelModel
             LavaFishType.CRAB -> this.model = crabModel
             LavaFishType.SNAIL -> this.model = snailModel
+            LavaFishType.LOBSTER -> this.model = lobsterModel
             else -> this.model = commonModel
         }
         super.render(fishEntity, entityYaw, partialTicks, matrixStack, buffer, i)
