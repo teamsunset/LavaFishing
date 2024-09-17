@@ -1,17 +1,12 @@
 package club.redux.sunset.lavafishing.client.renderer.entity
 
-import club.redux.sunset.lavafishing.client.model.ModelCommonFish
-import club.redux.sunset.lavafishing.client.model.ModelCrab
-import club.redux.sunset.lavafishing.client.model.ModelSnail
-import club.redux.sunset.lavafishing.client.model.ModelSwordFish
+import club.redux.sunset.lavafishing.client.model.*
 import club.redux.sunset.lavafishing.entity.EntityLavaFish
 import club.redux.sunset.lavafishing.misc.LavaFishType
 import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import club.redux.sunset.lavafishing.util.getTexture
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
-import com.teammetallurgy.aquaculture.client.ClientHandler
-import com.teammetallurgy.aquaculture.client.renderer.entity.model.FishMediumModel
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -23,15 +18,15 @@ class EntityRendererLavaFish(
     context: EntityRendererProvider.Context,
 ) : MobRenderer<EntityLavaFish, EntityModel<EntityLavaFish>>(
     context,
-    FishMediumModel(context.bakeLayer(ClientHandler.MEDIUM_MODEL)),
+    ModelCommonFish(context.bakeLayer(ModelCommonFish.LAYER_LOCATION)),
     0.35f
 ) {
-    private val commonModel = ModelSwordFish<EntityLavaFish>(context.bakeLayer(ModelCommonFish.LAYER_LOCATION))
+    private val commonModel = ModelCommonFish<EntityLavaFish>(context.bakeLayer(ModelCommonFish.LAYER_LOCATION))
     private val swordFishModel = ModelSwordFish<EntityLavaFish>(context.bakeLayer(ModelSwordFish.LAYER_LOCATION))
-    private val eelModel = ModelSwordFish<EntityLavaFish>(context.bakeLayer(ModelCommonFish.LAYER_LOCATION))
+    private val eelModel = ModelEel<EntityLavaFish>(context.bakeLayer(ModelEel.LAYER_LOCATION))
     private val crabModel = ModelCrab<EntityLavaFish>(context.bakeLayer(ModelCrab.LAYER_LOCATION))
-    private val snailModel = ModelSwordFish<EntityLavaFish>(context.bakeLayer(ModelSnail.LAYER_LOCATION))
-    private val lobsterModel = ModelSwordFish<EntityLavaFish>(context.bakeLayer(ModelCommonFish.LAYER_LOCATION))
+    private val snailModel = ModelSnail<EntityLavaFish>(context.bakeLayer(ModelSnail.LAYER_LOCATION))
+    private val lobsterModel = ModelLobster<EntityLavaFish>(context.bakeLayer(ModelLobster.LAYER_LOCATION))
 
     override fun render(
         fishEntity: EntityLavaFish,
@@ -86,7 +81,6 @@ class EntityRendererLavaFish(
 
     override fun scale(fishEntity: EntityLavaFish, matrixStack: PoseStack, partialTickTime: Float) {
 //        val location = ForgeRegistries.ENTITY_TYPES.getKey(fishEntity.type)
-        var scale = 0.0f
 //        if (location != null) {
 //            when (location.path) {
 //                "minnow" -> scale = 0.5f
@@ -98,8 +92,10 @@ class EntityRendererLavaFish(
 //                    1.4f
 //            }
 //        }
-        if (fishEntity.fishType == LavaFishType.CRAB) {
-            scale = 0.5f
+        val scale = when (fishEntity.fishType) {
+            LavaFishType.CRAB, LavaFishType.EEL, LavaFishType.SNAIL -> 0.5f
+            LavaFishType.LOBSTER -> 0.3f
+            else -> 0f
         }
 
         if (scale > 0) {

@@ -11,7 +11,6 @@ import net.minecraft.world.phys.Vec3
 open class PathNavigationLavaAmphibious(mob: Mob, level: Level) : PathNavigation(mob, level) {
     override fun createPathFinder(pMaxVisitedNodes: Int): PathFinder {
         this.nodeEvaluator = NodeEvaluatorLavaAmphibious(false)
-        nodeEvaluator.setCanPassDoors(true)
         return PathFinder(this.nodeEvaluator, pMaxVisitedNodes)
     }
 

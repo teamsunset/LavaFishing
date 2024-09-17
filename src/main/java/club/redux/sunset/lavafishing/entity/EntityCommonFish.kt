@@ -1,9 +1,7 @@
 package club.redux.sunset.lavafishing.entity;
 
 import club.redux.sunset.lavafishing.ai.goal.GoalLavaFishSwim
-import club.redux.sunset.lavafishing.api.mixin.IMixinProxyAbstractFish
 import club.redux.sunset.lavafishing.misc.LavaFishType
-import club.redux.sunset.lavafishing.util.castToProxy
 import com.teammetallurgy.aquaculture.entity.ai.goal.FollowTypeSchoolLeaderGoal
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.EntityType
@@ -50,7 +48,7 @@ class EntityCommonFish(
             this.hasImpulse = true
             this.playSound(this.flopSound, this.soundVolume, this.voicePitch)
         }
-        this.castToProxy(IMixinProxyAbstractFish::class.java).aiStepFromMob()
+        super.aiStep()
     }
 
     override fun registerGoals() {

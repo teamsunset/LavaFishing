@@ -100,8 +100,6 @@ open class EntityLavaFish(
         }
     }
 
-    override fun getFlopSound(): SoundEvent = AquaSounds.FISH_FLOP.get()
-
     override fun handleAirSupply(pAirSupply: Int) {
         if (this.isAlive && this.isInWater) {
             this.freezeTick--
@@ -131,6 +129,8 @@ open class EntityLavaFish(
         }
     }
 
+    override fun aiStep() = this.castToProxy(IMixinProxyAbstractFish::class.java).aiStepFromMob()
+    override fun getFlopSound(): SoundEvent = AquaSounds.FISH_FLOP.get()
     override fun getAmbientSound(): SoundEvent = AquaSounds.FISH_AMBIENT.get()
     override fun getDeathSound(): SoundEvent = AquaSounds.FISH_DEATH.get()
     override fun getHurtSound(damageSource: DamageSource): SoundEvent = AquaSounds.FISH_HURT.get()

@@ -158,10 +158,10 @@ class NodeEvaluatorLavaAmphibious(private val prefersShallowSwimming: Boolean) :
      *
      * @param pNeighbor 邻居节点。
      * @param pNode 当前节点。
-     * @return 如果邻居节点有效且为水域类型，则返回 true。
+     * @return 如果邻居节点有效且为LAVA类型，则返回 true。
      */
     private fun isVerticalNeighborValid(pNeighbor: Node?, pNode: Node): Boolean {
-        return this.isNeighborValid(pNeighbor, pNode) && pNeighbor!!.type == BlockPathTypes.WATER
+        return this.isNeighborValid(pNeighbor, pNode) && pNeighbor!!.type == BlockPathTypes.LAVA
     }
 
 

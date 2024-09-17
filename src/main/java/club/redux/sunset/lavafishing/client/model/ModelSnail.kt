@@ -1,9 +1,10 @@
 package club.redux.sunset.lavafishing.client.model
 
+import club.redux.sunset.lavafishing.client.animation.AnimatedEntityAnimationSnail
 import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
-import net.minecraft.client.model.EntityModel
+import net.minecraft.client.model.HierarchicalModel
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.model.geom.PartPose
@@ -12,10 +13,11 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder
 import net.minecraft.client.model.geom.builders.LayerDefinition
 import net.minecraft.client.model.geom.builders.MeshDefinition
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
 import net.minecraftforge.client.event.EntityRenderersEvent
 
 
-class ModelSnail<T : Entity>(root: ModelPart) : EntityModel<T>() {
+class ModelSnail<T : Entity>(val root: ModelPart) : HierarchicalModel<T>() {
     private val whole: ModelPart = root.getChild("whole")
 
     override fun renderToBuffer(
@@ -31,6 +33,7 @@ class ModelSnail<T : Entity>(root: ModelPart) : EntityModel<T>() {
         this.whole.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha)
     }
 
+    override fun root(): ModelPart = this.root
     override fun setupAnim(
         pEntity: T,
         pLimbSwing: Float,
@@ -39,7 +42,16 @@ class ModelSnail<T : Entity>(root: ModelPart) : EntityModel<T>() {
         pNetHeadYaw: Float,
         pHeadPitch: Float,
     ) {
-
+        if (pEntity is LivingEntity) {
+            this.root().allParts.forEach(ModelPart::resetPose)
+            animateWalk(
+                AnimatedEntityAnimationSnail.WALK,
+                pLimbSwing,
+                pLimbSwingAmount,
+                10F,
+                Float.MAX_VALUE
+            )
+        }
     }
 
     companion object {
