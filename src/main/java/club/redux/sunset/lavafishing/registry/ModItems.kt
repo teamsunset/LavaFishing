@@ -2,8 +2,8 @@ package club.redux.sunset.lavafishing.registry
 
 import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.block.blockentity.BlockEntityPrometheusBounty
+import club.redux.sunset.lavafishing.entity.EntityAmphibious
 import club.redux.sunset.lavafishing.entity.EntityCommonFish
-import club.redux.sunset.lavafishing.entity.EntityCrab
 import club.redux.sunset.lavafishing.entity.EntityLavaFish
 import club.redux.sunset.lavafishing.item.ItemPromethiumArmor
 import club.redux.sunset.lavafishing.item.block.BlockItemWithoutLevelRenderer
@@ -45,7 +45,7 @@ object ModItems {
 
     // Fish
     @JvmField val FLAME_SQUAT_LOBSTER =
-        registerFish("flame_squat_lobster", ::EntityCommonFish, LavaFishType.LOBSTER) { ItemFlameSquatLobster() }
+        registerFish("flame_squat_lobster", ::EntityAmphibious, LavaFishType.LOBSTER) { ItemFlameSquatLobster() }
     @JvmField val OBSIDIAN_SWORD_FISH =
         registerFish("obsidian_sword_fish", ::EntityCommonFish, LavaFishType.SWORDFISH) { ItemObsidianSwordFish() }
     @JvmField val STEAM_FLYING_FISH =
@@ -57,11 +57,11 @@ object ModItems {
     @JvmField val QUARTZ_FISH =
         registerFish("quartz_fish", ::EntityCommonFish, LavaFishType.COMMON) { ItemLavaFish() }
     @JvmField val SCALY_FOOT_SNAIL =
-        registerFish("scaly_foot_snail", ::EntityCommonFish, LavaFishType.SNAIL) { ItemLavaFish(SMALL_FISH_RAW) }
+        registerFish("scaly_foot_snail", ::EntityAmphibious, LavaFishType.SNAIL) { ItemLavaFish(SMALL_FISH_RAW) }
     @JvmField val YETI_CRAB =
-        registerFish("yeti_crab", ::EntityCrab, LavaFishType.CRAB) { ItemLavaFish(SMALL_FISH_RAW) }
+        registerFish("yeti_crab", ::EntityAmphibious, LavaFishType.CRAB) { ItemLavaFish(SMALL_FISH_RAW) }
     @JvmField val LAVA_LAMPREY =
-        registerFish("lava_lamprey", ::EntityLavaFish, LavaFishType.EEL) { ItemLavaFish() }
+        registerFish("lava_lamprey", ::EntityCommonFish, LavaFishType.EEL) { ItemLavaFish() }
 
     // Food
     val SPICY_FISH_FILLET = REGISTER.registerKt("spicy_fish_fillet") { ItemSpicyFishFillet() }

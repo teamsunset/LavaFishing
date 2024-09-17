@@ -154,6 +154,8 @@ class EventHandler {
             ModelCrab.onRegisterLayerDefinitions(event)
             ModelSwordFish.onRegisterLayerDefinitions(event)
             ModelSnail.onRegisterLayerDefinitions(event)
+            ModelEel.onRegisterLayerDefinitions(event)
+            ModelLobster.onRegisterLayerDefinitions(event)
         }
     }
 }
