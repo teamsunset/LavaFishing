@@ -10,7 +10,7 @@ object EventDataGenerator {
     @JvmStatic
     fun onGatherData(event: GatherDataEvent) {
         event.generator.apply {
-            addProvider(true, ModDataProviderRecipe(packOutput))
+            addProvider(true, ModDataProviderRecipe(packOutput, event.lookupProvider))
             addProvider(
                 event.includeServer(),
                 ModDataProviderItemTags(
@@ -20,7 +20,7 @@ object EventDataGenerator {
                     event.existingFileHelper
                 )
             )
-            addProvider(event.includeServer(), ModDataProviderLootTable(packOutput))
+            addProvider(event.includeServer(), ModDataProviderLootTable(packOutput, event.lookupProvider))
             addProvider(event.includeClient(), ModDataProviderItemModel(packOutput, event.existingFileHelper))
             addProvider(true, ModDataProviderLanguage(packOutput, Locale.PRC))
             addProvider(true, ModDataProviderLanguage(packOutput, Locale.US))

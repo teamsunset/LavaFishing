@@ -1,15 +1,8 @@
 package club.redux.sunset.lavafishing.entity.bullet
 
 import club.redux.sunset.lavafishing.item.bullet.ItemBullet
-import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
 import club.redux.sunset.lavafishing.registry.ModItems
-import club.redux.sunset.lavafishing.util.UtilEnchantment
 import net.minecraft.network.RegistryFriendlyByteBuf
-import net.minecraft.network.protocol.Packet
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload
-import net.minecraft.network.protocol.game.ClientGamePacketListener
-import net.minecraft.server.level.ServerEntity
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntityType
@@ -18,13 +11,10 @@ import net.minecraft.world.entity.projectile.AbstractArrow
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Tier
 import net.minecraft.world.item.Tiers
-import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
-import net.minecraftforge.network.NetworkHooks
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn
-import java.util.function.Consumer
 
 open class EntityBullet(
     entityType: EntityType<out EntityBullet>,
@@ -68,19 +58,17 @@ open class EntityBullet(
         this.setSoundEvent(oldSoundEvent)
     }
 
-    override fun setEnchantmentEffectsFromEntity(pShooter: LivingEntity, pVelocity: Float) {
-        pShooter.handSlots.firstOrNull { it.item is ItemSlingshot }?.let {
-            this.attachEnchantment(it)
-        }
-    }
+//    override fun setEnchantmentEffectsFromEntity(pShooter: LivingEntity, pVelocity: Float) {
+//        pShooter.handSlots.firstOrNull { it.item is ItemSlingshot }?.let {
+//            this.attachEnchantment(it)
+//        }
+//    }
 
+    //TODO
     open fun attachEnchantment(stack: ItemStack) {
-        this.level().registryAccess().holder(Enchantments.POWER).ifPresent { enchantment ->
-            UtilEnchantment.hasThen(enchantment, stack) { this.baseDamage += it * 0.5 + 0.5 }
-        }
-        UtilEnchantment.hasThen(Enchantments.POWER, stack) { this.baseDamage += it * 0.5 + 0.5 }
-        UtilEnchantment.hasThen(Enchantments.PUNCH, stack) { this.knockback = it }
-        UtilEnchantment.hasThen(Enchantments.FLAME, stack) { this.setSecondsOnFire(100) }
+//        UtilEnchantment.hasThen(Enchantments.POWER, stack) { this.baseDamage += it * 0.5 + 0.5 }
+//        UtilEnchantment.hasThen(Enchantments.PUNCH, stack) { this.knockback = it }
+//        UtilEnchantment.hasThen(Enchantments.FLAME, stack) { this.setSecondsOnFire(100) }
     }
 
     override fun shoot(pX: Double, pY: Double, pZ: Double, pVelocity: Float, pInaccuracy: Float) {

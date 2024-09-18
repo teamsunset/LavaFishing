@@ -1,21 +1,25 @@
 package club.redux.sunset.lavafishing.datagenerator
 
-import club.redux.sunset.lavafishing.misc.ModResourceLocation
+import club.redux.sunset.lavafishing.LavaFishing
 import club.redux.sunset.lavafishing.registry.ModItems
 import com.teammetallurgy.aquaculture.init.AquaItems
 import net.minecraft.advancements.critereon.ItemPredicate
+import net.minecraft.core.HolderLookup
 import net.minecraft.data.PackOutput
 import net.minecraft.data.recipes.*
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.level.ItemLike
-import java.util.function.Consumer
+import java.util.concurrent.CompletableFuture
 
-class ModDataProviderRecipe(pOutput: PackOutput) : RecipeProvider(pOutput) {
-    override fun buildRecipes(pWriter: Consumer<FinishedRecipe>) {
-        this.buildTools(pWriter)
-        this.buildArmors(pWriter)
-        this.buildMisc(pWriter)
+class ModDataProviderRecipe(
+    pOutput: PackOutput,
+    lookupProvider: CompletableFuture<HolderLookup.Provider>,
+) : RecipeProvider(pOutput, lookupProvider) {
+    override fun buildRecipes(recipeOutput: RecipeOutput) {
+        this.buildTools(recipeOutput)
+        this.buildArmors(recipeOutput)
+        this.buildMisc(recipeOutput)
     }
 
     val smeltingPattern = { category: RecipeCategory, result: ItemLike, ingredients: List<ItemLike> ->
@@ -31,7 +35,7 @@ class ModDataProviderRecipe(pOutput: PackOutput) : RecipeProvider(pOutput) {
         )
     }
 
-    private fun buildTools(pWriter: Consumer<FinishedRecipe>) {
+    private fun buildTools(recipeOutput: RecipeOutput) {
         val category = RecipeCategory.TOOLS
         val fishingRodPattern = { result: ItemLike, ingredient: ItemLike ->
             ShapedRecipeBuilder.shaped(category, result)
@@ -44,9 +48,9 @@ class ModDataProviderRecipe(pOutput: PackOutput) : RecipeProvider(pOutput) {
                 .unlockedBy("has_item", has(ingredient))
         }
         fishingRodPattern(ModItems.OBSIDIAN_FISHING_ROD.get(), Items.OBSIDIAN)
-            .save(pWriter)
+            .save(recipeOutput)
         fishingRodPattern(ModItems.NETHERITE_FISHING_ROD.get(), Items.NETHERITE_INGOT)
-            .save(pWriter)
+            .save(recipeOutput)
 
         val slingshotPattern = { result: ItemLike, ingredient: ItemLike ->
             ShapedRecipeBuilder.shaped(category, result)
@@ -59,12 +63,12 @@ class ModDataProviderRecipe(pOutput: PackOutput) : RecipeProvider(pOutput) {
                 .unlockedBy("has_item", has(ingredient))
         }
         slingshotPattern(ModItems.NEPTUNIUM_SLINGSHOT.get(), AquaItems.NEPTUNIUM_INGOT.get())
-            .save(pWriter)
+            .save(recipeOutput)
         slingshotPattern(ModItems.PROMETHIUM_SLINGSHOT.get(), ModItems.PROMETHIUM_INGOT.get())
-            .save(pWriter)
+            .save(recipeOutput)
     }
 
-    private fun buildArmors(pWriter: Consumer<FinishedRecipe>) {
+    private fun buildArmors(recipeOutput: RecipeOutput) {
         val category = RecipeCategory.COMBAT
         val promethiumArmorPattern = { itemLike: ItemLike ->
             ShapedRecipeBuilder.shaped(category, itemLike)
@@ -75,21 +79,21 @@ class ModDataProviderRecipe(pOutput: PackOutput) : RecipeProvider(pOutput) {
         promethiumArmorPattern(ModItems.PROMETHIUM_HELMET.get())
             .pattern("###")
             .pattern("# #")
-            .save(pWriter)
+            .save(recipeOutput)
         promethiumArmorPattern(ModItems.PROMETHIUM_CHESTPLATE.get())
             .pattern("# #")
             .pattern("###")
             .pattern("###")
-            .save(pWriter)
+            .save(recipeOutput)
         promethiumArmorPattern(ModItems.PROMETHIUM_LEGGINGS.get())
             .pattern("###")
             .pattern("# #")
             .pattern("# #")
-            .save(pWriter)
+            .save(recipeOutput)
         promethiumArmorPattern(ModItems.PROMETHIUM_BOOTS.get())
             .pattern("# #")
             .pattern("# #")
-            .save(pWriter)
+            .save(recipeOutput)
 
         smeltingPattern(
             category, ModItems.PROMETHIUM_NUGGET.get(),
@@ -99,10 +103,10 @@ class ModDataProviderRecipe(pOutput: PackOutput) : RecipeProvider(pOutput) {
                 ModItems.PROMETHIUM_LEGGINGS.get(),
                 ModItems.PROMETHIUM_BOOTS.get()
             )
-        ).save(pWriter, ModResourceLocation(ModItems.PROMETHIUM_NUGGET.get().descriptionId + "_smelting"))
+        ).save(recipeOutput, LavaFishing.resourceLocation(ModItems.PROMETHIUM_NUGGET.get().descriptionId + "_smelting"))
     }
 
-    private fun buildMisc(pWriter: Consumer<FinishedRecipe>) {
+    private fun buildMisc(recipeOutput: RecipeOutput) {
         val category = RecipeCategory.MISC
         ShapedRecipeBuilder.shaped(category, ModItems.PROMETHIUM_INGOT.get())
             .define('#', ModItems.PROMETHIUM_NUGGET.get())
@@ -110,22 +114,25 @@ class ModDataProviderRecipe(pOutput: PackOutput) : RecipeProvider(pOutput) {
             .pattern("###")
             .pattern("###")
             .unlockedBy("has_item", has(ModItems.PROMETHIUM_INGOT.get()))
-            .save(pWriter)
+            .save(recipeOutput)
         ShapelessRecipeBuilder.shapeless(category, ModItems.PROMETHIUM_NUGGET.get(), 9)
             .requires(ModItems.PROMETHIUM_INGOT.get())
             .unlockedBy("has_item", has(ModItems.PROMETHIUM_INGOT.get()))
-            .save(pWriter)
+            .save(recipeOutput)
         ShapedRecipeBuilder.shaped(category, ModItems.PROMETHIUM_BLOCK.get())
             .define('#', ModItems.PROMETHIUM_INGOT.get())
             .pattern("###")
             .pattern("###")
             .pattern("###")
             .unlockedBy("has_item", has(ModItems.PROMETHIUM_INGOT.get()))
-            .save(pWriter)
+            .save(recipeOutput)
         ShapelessRecipeBuilder.shapeless(category, ModItems.PROMETHIUM_INGOT.get(), 9)
             .requires(ModItems.PROMETHIUM_BLOCK.get())
             .unlockedBy("has_item", has(ModItems.PROMETHIUM_INGOT.get()))
-            .save(pWriter, ModResourceLocation(ModItems.PROMETHIUM_INGOT.get().descriptionId + "_from_block"))
+            .save(
+                recipeOutput,
+                LavaFishing.resourceLocation(ModItems.PROMETHIUM_INGOT.get().descriptionId + "_from_block")
+            )
 
         val bulletPattern = { itemLike: ItemLike, ingredient: ItemLike ->
             ShapelessRecipeBuilder.shapeless(category, itemLike)
@@ -134,14 +141,14 @@ class ModDataProviderRecipe(pOutput: PackOutput) : RecipeProvider(pOutput) {
                 .unlockedBy("has_item", has(ingredient))
         }
         bulletPattern(ModItems.STONE_BULLET.get(), Items.STONE_BUTTON)
-            .save(pWriter)
+            .save(recipeOutput)
         bulletPattern(ModItems.IRON_BULLET.get(), Items.IRON_NUGGET)
-            .save(pWriter)
+            .save(recipeOutput)
         bulletPattern(ModItems.NEPTUNIUM_BULLET.get(), AquaItems.NEPTUNIUM_NUGGET.get())
             .requires(Items.PRISMARINE_CRYSTALS)
-            .save(pWriter)
+            .save(recipeOutput)
         bulletPattern(ModItems.PROMETHIUM_BULLET.get(), ModItems.PROMETHIUM_NUGGET.get())
             .requires(Items.GUNPOWDER)
-            .save(pWriter)
+            .save(recipeOutput)
     }
 }

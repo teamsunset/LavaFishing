@@ -17,7 +17,7 @@ open class ItemLavaFish : FishItem {
         this.filletAmount = foodProperties.nutrition * 2
     }
 
-    override fun isFireResistant(): Boolean = true
+//    override fun isFireResistant(): Boolean = true
 
 
     companion object {

@@ -1,13 +1,15 @@
 package club.redux.sunset.lavafishing.datagenerator
 
+import club.redux.sunset.lavafishing.LavaFishing
 import club.redux.sunset.lavafishing.entity.EntityLavaFish
-import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
+import net.minecraft.core.HolderLookup
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.core.registries.Registries
 import net.minecraft.data.PackOutput
 import net.minecraft.data.loot.LootTableProvider
 import net.minecraft.data.loot.LootTableSubProvider
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.ResourceKey
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.storage.loot.LootPool
 import net.minecraft.world.level.storage.loot.LootTable
@@ -15,26 +17,31 @@ import net.minecraft.world.level.storage.loot.entries.LootItem
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition
+import java.util.concurrent.CompletableFuture
 
 class ModDataProviderLootTable(
     pOutput: PackOutput,
-) : LootTableProvider(pOutput, emptySet(), emptyList()) {
+    lookupProvider: CompletableFuture<HolderLookup.Provider>,
+) : LootTableProvider(pOutput, emptySet(), emptyList(), lookupProvider) {
     override fun getTables(): MutableList<SubProviderEntry> {
         val tables = mutableListOf<SubProviderEntry>()
 
         val build =
-            { resourceLocation: ResourceLocation, builder: LootTable.Builder, lootContextParamSet: LootContextParamSet ->
+            { resourceKey: ResourceKey<LootTable>, builder: LootTable.Builder, lootContextParamSet: LootContextParamSet ->
                 SubProviderEntry(
-                    { LootTableSubProvider { it.accept(resourceLocation, builder) } },
+                    { LootTableSubProvider { it.accept(resourceKey, builder) } },
                     lootContextParamSet
                 )
             }
 
         ModEntityTypes.getEntriesByEntityParentClass(EntityLavaFish::class.java)
-            .forEach { entityTypeRegistryObject ->
-                val location = entityTypeRegistryObject.key!!.location()
+            .forEach { entry ->
+                val location = entry.key!!.location()
                 build(
-                    ModResourceLocation("entities/${location.path}"),
+                    ResourceKey.create(
+                        Registries.LOOT_TABLE,
+                        LavaFishing.resourceLocation("entities/${location.path}")
+                    ),
                     LootTable.lootTable().withPool(
                         LootPool.lootPool()
                             .add(LootItem.lootTableItem(BuiltInRegistries.ITEM.get(location)))

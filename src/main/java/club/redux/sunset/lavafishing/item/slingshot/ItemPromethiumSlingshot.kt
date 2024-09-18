@@ -16,7 +16,7 @@ class ItemPromethiumSlingshot : ItemSlingshot(
         if (pLivingEntity !is Player || pLevel.isClientSide) return
 
         val item = pStack.item as ItemPromethiumSlingshot
-        val duration = item.getUseDuration(pStack)
+        val duration = item.getUseDuration(pStack, pLivingEntity)
         var overtime = duration - pRemainingUseDuration
         overtime *= item.getChargeMultiplier(pStack)
         if (overtime < 0) return

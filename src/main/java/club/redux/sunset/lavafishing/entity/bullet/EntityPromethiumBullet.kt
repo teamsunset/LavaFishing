@@ -2,12 +2,10 @@ package club.redux.sunset.lavafishing.entity.bullet
 
 import club.redux.sunset.lavafishing.misc.ModTiers
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
-import club.redux.sunset.lavafishing.util.UtilEnchantment
 import club.redux.sunset.lavafishing.util.Utils
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
@@ -107,10 +105,11 @@ class EntityPromethiumBullet(
         }
     }
 
+    //TODO
     override fun attachEnchantment(stack: ItemStack) {
         super.attachEnchantment(stack)
-        UtilEnchantment.hasThen(Enchantments.POWER_ARROWS, stack) { this.divisionNum += it }
-        UtilEnchantment.hasThen(Enchantments.MULTISHOT, stack) { this.divisionTimes = 3 }
+//        UtilEnchantment.hasThen(Enchantments.POWER_ARROWS, stack) { this.divisionNum += it }
+//        UtilEnchantment.hasThen(Enchantments.MULTISHOT, stack) { this.divisionTimes = 3 }
     }
 
     //-----------------network----------------//

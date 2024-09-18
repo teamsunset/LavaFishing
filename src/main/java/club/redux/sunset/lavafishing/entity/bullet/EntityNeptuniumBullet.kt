@@ -1,17 +1,15 @@
 package club.redux.sunset.lavafishing.entity.bullet
 
-import club.redux.sunset.lavafishing.misc.ModTiers
-import com.teammetallurgy.aquaculture.Aquaculture
 import com.teammetallurgy.aquaculture.api.AquacultureAPI
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
-import net.minecraft.world.entity.MobType
 import net.minecraft.world.entity.monster.Drowned
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
+import net.neoforged.neoforge.common.NeoForgeMod
 import kotlin.math.log
 import kotlin.math.max
 
@@ -24,7 +22,7 @@ open class EntityNeptuniumBullet(
     val baseTraceRate = 0.3
 
     val predicate = { entity: Entity ->
-        entity is Mob && (entity.mobType == MobType.WATER || entity is Drowned)
+        entity is Mob && (entity.canDrownInFluidType(NeoForgeMod.WATER_TYPE.value()) || entity is Drowned)
     }
 
     init {

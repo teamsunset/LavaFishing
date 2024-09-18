@@ -20,7 +20,10 @@ import net.minecraft.util.RandomSource
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.entity.*
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.MobSpawnType
+import net.minecraft.world.entity.MoverType
+import net.minecraft.world.entity.SpawnPlacementTypes
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.ai.goal.FollowFlockLeaderGoal
@@ -168,8 +171,6 @@ class EntityLavaFish(
     override fun getAmbientSound(): SoundEvent = AquaSounds.FISH_AMBIENT.get()
     override fun getDeathSound(): SoundEvent = AquaSounds.FISH_DEATH.get()
     override fun getHurtSound(damageSource: DamageSource): SoundEvent = AquaSounds.FISH_HURT.get()
-    override fun getDimensions(pose: Pose): EntityDimensions = super.getDimensions(pose)
-    override fun playerTouch(player: Player) = super.playerTouch(player)
     override fun fireImmune(): Boolean = true
 
     override fun createNavigation(pLevel: Level): PathNavigation = PathNavigationLavaBound(this, pLevel)

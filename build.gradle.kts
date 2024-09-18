@@ -118,11 +118,11 @@ dependencies {
     val mixinProcessor = "org.spongepowered:mixin:0.8.5:processor"
     val aquaculture =
         "com.teammetallurgy.aquaculture:aquaculture2_${minecraftVersion}:${minecraftVersion}-${aquacultureVersion}"
-    val kotlinforforge = "thedarkcolour:kotlinforforge-neoforge:4.10.0"
+    val kotlinforforge = "thedarkcolour:kotlinforforge-neoforge:5.5.0"
     val jeiCommonApi = "mezz.jei:jei-${minecraftVersion}-common-api:${jeiVersion}"
     val jeiForgeApi = "mezz.jei:jei-${minecraftVersion}-neoforge-api:${jeiVersion}"
     val jei = "mezz.jei:jei-${minecraftVersion}-neoforge:${jeiVersion}"
-    val configured = "curse.maven:configured-457570:5441234"
+//    val configured = "curse.maven:configured-457570:5441232"
 
     val jable = "com.github.dsx137:jable:1.0.10"
 
@@ -145,7 +145,7 @@ dependencies {
     runtimeOnly(jei)
 
     // Configured
-    implementation(configured)
+//    implementation(configured)
 }
 
 neoForge {
@@ -210,8 +210,8 @@ sourceSets["main"].resources.srcDirs("src/generated/resources")
 val props = mapOf(
     "minecraft_version" to minecraftVersion,
     "minecraft_version_range" to minecraftVersionRange,
-    "forge_version" to neoforgeVersion,
-    "forge_version_range" to neoforgeVersionRange,
+    "neoforge_version" to neoforgeVersion,
+    "neoforge_version_range" to neoforgeVersionRange,
     "mod_loader" to modLoader,
     "mod_loader_version_range" to modLoaderVersionRange,
     "mod_id" to modId,

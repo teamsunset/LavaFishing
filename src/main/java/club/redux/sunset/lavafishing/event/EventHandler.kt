@@ -32,6 +32,7 @@ import net.neoforged.neoforge.client.event.ViewportEvent
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
 import net.neoforged.neoforge.data.event.GatherDataEvent
 import net.neoforged.neoforge.event.LootTableLoadEvent
+import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent
@@ -40,7 +41,6 @@ import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent
 import net.neoforged.neoforge.event.entity.player.PlayerEvent
 import net.neoforged.neoforge.event.tick.EntityTickEvent
-import net.neoforged.neoforge.event.tick.PlayerTickEvent
 
 class EventHandler {
     @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
@@ -77,7 +77,8 @@ class EventHandler {
         }
 
         @SubscribeEvent
-        fun onPlayerTick(event: PlayerTickEvent) {
+        fun onRegisterBrewingRecipes(event: RegisterBrewingRecipesEvent) {
+            ModPotions.onRegisterBrewingRecipes(event)
         }
     }
 
@@ -99,7 +100,6 @@ class EventHandler {
         @SubscribeEvent
         fun onSetup(event: FMLCommonSetupEvent) {
             BehaviorDispenserBullet.onSetup(event)
-            ModPotions.onCommonSetupEvent(event)
             ItemLavaFish.onSetup(event)
         }
 

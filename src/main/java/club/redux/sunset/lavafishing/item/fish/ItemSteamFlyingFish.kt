@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level
 
 class ItemSteamFlyingFish : ItemLavaFish() {
     override fun finishUsingItem(pStack: ItemStack, pLevel: Level, pLivingEntity: LivingEntity): ItemStack {
-        pLivingEntity.addEffect(MobEffectInstance(ModMobEffects.LAVA_WALKER.get(), 300))
+        pLivingEntity.addEffect(MobEffectInstance(ModMobEffects.LAVA_WALKER, 300))
         return super.finishUsingItem(pStack, pLevel, pLivingEntity)
     }
 }
