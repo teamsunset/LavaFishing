@@ -44,6 +44,10 @@ class ModelBullet(
         @JvmField val LAYER_LOCATION: ModelLayerLocation =
             ModelLayerLocation(LavaFishing.resourceLocation("bullet"), "main")
 
+        fun onRegisterLayerDefinitions(event: EntityRenderersEvent.RegisterLayerDefinitions) {
+            event.registerLayerDefinition(LAYER_LOCATION) { createBodyLayer() }
+        }
+
         fun createBodyLayer(): LayerDefinition {
             val meshDefinition = MeshDefinition()
             val partDefinition = meshDefinition.root
@@ -56,10 +60,6 @@ class ModelBullet(
             )
 
             return LayerDefinition.create(meshDefinition, 16, 16)
-        }
-
-        fun onRegisterLayerDefinitions(event: EntityRenderersEvent.RegisterLayerDefinitions) {
-            event.registerLayerDefinition(LAYER_LOCATION) { createBodyLayer() }
         }
     }
 }

@@ -2,6 +2,8 @@ package club.redux.sunset.lavafishing.registry
 
 import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.block.blockentity.BlockEntityPrometheusBounty
+import club.redux.sunset.lavafishing.entity.EntityAmphibious
+import club.redux.sunset.lavafishing.entity.EntityCommonFish
 import club.redux.sunset.lavafishing.entity.EntityLavaFish
 import club.redux.sunset.lavafishing.item.ItemPromethiumArmor
 import club.redux.sunset.lavafishing.item.block.BlockItemWithoutLevelRenderer
@@ -10,6 +12,7 @@ import club.redux.sunset.lavafishing.item.cuisine.ItemSpicyFishFillet
 import club.redux.sunset.lavafishing.item.fish.*
 import club.redux.sunset.lavafishing.item.slingshot.ItemNeptuniumSlingshot
 import club.redux.sunset.lavafishing.item.slingshot.ItemPromethiumSlingshot
+import club.redux.sunset.lavafishing.misc.LavaFishType
 import club.redux.sunset.lavafishing.misc.ModTiers
 import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt
@@ -41,23 +44,23 @@ object ModItems {
 
     // Fish
     @JvmField val FLAME_SQUAT_LOBSTER =
-        registerFish("flame_squat_lobster", EntityLavaFish.Companion.FishType.COMMON) { ItemFlameSquatLobster() }
+        registerFish("flame_squat_lobster", ::EntityAmphibious, LavaFishType.LOBSTER) { ItemFlameSquatLobster() }
     @JvmField val OBSIDIAN_SWORD_FISH =
-        registerFish("obsidian_sword_fish", EntityLavaFish.Companion.FishType.COMMON) { ItemObsidianSwordFish() }
+        registerFish("obsidian_sword_fish", ::EntityCommonFish, LavaFishType.SWORDFISH) { ItemObsidianSwordFish() }
     @JvmField val STEAM_FLYING_FISH =
-        registerFish("steam_flying_fish", EntityLavaFish.Companion.FishType.COMMON) { ItemSteamFlyingFish() }
+        registerFish("steam_flying_fish", ::EntityCommonFish, LavaFishType.COMMON) { ItemSteamFlyingFish() }
     @JvmField val AGNI_FISH =
-        registerFish("agni_fish", EntityLavaFish.Companion.FishType.COMMON) { ItemAgniFish() }
+        registerFish("agni_fish", ::EntityCommonFish, LavaFishType.COMMON) { ItemAgniFish() }
     @JvmField val AROWANA_FISH =
-        registerFish("arowana_fish", EntityLavaFish.Companion.FishType.COMMON) { ItemLavaFish() }
+        registerFish("arowana_fish", ::EntityCommonFish, LavaFishType.COMMON) { ItemLavaFish() }
     @JvmField val QUARTZ_FISH =
-        registerFish("quartz_fish", EntityLavaFish.Companion.FishType.COMMON) { ItemLavaFish() }
+        registerFish("quartz_fish", ::EntityCommonFish, LavaFishType.COMMON) { ItemLavaFish() }
     @JvmField val SCALY_FOOT_SNAIL =
-        registerFish("scaly_foot_snail", EntityLavaFish.Companion.FishType.COMMON) { ItemLavaFish(SMALL_FISH_RAW) }
+        registerFish("scaly_foot_snail", ::EntityAmphibious, LavaFishType.SNAIL) { ItemLavaFish(SMALL_FISH_RAW) }
     @JvmField val YETI_CRAB =
-        registerFish("yeti_crab", EntityLavaFish.Companion.FishType.COMMON) { ItemLavaFish(SMALL_FISH_RAW) }
+        registerFish("yeti_crab", ::EntityAmphibious, LavaFishType.CRAB) { ItemLavaFish(SMALL_FISH_RAW) }
     @JvmField val LAVA_LAMPREY =
-        registerFish("lava_lamprey", EntityLavaFish.Companion.FishType.COMMON) { ItemLavaFish() }
+        registerFish("lava_lamprey", ::EntityCommonFish, LavaFishType.EEL) { ItemLavaFish() }
 
     // Food
     val SPICY_FISH_FILLET = REGISTER.registerKt("spicy_fish_fillet") { ItemSpicyFishFillet() }
@@ -117,12 +120,14 @@ object ModItems {
 
     private fun registerFish(
         name: String,
-        fishType: EntityLavaFish.Companion.FishType,
+        fishConstructor: (EntityType<EntityLavaFish>, Level, LavaFishType) -> EntityLavaFish,
+        fishType: LavaFishType,
         itemSupplier: () -> ItemLavaFish,
     ): DeferredHolder<Item, ItemLavaFish> {
         val fish = ModEntityTypes.register(name) {
             EntityType.Builder.of(
-                { f: EntityType<EntityLavaFish>, w: Level -> EntityLavaFish(f, w, fishType) }, MobCategory.WATER_AMBIENT
+                { f: EntityType<EntityLavaFish>, w: Level -> fishConstructor(f, w, fishType) },
+                MobCategory.WATER_AMBIENT
             ).sized(fishType.width, fishType.height).build(BuildConstants.MOD_ID + ":" + name)
         }
 

@@ -1,6 +1,5 @@
-package club.redux.sunset.lavafishing.ai.path
+package club.redux.sunset.lavafishing.ai.path.nodeevaluator
 
-import club.redux.sunset.lavafishing.entity.EntityLavaFish
 import com.google.common.collect.Maps
 import it.unimi.dsi.fastutil.longs.Long2ObjectFunction
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap
@@ -8,6 +7,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import net.minecraft.core.BlockPos
 import net.minecraft.core.BlockPos.MutableBlockPos
 import net.minecraft.core.Direction
+import net.minecraft.tags.FluidTags
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.level.PathNavigationRegion
@@ -20,6 +20,8 @@ class NodeEvaluatorLavaSwim(private val allowBreaching: Boolean) : NodeEvaluator
 
     override fun prepare(pLevel: PathNavigationRegion, pMob: Mob) {
         super.prepare(pLevel, pMob)
+        pMob.setPathfindingMalus(PathType.LAVA, 0.0f)
+
         pathTypesByPosCache.clear()
     }
 
@@ -85,12 +87,12 @@ class NodeEvaluatorLavaSwim(private val allowBreaching: Boolean) : NodeEvaluator
     private fun findAcceptedNode(pX: Int, pY: Int, pZ: Int): Node? {
         val blockPathTypes = this.getCachedBlockType(pX, pY, pZ)
         if (this.allowBreaching && blockPathTypes == PathType.BREACH || blockPathTypes == PathType.LAVA) {
-            if (mob.getPathfindingMalus(blockPathTypes) >= 0.0f) {
-                return this.getNode(pX, pY, pZ).also {
-                    it.type = blockPathTypes
-                    it.costMalus = max(it.costMalus.toDouble(), it.f.toDouble()).toFloat()
-                    if (this.currentContext.level().getFluidState(BlockPos(pX, pY, pZ)).isEmpty) {
-                        it.costMalus += 8.0f
+            if (this.mob.getPathfindingMalus(blockPathTypes) >= 0.0f) {
+                return this.getNode(pX, pY, pZ).apply {
+                    type = blockPathTypes
+                    costMalus = max(costMalus.toDouble(), f.toDouble()).toFloat()
+                    if (mob.level().getFluidState(BlockPos(pX, pY, pZ)).isEmpty) {
+                        costMalus += 8.0f
                     }
                 }
             }
@@ -99,11 +101,11 @@ class NodeEvaluatorLavaSwim(private val allowBreaching: Boolean) : NodeEvaluator
         return null
     }
 
-    private fun getCachedBlockType(x: Int, y: Int, z: Int): PathType {
+    private fun getCachedBlockType(pX: Int, pY: Int, pZ: Int): PathType {
         return pathTypesByPosCache.computeIfAbsent(
-            BlockPos.asLong(x, y, z),
-            Long2ObjectFunction { _: Long -> this.getPathType(this.currentContext, x, y, z) }
-        ) as PathType
+            BlockPos.asLong(pX, pY, pZ),
+            Long2ObjectFunction { this.getPathType(this.currentContext, pX, pY, pZ) }
+        )
     }
 
     /**
@@ -116,28 +118,28 @@ class NodeEvaluatorLavaSwim(private val allowBreaching: Boolean) : NodeEvaluator
     override fun getPathTypeOfMob(context: PathfindingContext, pX: Int, pY: Int, pZ: Int, pMob: Mob): PathType {
         val blockPos = MutableBlockPos()
 
-        val isAcceptedFluids =
-            { p: BlockPos -> EntityLavaFish.acceptedFluids.any { context.level().getFluidState(p).`is`(it) } }
-
         for (i in pX until pX + this.entityWidth) {
             for (j in pY until pY + this.entityHeight) {
                 for (k in pZ until pZ + this.entityDepth) {
                     blockPos.set(i, j, k)
                     if (
                         context.level().getFluidState(blockPos).isEmpty &&
-                        isAcceptedFluids(blockPos.below()) &&
+                        context.level().getFluidState(blockPos.below()).`is`(FluidTags.LAVA) &&
                         context.level().getBlockState(blockPos).isAir
                     ) {
                         return PathType.BREACH
                     }
 
-                    if (!isAcceptedFluids(blockPos)) {
+                    if (!context.level().getFluidState(blockPos).`is`(FluidTags.LAVA)) {
                         return PathType.BLOCKED
                     }
                 }
             }
         }
 
-        return if (isAcceptedFluids(blockPos)) PathType.LAVA else PathType.BLOCKED
+        return if (context.level().getFluidState(blockPos.below()).`is`(FluidTags.LAVA))
+            PathType.LAVA
+        else
+            PathType.BLOCKED
     }
 }
