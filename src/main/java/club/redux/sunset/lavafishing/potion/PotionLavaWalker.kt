@@ -5,5 +5,5 @@ import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.item.alchemy.Potion
 
 class PotionLavaWalker : Potion(
-    MobEffectInstance(ModMobEffects.LAVA_WALKER.get(), 4800)
+    MobEffectInstance(ModMobEffects.LAVA_WALKER, 4800)
 )

@@ -2,10 +2,10 @@ package club.redux.sunset.lavafishing.item.bullet
 
 
 import club.redux.sunset.lavafishing.entity.bullet.EntityBullet
+import club.redux.sunset.lavafishing.util.getHolder
 import club.redux.sunset.lavafishing.util.setShooter
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.AbstractArrow
 import net.minecraft.world.item.ArrowItem
 import net.minecraft.world.item.ItemStack
@@ -20,8 +20,11 @@ open class ItemBullet(
     val entityTypeProvider: () -> EntityType<out EntityBullet>,
 ) : ArrowItem(properties) {
 
-    final override fun isInfinite(stack: ItemStack, bow: ItemStack, player: Player): Boolean {
-        return EnchantmentHelper.getTagEnchantmentLevel(Enchantments.INFINITY, bow) > 0
+    //TODO
+    override fun isInfinite(stack: ItemStack, bow: ItemStack, livingEntity: LivingEntity): Boolean {
+        return EnchantmentHelper.getTagEnchantmentLevel(
+            livingEntity.level().getHolder(Enchantments.INFINITY).orElseThrow(), bow
+        ) > 0
     }
 
     open fun attachBasePropertiesToBullet(bullet: EntityBullet) = Unit

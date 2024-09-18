@@ -10,7 +10,6 @@ import club.redux.sunset.lavafishing.item.cuisine.ItemSpicyFishFillet
 import club.redux.sunset.lavafishing.item.fish.*
 import club.redux.sunset.lavafishing.item.slingshot.ItemNeptuniumSlingshot
 import club.redux.sunset.lavafishing.item.slingshot.ItemPromethiumSlingshot
-import club.redux.sunset.lavafishing.misc.ModArmorMaterials
 import club.redux.sunset.lavafishing.misc.ModTiers
 import club.redux.sunset.lavafishing.util.UtilRegister
 import club.redux.sunset.lavafishing.util.registerKt

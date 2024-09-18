@@ -49,7 +49,7 @@ class ItemPromethiumArmor(
     }
 
     override fun getXpRepairRatio(stack: ItemStack): Float = super.getXpRepairRatio(stack)
-    
+
 
     companion object {
         fun onEntityTickPost(event: EntityTickEvent.Post) {
@@ -72,7 +72,7 @@ class ItemPromethiumArmor(
                         if (item.type == Type.LEGGINGS) {
                             applyEffect(MobEffects.MOVEMENT_SPEED)
                         } else if (item.type == Type.BOOTS) {
-                            applyEffect(ModMobEffects.LAVA_WALKER.get())
+                            applyEffect(ModMobEffects.LAVA_WALKER)
                         }
                     }
                 }
