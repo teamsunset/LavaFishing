@@ -288,18 +288,6 @@ tasks.shadowJar {
 
 //val reobfShadowJar = reobf.create("shadowJar")
 
-tasks.jar {
-    doFirst {
-        val modToml = file("build/resources/main/META-INF/mods.toml")
-        modToml.writeText(
-            modToml.readText().replace(
-                "mandatory = false # kff template replace",
-                "mandatory = true"
-            )
-        )
-    }
-}
-
 tasks.withType(GenerateModuleMetadata::class.java) {
     enabled = false
 }
@@ -346,6 +334,8 @@ publishing {
 /*---TeaCon---*/
 
 val oneStepBuild = tasks.create("oneStepBuild", ProcessResources::class) {
+    group = "build"
+
     dependsOn("runData")
     finalizedBy("build")
     processResourceConfig()
