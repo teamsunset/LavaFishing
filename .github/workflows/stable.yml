@@ -17,7 +17,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '21'
-          
+
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -53,7 +53,7 @@ jobs:
           prerelease: false
           body: ${{ github.event.head_commit.message }}
           files: |
-            ./build/libs/*-all.jar
+            ./build/libs/*.jar
 
       - name: Modrinth Release
         uses: dsx137/modrinth-release-action@main
@@ -67,7 +67,7 @@ jobs:
           version_number: ${{ env.VERSION }}
           changelog: ${{ github.event.head_commit.message }}
           version_type: beta
-          files: build/libs/lavafishing-${{env.VERSION}}-all.jar
+          files: build/libs/lavafishing-${{env.VERSION}}.jar
           dependencies: Vl1uNAuy:required, ordsPcFz:required
 
       - name: CurseForge Release
@@ -80,5 +80,5 @@ jobs:
           game_versions: 8326,7498,9638,9639,9990
           changelog: ${{ github.event.head_commit.message }}
           release_type: beta
-          file_path: build/libs/lavafishing-${{env.VERSION}}-all.jar
+          file_path: build/libs/lavafishing-${{env.VERSION}}.jar
           relations: aquaculture:requiredDependency
