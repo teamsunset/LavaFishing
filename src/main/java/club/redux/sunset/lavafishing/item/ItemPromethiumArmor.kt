@@ -37,6 +37,8 @@ class ItemPromethiumArmor(
         return this
     }
 
+    override fun isEnchantable(stack: ItemStack): Boolean = true
+
     // 这玩意居然是实时的
     override fun getArmorTexture(
         stack: ItemStack,

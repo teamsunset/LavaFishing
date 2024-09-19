@@ -2,6 +2,7 @@ package club.redux.sunset.lavafishing.entity.bullet
 
 import club.redux.sunset.lavafishing.item.bullet.ItemBullet
 import club.redux.sunset.lavafishing.registry.ModItems
+import club.redux.sunset.lavafishing.util.hasEnchantmentThen
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.projectile.AbstractArrow
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Tier
 import net.minecraft.world.item.Tiers
+import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
@@ -58,30 +60,19 @@ open class EntityBullet(
         this.setSoundEvent(oldSoundEvent)
     }
 
-//    override fun setEnchantmentEffectsFromEntity(pShooter: LivingEntity, pVelocity: Float) {
-//        pShooter.handSlots.firstOrNull { it.item is ItemSlingshot }?.let {
-//            this.attachEnchantment(it)
-//        }
-//    }
-
-    //TODO
     open fun attachEnchantment(stack: ItemStack) {
-//        UtilEnchantment.hasThen(Enchantments.POWER, stack) { this.baseDamage += it * 0.5 + 0.5 }
-//        UtilEnchantment.hasThen(Enchantments.PUNCH, stack) { this.knockback = it }
-//        UtilEnchantment.hasThen(Enchantments.FLAME, stack) { this.setSecondsOnFire(100) }
+        stack.hasEnchantmentThen(Enchantments.POWER) { this.baseDamage += it * 0.5 + 0.5 }
+//        stack.hasEnchantmentThen(Enchantments.PUNCH) { this.knockback = it }
+        stack.hasEnchantmentThen(Enchantments.FLAME) { this.remainingFireTicks = 100 }
     }
 
     override fun shoot(pX: Double, pY: Double, pZ: Double, pVelocity: Float, pInaccuracy: Float) {
         super.shoot(pX, pY, pZ, pVelocity, pInaccuracy * inaccuracyMultiplier)
     }
 
-    override fun getPickupItem(): ItemStack {
-        return ModItems.REGISTER.entries
-            .map { it.get() }.filterIsInstance<ItemBullet>().first { it.entityTypeProvider() == this.type }
-            .let { ItemStack(it) }
-    }
-
-    override fun getDefaultPickupItem(): ItemStack = super.getPickupItem()
+    override fun getDefaultPickupItem(): ItemStack = ModItems.REGISTER.entries
+        .map { it.get() }.filterIsInstance<ItemBullet>().first { it.entityTypeProvider() == this.type }
+        .let { ItemStack(it) }
 
 
     public override fun getWaterInertia(): Float = this.waterInertia

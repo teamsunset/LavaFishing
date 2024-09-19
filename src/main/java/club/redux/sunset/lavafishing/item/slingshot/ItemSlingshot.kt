@@ -4,7 +4,9 @@ import club.redux.sunset.lavafishing.entity.bullet.EntityBullet
 import club.redux.sunset.lavafishing.item.bullet.ItemBullet
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModSoundEvents
+import club.redux.sunset.lavafishing.util.getEnchantmentLevel
 import net.minecraft.client.renderer.item.ItemProperties
+import net.minecraft.core.Holder
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundSource
@@ -15,6 +17,8 @@ import net.minecraft.world.entity.projectile.AbstractArrow
 import net.minecraft.world.item.BowItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Tier
+import net.minecraft.world.item.enchantment.Enchantment
+import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import net.neoforged.neoforge.event.EventHooks
@@ -31,18 +35,6 @@ open class ItemSlingshot(
      * 抄原版的
      */
     override fun releaseUsing(pStack: ItemStack, pLevel: Level, pEntityLiving: LivingEntity, pTimeLeft: Int) {
-        //            // 创建弹丸实体并赋予初始属性
-//            val itemBullet = itemStack.item as ItemBullet
-//            val bullet = customBullet(itemBullet.createBullet(pLevel, itemStack, pEntityLiving)).apply {
-//                shootFromRotation(
-//                    pEntityLiving,
-//                    pEntityLiving.getXRot(),
-//                    pEntityLiving.getYRot(),
-//                    0.0f,
-//                    timePower * 3.0f,
-//                    1.0f
-//                )
-//            }
         if (pEntityLiving is Player) {
             //这里居然是用事件获取弹射物的
             val itemStack: ItemStack = pEntityLiving.getProjectile(pStack)
@@ -97,13 +89,20 @@ open class ItemSlingshot(
 
     override fun getEnchantmentValue(stack: ItemStack): Int = this.tier.enchantmentValue
 
-    //TODO
-//    override fun canApplyAtEnchantingTable(stack: ItemStack?, enchantment: Enchantment?): Boolean {
-//        return (super.canApplyAtEnchantingTable(stack, enchantment) ||
-//                enchantment == Enchantments.MULTISHOT ||
-//                enchantment == Enchantments.QUICK_CHARGE) &&
-//                enchantment != Enchantments.INFINITY_ARROWS
-//    }
+    override fun isPrimaryItemFor(stack: ItemStack, enchantment: Holder<Enchantment>): Boolean {
+        return super.isPrimaryItemFor(stack, enchantment) || this.supportsEnchantment(stack, enchantment)
+    }
+
+    override fun supportsEnchantment(stack: ItemStack, enchantment: Holder<Enchantment>): Boolean {
+        return (super.supportsEnchantment(stack, enchantment) ||
+                listOf(
+                    Enchantments.MULTISHOT,
+                    Enchantments.QUICK_CHARGE
+                ).any { it == enchantment.key }) &&
+                listOf(
+                    Enchantments.INFINITY
+                ).any { it != enchantment.key }
+    }
 
     /**
      * # 第二步
@@ -121,7 +120,7 @@ open class ItemSlingshot(
                 this.setPos(arrow.x, arrow.y, arrow.z)
                 this.owner = arrow.owner
             }
-        )
+        ).apply { attachEnchantment(weaponStack) }
     }
 
     open fun customBullet(bullet: EntityBullet): EntityBullet {
@@ -129,8 +128,7 @@ open class ItemSlingshot(
     }
 
     open fun getChargeMultiplier(stack: ItemStack): Int {
-//        return 1 + EnchantmentHelper.getTagEnchantmentLevel(Enchantments.QUICK_CHARGE, stack)
-        return 1
+        return 1 + stack.getEnchantmentLevel(Enchantments.QUICK_CHARGE)
     }
 
     companion object {

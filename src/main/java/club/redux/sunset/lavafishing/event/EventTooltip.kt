@@ -1,7 +1,7 @@
 package club.redux.sunset.lavafishing.event
 
 import club.redux.sunset.lavafishing.BuildConstants
-import club.redux.sunset.lavafishing.registry.ModTags
+import club.redux.sunset.lavafishing.misc.ModTags
 import com.mojang.blaze3d.platform.InputConstants
 import com.teammetallurgy.aquaculture.Aquaculture
 import net.minecraft.ChatFormatting

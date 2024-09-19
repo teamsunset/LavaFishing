@@ -2,8 +2,8 @@ package club.redux.sunset.lavafishing.datagenerator
 
 import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.item.fish.ItemLavaFish
+import club.redux.sunset.lavafishing.misc.ModTags
 import club.redux.sunset.lavafishing.registry.ModItems
-import club.redux.sunset.lavafishing.registry.ModTags
 import net.minecraft.core.HolderLookup
 import net.minecraft.data.PackOutput
 import net.minecraft.data.tags.ItemTagsProvider
@@ -33,11 +33,31 @@ class ModDataProviderItemTags(
         tag(Tags.Items.STORAGE_BLOCKS).addTags(ModTags.OreDirectories.PROMETHIUM_BLOCK)
 
         tag(Tags.Items.ARMORS).add(ModItems.PROMETHIUM_HELMET.get())
-        tag(Tags.Items.ARMORS).add(ModItems.PROMETHIUM_CHESTPLATE.get())
-        tag(Tags.Items.ARMORS).add(ModItems.PROMETHIUM_LEGGINGS.get())
-        tag(Tags.Items.ARMORS).add(ModItems.PROMETHIUM_BOOTS.get())
+            .add(ModItems.PROMETHIUM_CHESTPLATE.get())
+            .add(ModItems.PROMETHIUM_LEGGINGS.get())
+            .add(ModItems.PROMETHIUM_BOOTS.get())
+
+        tag(ItemTags.BOW_ENCHANTABLE)
+            .add(ModItems.NEPTUNIUM_SLINGSHOT.get())
+            .add(ModItems.PROMETHIUM_SLINGSHOT.get())
+
+        tag(ItemTags.DURABILITY_ENCHANTABLE)
+            .add(ModItems.NEPTUNIUM_SLINGSHOT.get())
+            .add(ModItems.PROMETHIUM_SLINGSHOT.get())
+            .add(ModItems.OBSIDIAN_FISHING_ROD.get())
+            .add(ModItems.NETHERITE_FISHING_ROD.get())
+
+        tag(ItemTags.HEAD_ARMOR).add(ModItems.PROMETHIUM_HELMET.get())
+        tag(ItemTags.CHEST_ARMOR).add(ModItems.PROMETHIUM_CHESTPLATE.get())
+        tag(ItemTags.LEG_ARMOR).add(ModItems.PROMETHIUM_LEGGINGS.get())
+        tag(ItemTags.FOOT_ARMOR).add(ModItems.PROMETHIUM_BOOTS.get())
 
         tag(Tags.Items.CHESTS).add(ModItems.PROMETHEUS_BOUNTY.get())
-        tag(Tags.Items.TOOLS_FISHING_ROD).add(ModItems.PROMETHEUS_BOUNTY.get())
+        tag(ItemTags.FISHING_ENCHANTABLE)
+            .add(ModItems.OBSIDIAN_FISHING_ROD.get())
+            .add(ModItems.NETHERITE_FISHING_ROD.get())
+        tag(Tags.Items.TOOLS_FISHING_ROD)
+            .add(ModItems.OBSIDIAN_FISHING_ROD.get())
+            .add(ModItems.NETHERITE_FISHING_ROD.get())
     }
 }

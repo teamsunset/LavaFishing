@@ -1,4 +1,4 @@
-package club.redux.sunset.lavafishing.registry
+package club.redux.sunset.lavafishing.misc
 
 import club.redux.sunset.lavafishing.LavaFishing
 import net.minecraft.core.registries.Registries

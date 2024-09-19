@@ -2,8 +2,8 @@ package club.redux.sunset.lavafishing.datagenerator
 
 import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.entity.EntityLavaFish
+import club.redux.sunset.lavafishing.misc.ModTags
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
-import club.redux.sunset.lavafishing.registry.ModTags
 import net.minecraft.core.HolderLookup
 import net.minecraft.data.PackOutput
 import net.minecraft.data.tags.EntityTypeTagsProvider
