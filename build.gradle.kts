@@ -20,6 +20,7 @@ val aquacultureVersionRange: String by project
 val kotlinForForgeVersion: String by project
 val kotlinForForgeVersionRange: String by project
 val jeiVersion: String by project
+val jableVersion: String by project
 val modId: String by project
 val modName: String by project
 val modLicense: String by project
@@ -122,16 +123,15 @@ dependencies {
     val kotlinforforge = "thedarkcolour:kotlinforforge-neoforge:${kotlinForForgeVersion}"
     val jeiForgeApi = "mezz.jei:jei-${minecraftVersion}-neoforge-api:${jeiVersion}"
     val jei = "mezz.jei:jei-${minecraftVersion}-neoforge:${jeiVersion}"
-//    val configured = "curse.maven:configured-457570:5441232"
 
-    val jable = "com.github.dsx137:jable:1.0.10"
+    val jable = "com.github.dsx137:jable:${jableVersion}"
 
     // NeoForge
     implementation("net.neoforged:neoforge:${neoforgeVersion}")
 
     // JUnit
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.0")
 
     // Mixin
     annotationProcessor(mixinProcessor)
@@ -149,9 +149,6 @@ dependencies {
     // Jei
     compileOnly(jeiForgeApi)
     runtimeOnly(jei)
-
-    // Configured
-//    implementation(configured)
 }
 
 runs {
@@ -188,7 +185,6 @@ runs {
 }
 
 minecraft {
-    version = neoforgeVersion
     accessTransformers { file("src/main/resources/META-INF/accesstransformer.cfg") }
 }
 
