@@ -9,23 +9,29 @@ import java.util.concurrent.CompletableFuture
 object EventDataGenerator {
     @JvmStatic
     fun onGatherData(event: GatherDataEvent) {
-        event.generator.apply {
-            addProvider(true, ModDataProviderRecipe(packOutput, event.lookupProvider))
-            addProvider(
-                event.includeServer(),
-                ModDataProviderItemTags(
-                    packOutput,
-                    event.lookupProvider,
-                    CompletableFuture.completedFuture(TagsProvider.TagLookup.empty()),
-                    event.existingFileHelper
-                )
+        val generator = event.generator
+        val packOutput = event.generator.packOutput
+        val existingFileHelper = event.existingFileHelper
+        val lookupProvider = event.lookupProvider
+        
+        generator.addProvider(
+            event.includeServer(),
+            ModDataProviderItemTags(
+                packOutput,
+                lookupProvider,
+                CompletableFuture.completedFuture(TagsProvider.TagLookup.empty()),
+                existingFileHelper
             )
-            addProvider(event.includeServer(), ModDataProviderLootTable(packOutput, event.lookupProvider))
-            addProvider(event.includeClient(), ModDataProviderItemModel(packOutput, event.existingFileHelper))
-            addProvider(true, ModDataProviderLanguage(packOutput, Locale.PRC))
-            addProvider(true, ModDataProviderLanguage(packOutput, Locale.US))
-            addProvider(true, ModDataProviderBiomeModifier(packOutput))
-            addProvider(true, ModDataProviderEntityTypeTags(packOutput, event.lookupProvider, event.existingFileHelper))
-        }
+        )
+        generator.addProvider(
+            event.includeServer(),
+            ModDataProviderEntityTypeTags(packOutput, lookupProvider, existingFileHelper)
+        )
+        generator.addProvider(event.includeServer(), ModDataProviderLootTable(packOutput, lookupProvider))
+        generator.addProvider(event.includeClient(), ModDataProviderItemModel(packOutput, existingFileHelper))
+        generator.addProvider(event.includeServer(), ModDataProviderBiomeModifier(packOutput))
+        generator.addProvider(event.includeServer(), ModDataProviderRecipe(packOutput, lookupProvider))
+        generator.addProvider(true, ModDataProviderLanguage(packOutput, Locale.PRC))
+        generator.addProvider(true, ModDataProviderLanguage(packOutput, Locale.US))
     }
 }

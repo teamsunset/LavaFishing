@@ -72,9 +72,9 @@ plugins {
     `maven-publish`
     `java-library`
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
-    id("net.neoforged.moddev") version "1.0.17"
     id("com.github.johnrengelman.shadow") version "7.1.2"
-//    id("org.spongepowered.mixin") version "0.7.+"
+    id("net.neoforged.gradle.userdev") version "7.0.145"
+    id("net.neoforged.gradle.mixin") version "7.0.145"
     kotlin("jvm") version "1.9.23"
     kotlin("kapt") version "1.9.23"
     kotlin("plugin.serialization") version "1.9.23"
@@ -119,12 +119,18 @@ dependencies {
     val aquaculture =
         "com.teammetallurgy.aquaculture:aquaculture2_${minecraftVersion}:${minecraftVersion}-${aquacultureVersion}"
     val kotlinforforge = "thedarkcolour:kotlinforforge-neoforge:5.5.0"
-    val jeiCommonApi = "mezz.jei:jei-${minecraftVersion}-common-api:${jeiVersion}"
     val jeiForgeApi = "mezz.jei:jei-${minecraftVersion}-neoforge-api:${jeiVersion}"
     val jei = "mezz.jei:jei-${minecraftVersion}-neoforge:${jeiVersion}"
 //    val configured = "curse.maven:configured-457570:5441232"
 
     val jable = "com.github.dsx137:jable:1.0.10"
+
+    // NeoForge
+    implementation("net.neoforged:neoforge:${neoforgeVersion}")
+
+    // JUnit
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
 
     // Mixin
     annotationProcessor(mixinProcessor)
@@ -140,7 +146,6 @@ dependencies {
     shade(jable)
 
     // Jei
-    compileOnly(jeiCommonApi)
     compileOnly(jeiForgeApi)
     runtimeOnly(jei)
 
@@ -148,64 +153,53 @@ dependencies {
 //    implementation(configured)
 }
 
-neoForge {
-    version = neoforgeVersion
-
-    accessTransformers { file("src/main/resources/META-INF/accesstransformer.cfg") }
-
-    parchment.let {
-        it.mappingsVersion = minecraftMappingVersion
-        it.minecraftVersion = minecraftVersion
+runs {
+    configureEach {
+        systemProperty("forge.logging.markers", "REGISTRIES")
+        systemProperty("forge.logging.console.level", "debug")
+        modSource(sourceSets["main"])
     }
 
-    runs {
-        create("client") {
-            client()
-            systemProperty("neoforge.enabledGameTestNamespaces", modId)
-        }
-
-        create("server") {
-            server()
-            programArgument("--nogui")
-            systemProperty("neoforge.enabledGameTestNamespaces", modId)
-        }
-
-        create("gameTestServer") {
-            type = "gameTestServer"
-            systemProperty("neoforge.enabledGameTestNamespaces", modId)
-        }
-
-        create("data") {
-            data()
-            programArguments.addAll(
-                "--mod",
-                modId,
-                "--all",
-                "--output",
-                file("src/generated/resources/").absolutePath,
-                "--existing",
-                file("src/main/resources/").absolutePath
-            )
-        }
-
-        configureEach {
-            systemProperty("forge.logging.markers", "REGISTRIES")
-            logLevel = org.slf4j.event.Level.DEBUG
-        }
+    named("client") {
+        systemProperty("neoforge.enabledGameTestNamespaces", modId)
     }
-    mods {
-        create(modId) {
-            sourceSet(sourceSets.main.get())
-        }
+
+    named("server") {
+        systemProperty("neoforge.enabledGameTestNamespaces", modId)
+        programArgument("--nogui")
+    }
+
+    named("gameTestServer") {
+        systemProperty("neoforge.enabledGameTestNamespaces", modId)
+    }
+
+    named("data") {
+        programArguments.addAll(
+            "--mod",
+            modId,
+            "--all",
+            "--output",
+            file("src/generated/resources/").absolutePath,
+            "--existing",
+            file("src/main/resources/").absolutePath
+        )
     }
 }
-sourceSets["main"].resources.srcDirs("src/generated/resources")
 
-//mixin {
-//    add(sourceSets.main.get(), "${modId}.refmap.json")
-//    config("${modId}.mixins.json")
-//}
+minecraft {
+    version = neoforgeVersion
+    accessTransformers { file("src/main/resources/META-INF/accesstransformer.cfg") }
+}
 
+mixin {
+    config("${modId}.mixins.json")
+}
+subsystems {
+    //    parchment.let {
+//        it.mappingsVersion = minecraftMappingVersion
+//        it.minecraftVersion = minecraftVersion
+//    }
+}
 
 val props = mapOf(
     "minecraft_version" to minecraftVersion,
@@ -235,6 +229,7 @@ val generateTemplates by tasks.registering(Copy::class) {
     into(dst)
     expand(props)
 }
+sourceSets["main"].resources.srcDirs("src/generated/resources")
 sourceSets["main"].java.srcDirs(generateTemplates.map { it.destinationDir })
 rootProject.idea.project.settings.taskTriggers.afterSync(generateTemplates)
 project.eclipse.synchronizationTasks(generateTemplates)
@@ -243,7 +238,7 @@ tasks.withType(JavaCompile::class.java).configureEach {
     options.encoding = "UTF-8"
 }
 
-val processResourceConfig: ProcessResources.() -> Unit = {
+val processResourcesConfig: ProcessResources.() -> Unit = {
     val targets = listOf("META-INF/neoforge.mods.toml", "pack.mcmeta")
     inputs.properties(props)
 
@@ -253,7 +248,7 @@ val processResourceConfig: ProcessResources.() -> Unit = {
 }
 
 // 同一流程中只有一个processResources任务，所以runData必须和其他任务分开执行
-tasks.processResources(processResourceConfig)
+tasks.processResources { processResourcesConfig() }
 
 tasks.jar {
     manifest {
@@ -333,10 +328,29 @@ publishing {
 
 /*---TeaCon---*/
 
-val oneStepBuild = tasks.create("oneStepBuild", ProcessResources::class) {
-    group = "build"
+fun createAfterRunData(task: String) =
+    tasks.create("${task}AfterRunData", ProcessResources::class) {
+        group = "After runData"
+        dependsOn("runData")
+        finalizedBy(task)
+        tasks.jar.get().mustRunAfter(this)
+        tasks.test.get().mustRunAfter(this)
 
-    dependsOn("runData")
-    finalizedBy("build")
-    processResourceConfig()
-}
+        val originDirs = sourceSets["main"].resources.srcDirs.map { it.relativeTo(projectDir) }
+        val outputDir = file("build/resources/main")
+
+        doFirst {
+            delete(outputDir)
+        }
+        from(originDirs) {
+            exclude {
+                it.isDirectory && it.name.startsWith(".")
+            }
+        }
+        into(outputDir)
+        processResourcesConfig()
+    }
+
+val buildAfterRunData = createAfterRunData("build")
+val runClientAfterRunData = createAfterRunData("runClient")
+val runServerAfterRunData = createAfterRunData("runServer")
