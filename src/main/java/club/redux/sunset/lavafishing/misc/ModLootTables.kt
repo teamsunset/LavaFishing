@@ -1,4 +1,4 @@
-package club.redux.sunset.lavafishing.registry
+package club.redux.sunset.lavafishing.misc
 
 import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.LavaFishing

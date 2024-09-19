@@ -13,17 +13,22 @@ object LavaFishing {
         ResourceLocation.fromNamespaceAndPath(BuildConstants.MOD_ID, path)
 
     init {
-//        val eventBus = FMLJavaModLoadingContext.get().modEventBus
-        ModBlocks.REGISTER.register(MOD_BUS)
+//        Useless.useless()
+//        LavaFishing::class.java.getResourceAsStream("/ascii-art.txt")?.let {
+//            it.bufferedReader().use { reader ->
+//                reader.lines().forEach { line -> this.slf4j.info(line) }
+//            }
+//        }
+        ModArmorMaterials.REGISTER.register(MOD_BUS)
         ModBlockEntityTypes.REGISTER.register(MOD_BUS)
+        ModBlocks.REGISTER.register(MOD_BUS)
         ModCreativeModeTabs.REGISTER.register(MOD_BUS)
-        ModItems.REGISTER.register(MOD_BUS)
         ModEntityTypes.REGISTER.register(MOD_BUS)
+        ModItems.REGISTER.register(MOD_BUS)
         ModMobEffects.REGISTER.register(MOD_BUS)
         ModParticleTypes.REGISTER.register(MOD_BUS)
         ModPotions.REGISTER.register(MOD_BUS)
         ModSoundEvents.REGISTER.register(MOD_BUS)
-        ModArmorMaterials.REGISTER.register(MOD_BUS)
         Hooks // 仅仅是加载一下这个类
     }
 }

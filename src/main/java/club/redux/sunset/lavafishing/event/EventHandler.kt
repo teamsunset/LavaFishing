@@ -15,8 +15,8 @@ import club.redux.sunset.lavafishing.item.ItemPromethiumArmor
 import club.redux.sunset.lavafishing.item.block.BlockItemWithoutLevelRenderer
 import club.redux.sunset.lavafishing.item.fish.ItemLavaFish
 import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
+import club.redux.sunset.lavafishing.misc.ModLootTables
 import club.redux.sunset.lavafishing.registry.ModItems
-import club.redux.sunset.lavafishing.registry.ModLootTables
 import club.redux.sunset.lavafishing.registry.ModParticleTypes
 import club.redux.sunset.lavafishing.registry.ModPotions
 import net.minecraft.client.particle.SpriteSet
