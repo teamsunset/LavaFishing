@@ -17,6 +17,7 @@ val minecraftMappingChannel: String by project
 val minecraftMappingVersion: String by project
 val aquacultureVersion: String by project
 val aquacultureVersionRange: String by project
+val kotlinForForgeVersion: String by project
 val kotlinForForgeVersionRange: String by project
 val jeiVersion: String by project
 val modId: String by project
@@ -118,7 +119,7 @@ dependencies {
     val mixinProcessor = "org.spongepowered:mixin:0.8.5:processor"
     val aquaculture =
         "com.teammetallurgy.aquaculture:aquaculture2_${minecraftVersion}:${minecraftVersion}-${aquacultureVersion}"
-    val kotlinforforge = "thedarkcolour:kotlinforforge-neoforge:5.5.0"
+    val kotlinforforge = "thedarkcolour:kotlinforforge-neoforge:${kotlinForForgeVersion}"
     val jeiForgeApi = "mezz.jei:jei-${minecraftVersion}-neoforge-api:${jeiVersion}"
     val jei = "mezz.jei:jei-${minecraftVersion}-neoforge:${jeiVersion}"
 //    val configured = "curse.maven:configured-457570:5441232"
