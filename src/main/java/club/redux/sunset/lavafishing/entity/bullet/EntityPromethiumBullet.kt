@@ -56,6 +56,8 @@ class EntityPromethiumBullet(
 
     override fun onHitEntity(pResult: EntityHitResult) {
         super.onHitEntity(pResult)
+        if (this.level().isClientSide) return
+
         if (this.dividable) {
             this.hitDivide()
         } else {
@@ -66,6 +68,8 @@ class EntityPromethiumBullet(
 
     override fun onHitBlock(pResult: BlockHitResult) {
         super.onHitBlock(pResult)
+        if (this.level().isClientSide) return
+
         if (!this.dividable) {
             this.explode(1.5f)
             this.remove(RemovalReason.DISCARDED)

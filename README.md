@@ -12,8 +12,8 @@ A mod which allows you to fish in the lava.
 
 > 依赖
 
-+ [Aquaculture2](https://www.curseforge.com/minecraft/mc-mods/aquaculture/files/4921323)
-+ [Kotlin For Forge](https://modrinth.com/mod/kotlin-for-forge/version/4.10.0)
++ [Aquaculture2](https://www.curseforge.com/minecraft/mc-mods/aquaculture/files/5713551)
++ [Kotlin For Forge](https://modrinth.com/mod/kotlin-for-forge/version/5.5.0)
 
 ## License
 
