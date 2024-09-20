@@ -62,11 +62,11 @@ jobs:
         with:
           name: ${{ env.VERSION }}
           project_id: puTJzCb0
-          loaders: forge
-          game_versions: 1.20.1
+          loaders: neoforge
+          game_versions: 1.21.1
           version_number: ${{ env.VERSION }}
           changelog: ${{ github.event.head_commit.message }}
-          version_type: beta
+          version_type: release
           files: build/libs/lavafishing-${{env.VERSION}}.jar
           dependencies: Vl1uNAuy:required, ordsPcFz:required
 
@@ -77,8 +77,8 @@ jobs:
           token: ${{ secrets.CURSEFORGE_TOKEN }}
           display_name: ${{ env.VERSION }}
           project_id: 1035887
-          game_versions: 8326,7498,9638,9639,9990
+          game_versions: 11774,10150,8326,9639,9638
           changelog: ${{ github.event.head_commit.message }}
-          release_type: beta
+          release_type: release
           file_path: build/libs/lavafishing-${{env.VERSION}}-all.jar
           relations: aquaculture:requiredDependency
