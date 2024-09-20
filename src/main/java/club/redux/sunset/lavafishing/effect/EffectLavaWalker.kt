@@ -24,6 +24,8 @@ class EffectLavaWalker : MobEffect(MobEffectCategory.BENEFICIAL, 0xCC3300) {
         }
     }
 
+    override fun shouldApplyEffectTickThisTick(tickCount: Int, amplifier: Int): Boolean = true
+
     override fun applyEffectTick(pLivingEntity: LivingEntity, pAmplifier: Int): Boolean {
         if (!pLivingEntity.isSpectator && !pLivingEntity.isShiftKeyDown) {
             val pos = pLivingEntity.position()
