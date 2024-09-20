@@ -20,6 +20,7 @@ class ModDataProviderRecipe(
         this.buildTools(recipeOutput)
         this.buildArmors(recipeOutput)
         this.buildMisc(recipeOutput)
+        this.buildFood(recipeOutput)
     }
 
     val smeltingPattern = { category: RecipeCategory, result: ItemLike, ingredients: List<ItemLike> ->
@@ -149,6 +150,17 @@ class ModDataProviderRecipe(
             .save(recipeOutput)
         bulletPattern(ModItems.PROMETHIUM_BULLET.get(), ModItems.PROMETHIUM_NUGGET.get())
             .requires(Items.GUNPOWDER)
+            .save(recipeOutput)
+    }
+
+    private fun buildFood(recipeOutput: RecipeOutput) {
+        val category = RecipeCategory.FOOD
+        ShapelessRecipeBuilder.shapeless(category, ModItems.SPICY_FISH_FILLET.get())
+            .requires(Items.BLAZE_POWDER)
+            .requires(Items.WEEPING_VINES)
+            .requires(AquaItems.COOKED_FILLET)
+            .requires(Items.BOWL)
+            .unlockedBy("has_item", has(AquaItems.COOKED_FILLET))
             .save(recipeOutput)
     }
 }
