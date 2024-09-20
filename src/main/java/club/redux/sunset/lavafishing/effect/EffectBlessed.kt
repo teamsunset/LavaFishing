@@ -6,6 +6,8 @@ import net.minecraft.world.entity.LivingEntity
 
 class EffectBlessed : MobEffect(MobEffectCategory.NEUTRAL, 0xCC3300) {
 
+    override fun shouldApplyEffectTickThisTick(tickCount: Int, amplifier: Int): Boolean = true
+
     override fun applyEffectTick(pLivingEntity: LivingEntity, pAmplifier: Int): Boolean {
         pLivingEntity.apply {
             remainingFireTicks = 20

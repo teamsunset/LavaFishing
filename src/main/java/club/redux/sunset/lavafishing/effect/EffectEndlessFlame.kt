@@ -26,6 +26,8 @@ class EffectEndlessFlame : MobEffect(MobEffectCategory.HARMFUL, 0xCC3300) {
         return true
     }
 
+    override fun shouldApplyEffectTickThisTick(tickCount: Int, amplifier: Int): Boolean = true
+
     companion object {
         @JvmStatic
         fun onLivingDamagePre(event: LivingDamageEvent.Pre) {
