@@ -36,6 +36,7 @@ val fullShade: Configuration by configurations.creating
 val runtimeMaven: Configuration by configurations.creating
 val providedMaven: Configuration by configurations.creating
 val compileMaven: Configuration by configurations.creating
+val libraries: Configuration by configurations.creating
 
 val javaVersion = JavaLanguageVersion.of(21)
 
@@ -53,28 +54,14 @@ idea {
     }
 }
 
-buildscript {
-    repositories {
-        maven {
-            url = uri("https://maven.aliyun.com/repository/public/")
-        }
-        maven {
-            url = uri("https://repo.spongepowered.org/repository/maven-public/")
-        }
-    }
-    dependencies {
-        classpath("org.spongepowered:mixingradle:0.7-SNAPSHOT")
-    }
-}
-
 plugins {
     java
     eclipse
     idea
     `maven-publish`
     `java-library`
+    id("com.gradleup.shadow") version "8.3.2"
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
     id("net.neoforged.gradle.userdev") version "7.0.145"
     id("net.neoforged.gradle.mixin") version "7.0.145"
     kotlin("jvm") version "1.9.23"
@@ -84,33 +71,15 @@ plugins {
 }
 
 repositories {
-    maven {
-        url = uri("https://maven.aliyun.com/repository/public/")
-    }
-    maven {
-        url = uri("https://maven.aliyun.com/repository/gradle-plugin")
-    }
-    maven {
-        url = uri("https://jitpack.io")
-    }
-    maven("Kotlin for Forge") {
-        url = uri("https://thedarkcolour.github.io/KotlinForForge/")
-    }
-    maven("Jared's maven") {
-        url = uri("https://maven.blamejared.com/")
-    }
-    maven("Aquaculture") {
-        url = uri("https://girafi.dk/maven/")
-    }
-    maven("ModMaven") {
-        // location of a maven mirror for JEI files, as a fallback
-        url = uri("https://modmaven.dev")
-    }
+    maven { url = uri("https://maven.aliyun.com/repository/public/") }
+    maven { url = uri("https://jitpack.io") }
+    maven("Kotlin for Forge") { url = uri("https://thedarkcolour.github.io/KotlinForForge/") }
+    maven("Jared's maven") { url = uri("https://maven.blamejared.com/") }
+    maven("Aquaculture") { url = uri("https://girafi.dk/maven/") }
+    maven("ModMaven") { url = uri("https://modmaven.dev") }
     maven {
         url = uri("https://www.cursemaven.com")
-        content {
-            includeGroup("curse.maven")
-        }
+        content { includeGroup("curse.maven") }
     }
     mavenLocal()
     mavenCentral()
@@ -144,6 +113,7 @@ dependencies {
 
     // Jable
     implementation(jable)
+    libraries(jable)
     shade(jable)
 
     // Jei
@@ -187,7 +157,6 @@ runs {
 minecraft {
     accessTransformers { file("src/main/resources/META-INF/accesstransformer.cfg") }
 }
-
 mixin {
     config("${modId}.mixins.json")
 }
@@ -278,7 +247,9 @@ tasks.shadowJar {
     relocate("com.github", "${modGroupId}.${modId}.shadowed.com.github")
 }
 
-//val reobfShadowJar = reobf.create("shadowJar")
+tasks.build {
+    dependsOn("shadowJar")
+}
 
 tasks.withType(GenerateModuleMetadata::class.java) {
     enabled = false

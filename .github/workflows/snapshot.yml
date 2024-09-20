@@ -55,4 +55,4 @@ jobs:
           prerelease: true
           body: ${{ github.event.head_commit.message }}
           files: |
-            ./build/libs/*.jar
+            ./build/libs/*-all.jar

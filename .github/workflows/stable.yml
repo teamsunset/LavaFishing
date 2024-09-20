@@ -53,7 +53,7 @@ jobs:
           prerelease: false
           body: ${{ github.event.head_commit.message }}
           files: |
-            ./build/libs/*.jar
+            ./build/libs/*-all.jar
 
       - name: Modrinth Release
         uses: dsx137/modrinth-release-action@main
@@ -80,5 +80,5 @@ jobs:
           game_versions: 8326,7498,9638,9639,9990
           changelog: ${{ github.event.head_commit.message }}
           release_type: beta
-          file_path: build/libs/lavafishing-${{env.VERSION}}.jar
+          file_path: build/libs/lavafishing-${{env.VERSION}}-all.jar
           relations: aquaculture:requiredDependency
