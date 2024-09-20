@@ -22,25 +22,3 @@ A mod which allows you to fish in the lava.
 Lava Fishing is licensed under the OSLv3 license. You may incorporate it into modpacks, utilize it for review
 purposes, or engage with it in any other manner, provided that you strictly adhere to the terms and conditions outlined
 in the OSLv3 license.
-
-## Development
-
-```kotlin
-repositories {
-    maven {
-        url = uri("https://www.cursemaven.com")
-        content {
-            includeGroup("curse.maven")
-        }
-    }
-    maven {
-        url = uri("https://thedarkcolour.github.io/KotlinForForge/")
-    }
-    maven {
-        url = uri("https://jitpack.io")
-    }
-}
-dependencies {
-    implementation("com.github.TeamSunset:lavafishing:mc1.20.1~dev-SNAPSHOT")
-}
-```
