@@ -303,6 +303,7 @@ fun createAfterRunData(task: String) =
         finalizedBy(task)
         tasks.jar.get().mustRunAfter(this)
         tasks.test.get().mustRunAfter(this)
+        tasks.shadowJar.get().mustRunAfter(this)
 
         val originDirs = sourceSets["main"].resources.srcDirs.map { it.relativeTo(projectDir) }
         val outputDir = file("build/resources/main")
