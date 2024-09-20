@@ -7,7 +7,7 @@
         {
           "type": "minecraft:loot_table",
           "weight": 100,
-          "name": "lavafishing:gameplay/fishing/lava/junk"
+          "value": "lavafishing:gameplay/fishing/lava/junk"
         }
       ]
     }

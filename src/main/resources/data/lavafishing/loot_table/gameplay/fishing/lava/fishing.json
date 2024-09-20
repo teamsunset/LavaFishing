@@ -8,19 +8,19 @@
           "type": "minecraft:loot_table",
           "weight": 10,
           "quality": -2,
-          "name": "lavafishing:gameplay/fishing/lava/junk"
+          "value": "lavafishing:gameplay/fishing/lava/junk"
         },
         {
           "type": "minecraft:loot_table",
           "weight": 5,
           "quality": 2,
-          "name": "lavafishing:gameplay/fishing/lava/treasure"
+          "value": "lavafishing:gameplay/fishing/lava/treasure"
         },
         {
           "type": "minecraft:loot_table",
           "weight": 85,
           "quality": -1,
-          "name": "lavafishing:gameplay/fishing/lava/fish"
+          "value": "lavafishing:gameplay/fishing/lava/fish"
         }
       ]
     }

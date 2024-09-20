@@ -7,7 +7,7 @@
         {
           "type": "minecraft:loot_table",
           "weight": 30,
-          "name": "lavafishing:gameplay/fishing/lava/treasure"
+          "value": "lavafishing:gameplay/fishing/lava/treasure"
         },
         {
           "type": "minecraft:item",
@@ -20,11 +20,11 @@
           "functions": [
             {
               "function": "minecraft:set_contents",
-              "type": "lavafishing:prometheus_bounty",
+              "component": "minecraft:container",
               "entries": [
                 {
                   "type": "minecraft:loot_table",
-                  "name": "lavafishing:box/prometheus_bounty"
+                  "value": "lavafishing:box/prometheus_bounty"
                 }
               ]
             }
