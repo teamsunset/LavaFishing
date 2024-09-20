@@ -44,6 +44,6 @@ object ModTags {
         @JvmField val PROMETHIUM_BLOCK = tagKey(OreDirectoryType.STORAGE_BLOCKS, "promethium")
 
         private fun tagKey(type: OreDirectoryType, path: String): TagKey<Item> =
-            ItemTags.create(ResourceLocation.fromNamespaceAndPath("forge", "${type.type}/${path}"))
+            ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "${type.type}/${path}"))
     }
 }

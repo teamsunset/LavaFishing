@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "loot_table",
-          "name": "lavafishing:box/prometheus_bounty_junk",
+          "value": "lavafishing:box/prometheus_bounty_junk",
           "weight": 1
         }
       ]
@@ -62,7 +62,7 @@
       "entries": [
         {
           "type": "loot_table",
-          "name": "lavafishing:box/prometheus_bounty_junk",
+          "value": "lavafishing:box/prometheus_bounty_junk",
           "weight": 1
         }
       ]
