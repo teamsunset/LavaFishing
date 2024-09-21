@@ -15,13 +15,20 @@ object EventTooltip {
     fun onItemTooltip(event: ItemTooltipEvent) {
         if (event.itemStack.isEmpty) return
         if (!event.itemStack.`is`(ModTags.Items.TOOLTIP)) return
-        val id = BuiltInRegistries.ITEM.getKey(event.itemStack.item) ?: return
+        val id = BuiltInRegistries.ITEM.getKey(event.itemStack.item)
+        if (id == BuiltInRegistries.ITEM.defaultKey) return
         val tooltipPath = "${BuildConstants.MOD_ID}.${id.path}.tooltip"
         val key = if (InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_LEFT_SHIFT)) {
             "$tooltipPath.desc"
         } else {
             "$tooltipPath.title"
         }
+
+        event.toolTip.add(
+            Component.translatable(key).withStyle(ChatFormatting.DARK_RED)
+                .append(" ")
+                .append(Component.translatable(Aquaculture.MOD_ID + ".shift").withStyle(ChatFormatting.DARK_GRAY))
+        )
 
         var index = 1
         val indexKey = { "$key.$index" }
@@ -30,10 +37,5 @@ object EventTooltip {
             event.toolTip.add(indexComponent())
             index++
         }
-        event.toolTip.add(
-            Component.translatable(key).withStyle(ChatFormatting.DARK_RED)
-                .append(" ")
-                .append(Component.translatable(Aquaculture.MOD_ID + ".shift").withStyle(ChatFormatting.DARK_GRAY))
-        )
     }
 }

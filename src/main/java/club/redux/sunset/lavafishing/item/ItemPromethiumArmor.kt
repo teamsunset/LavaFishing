@@ -32,10 +32,7 @@ class ItemPromethiumArmor(
 
     private var texture: String? = null
 
-    fun setArmorTexture(filename: String?): Item {
-        this.texture = filename
-        return this
-    }
+    fun setArmorTexture(filename: String): Item = this.apply { this.texture = filename }
 
     override fun isEnchantable(stack: ItemStack): Boolean = true
 
