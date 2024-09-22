@@ -1,5 +1,6 @@
 @echo off
 chcp 65001
+cls
 cd /d %~dp0
 echo 非常好脚本，使我的项目运行
 set isSetUser=
