@@ -18,10 +18,10 @@ abstract class DataProviderLanguage(
         return pairs.find { it.first == this.locale }?.second ?: throw IllegalArgumentException("Locale not found")
     }
 
-    protected fun Item.addToTranslation(vararg pairs: Pair<Locale, String>) = add(this, choose(*pairs))
-    protected fun Block.addToTranslation(vararg pairs: Pair<Locale, String>) = add(this, choose(*pairs))
-    protected fun EntityType<*>.addToTranslation(vararg pairs: Pair<Locale, String>) = add(this, choose(*pairs))
-    protected fun String.addToTranslation(vararg pairs: Pair<Locale, String>) = add(this, choose(*pairs))
-    protected fun ItemStack.addToTranslation(vararg pairs: Pair<Locale, String>) = add(this, choose(*pairs))
-    protected fun MobEffect.addToTranslation(vararg pairs: Pair<Locale, String>) = add(this, choose(*pairs))
+    protected fun Item.addTranslation(vararg pairs: Pair<Locale, String>) = add(this, choose(*pairs))
+    protected fun Block.addTranslation(vararg pairs: Pair<Locale, String>) = add(this, choose(*pairs))
+    protected fun EntityType<*>.addTranslation(vararg pairs: Pair<Locale, String>) = add(this, choose(*pairs))
+    protected fun String.addTranslation(vararg pairs: Pair<Locale, String>) = add(this, choose(*pairs))
+    protected fun ItemStack.addTranslation(vararg pairs: Pair<Locale, String>) = add(this, choose(*pairs))
+    protected fun MobEffect.addTranslation(vararg pairs: Pair<Locale, String>) = add(this, choose(*pairs))
 }
