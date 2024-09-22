@@ -8,6 +8,7 @@ import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent
 import org.lwjgl.glfw.GLFW
 
@@ -18,16 +19,20 @@ object EventTooltip {
         val id = BuiltInRegistries.ITEM.getKey(event.itemStack.item)
         if (id == BuiltInRegistries.ITEM.defaultKey) return
         val tooltipPath = "${BuildConstants.MOD_ID}.${id.path}.tooltip"
-        val key = if (InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_LEFT_SHIFT)) {
+        val isShiftDown = InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_LEFT_SHIFT)
+
+        val key = if (isShiftDown) {
             "$tooltipPath.desc"
         } else {
             "$tooltipPath.title"
         }
 
+        fun MutableComponent.appendShift() = this.append(" ")
+            .append(Component.translatable(Aquaculture.MOD_ID + ".shift").withStyle(ChatFormatting.DARK_GRAY))
+
         event.toolTip.add(
             Component.translatable(key).withStyle(ChatFormatting.DARK_RED)
-                .append(" ")
-                .append(Component.translatable(Aquaculture.MOD_ID + ".shift").withStyle(ChatFormatting.DARK_GRAY))
+                .let { if (isShiftDown) it else it.appendShift() }
         )
 
         var index = 1
@@ -35,9 +40,7 @@ object EventTooltip {
         val indexComponent = { Component.translatable(indexKey()).withStyle(ChatFormatting.DARK_RED) }
         while (indexComponent().string != indexKey()) {
             event.toolTip.add(
-                indexComponent()
-                    .append(" ")
-                    .append(Component.translatable(Aquaculture.MOD_ID + ".shift").withStyle(ChatFormatting.DARK_GRAY))
+                indexComponent().let { if (isShiftDown) it else it.appendShift() }
             )
 
             index++
