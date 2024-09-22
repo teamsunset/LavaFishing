@@ -34,7 +34,12 @@ object EventTooltip {
         val indexKey = { "$key.$index" }
         val indexComponent = { Component.translatable(indexKey()).withStyle(ChatFormatting.DARK_RED) }
         while (indexComponent().string != indexKey()) {
-            event.toolTip.add(indexComponent())
+            event.toolTip.add(
+                indexComponent()
+                    .append(" ")
+                    .append(Component.translatable(Aquaculture.MOD_ID + ".shift").withStyle(ChatFormatting.DARK_GRAY))
+            )
+
             index++
         }
     }
