@@ -20,12 +20,7 @@ object EventTooltip {
         if (id == BuiltInRegistries.ITEM.defaultKey) return
         val tooltipPath = "${BuildConstants.MOD_ID}.${id.path}.tooltip"
         val isShiftDown = InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_LEFT_SHIFT)
-
-        val key = if (isShiftDown) {
-            "$tooltipPath.desc"
-        } else {
-            "$tooltipPath.title"
-        }
+        val key = "$tooltipPath.${if (isShiftDown) "desc" else "title"}"
 
         fun MutableComponent.appendShift() = this.append(" ")
             .append(Component.translatable(Aquaculture.MOD_ID + ".shift").withStyle(ChatFormatting.DARK_GRAY))
