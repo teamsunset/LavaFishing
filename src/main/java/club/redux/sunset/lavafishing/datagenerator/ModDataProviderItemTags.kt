@@ -38,6 +38,6 @@ class ModDataProviderItemTags(
         tag(Tags.Items.ARMORS_BOOTS).add(ModItems.PROMETHIUM_BOOTS.get())
 
         tag(Tags.Items.CHESTS).add(ModItems.PROMETHEUS_BOUNTY.get())
-        tag(Tags.Items.TOOLS_FISHING_RODS).add(ModItems.PROMETHEUS_BOUNTY.get())
+        tag(Tags.Items.TOOLS_FISHING_RODS).add(ModItems.OBSIDIAN_FISHING_ROD.get())
     }
 }
