@@ -29,6 +29,9 @@ public abstract class MixinLivingEntity extends Entity implements Attackable, IL
     @Shadow
     public abstract ItemStack getItemBySlot(EquipmentSlot equipmentSlot);
 
+    @Shadow
+    private float speed;
+
     @Inject(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;moveRelative(FLnet/minecraft/world/phys/Vec3;)V"))
     public void travel(Vec3 pTravelVector, CallbackInfo ci) {
         if (this.isControlledByLocalInstance()) {
