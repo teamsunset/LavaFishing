@@ -15,20 +15,22 @@ cd /d %~dp0
         @REM cmd /C gradlew systemProp.http.proxyHost=%proxy% systemProp.http.proxyPort=1080 systemProp.https.proxyHost=%proxy% systemProp.https.proxyPort=1080
     )
 
+    call :input "username" "设置用户名（回车跳过）: "
+    if "%username%"=="" (
+        call :output "不设置用户名"
+    ) else (
+        call :output "设置用户名为： %username%"
+    )
+
     call :output "开始运行项目 1/2……"
     call :output
     cmd /C gradlew runData
     call :output
-    call :input "username" "设置用户名（回车跳过）: "
+    call :output "开始运行项目 2/2……"
+    call :output
     if "%username%"=="" (
-        call :output "不设置用户名"
-        call :output "开始运行项目 2/2……"
-        call :output
         cmd /C gradlew runClient
     ) else (
-        call :output "设置用户名为： %username%"
-        call :output "开始运行项目 2/2……"
-        call :output
         cmd /C gradlew runClient --args="--username %username%"
     )
     exit /b
