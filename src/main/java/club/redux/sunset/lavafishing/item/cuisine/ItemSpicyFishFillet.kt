@@ -13,12 +13,13 @@ class ItemSpicyFishFillet : Item(
             FoodProperties.Builder()
                 .nutrition(7)
                 .saturationModifier(0.8f)
+                .usingConvertsTo(Items.BOWL)
                 .build()
         )
+        .stacksTo(1)
 ) {
     override fun finishUsingItem(pStack: ItemStack, pLevel: Level, pLivingEntity: LivingEntity): ItemStack {
         pLivingEntity.remainingFireTicks = 20
-        Items.MUSHROOM_STEW
         return super.finishUsingItem(pStack, pLevel, pLivingEntity)
     }
 }

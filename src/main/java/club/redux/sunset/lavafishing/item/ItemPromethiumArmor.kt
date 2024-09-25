@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.material.FogType
 import net.neoforged.neoforge.client.event.RenderBlockScreenEffectEvent
 import net.neoforged.neoforge.client.event.ViewportEvent
+import net.neoforged.neoforge.common.NeoForgeMod
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent
 import net.neoforged.neoforge.event.tick.EntityTickEvent
@@ -143,7 +144,7 @@ class ItemPromethiumArmor(
                 val bufferBuilder =
                     Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR)
 
-                val alpha = 0.3f
+                val alpha = if (event.player.isEyeInFluidType(NeoForgeMod.LAVA_TYPE.value())) 0f else 0.3f
 
                 bufferBuilder.addVertex(matrix4f, -0.5f, -0.5f, -0.5f)
                     .setUv(uAdjustedMax, vAdjustedMax)
