@@ -27,6 +27,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 import net.neoforged.neoforge.client.event.EntityRenderersEvent
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent
+import net.neoforged.neoforge.client.event.RenderBlockScreenEffectEvent
 import net.neoforged.neoforge.client.event.ViewportEvent
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
 import net.neoforged.neoforge.data.event.GatherDataEvent
@@ -91,6 +92,11 @@ class EventHandler {
         @SubscribeEvent
         fun onFogRender(event: ViewportEvent.RenderFog) {
             ItemPromethiumArmor.onFogRender(event)
+        }
+
+        @SubscribeEvent
+        fun onRenderBlockScreen(event: RenderBlockScreenEffectEvent) {
+            ItemPromethiumArmor.onRenderBlockScreen(event)
         }
     }
 

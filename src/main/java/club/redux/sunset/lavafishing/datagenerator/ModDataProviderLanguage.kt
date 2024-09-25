@@ -306,8 +306,8 @@ class ModDataProviderLanguage(
                 Locale.US to "Golden Eyes"
             )
             .desc(
-                Locale.PRC to "在岩浆下拥有良好视野",
-                Locale.US to "Watch under the lava clearly"
+                Locale.PRC to "在岩浆下和着火时拥有良好视野",
+                Locale.US to "Watch under the lava and on fire clearly"
             )
         Tooltip(ModItems.PROMETHIUM_CHESTPLATE.get()).modId(BuildConstants.MOD_ID)
             .title(*heatLoverTitle).desc(*heatLoverDesc)
