@@ -2,15 +2,10 @@ package club.redux.sunset.lavafishing
 
 import club.redux.sunset.lavafishing.misc.Hooks
 import club.redux.sunset.lavafishing.registry.*
-import club.redux.sunset.lavafishing.util.logger
-import com.github.dsx137.jable.extension.log4j
-import com.mojang.logging.LogUtils
+import club.redux.sunset.lavafishing.util.Utils
 import net.minecraft.resources.ResourceLocation
 import net.neoforged.fml.common.Mod
-import org.apache.logging.log4j.LogManager
-import org.slf4j.LoggerFactory
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
-import java.nio.charset.Charset
 
 @Mod(BuildConstants.MOD_ID)
 object LavaFishing {
@@ -19,13 +14,7 @@ object LavaFishing {
         ResourceLocation.fromNamespaceAndPath(BuildConstants.MOD_ID, path)
 
     init {
-        this.javaClass.getResourceAsStream("/ascii-art.txt")?.let {
-            it.bufferedReader().use { reader ->
-                reader.lines().forEach { line ->
-                    this.logger.info(line)
-                }
-            }
-        }
+        Utils.asciiArt()
 
         ModArmorMaterials.REGISTER.register(MOD_BUS)
         ModBlockEntityTypes.REGISTER.register(MOD_BUS)

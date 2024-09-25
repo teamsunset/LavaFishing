@@ -1,6 +1,8 @@
 package club.redux.sunset.lavafishing.util
 
+import club.redux.sunset.lavafishing.LavaFishing
 import net.minecraft.world.phys.Vec3
+import org.slf4j.LoggerFactory
 import java.security.SecureRandom
 
 object Utils {
@@ -35,6 +37,17 @@ object Utils {
     @JvmStatic
     fun dot(vecA: Vec3, vecB: Vec3): Double {
         return vecA.x * vecB.x + vecA.y * vecB.y + vecA.z * vecB.z
+    }
+
+    @JvmStatic
+    fun asciiArt() {
+        this.javaClass.getResourceAsStream("/ascii-art.txt")?.let {
+            it.bufferedReader().use { reader ->
+                reader.lines().forEach { line ->
+                    LoggerFactory.getLogger(LavaFishing::class.java).info(line)
+                }
+            }
+        }
     }
 }
 
