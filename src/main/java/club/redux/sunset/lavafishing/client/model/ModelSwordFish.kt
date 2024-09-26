@@ -60,7 +60,7 @@ class ModelSwordFish<T : Entity>(root: ModelPart) : EntityModel<T>() {
             val whole = partdefinition.addOrReplaceChild(
                 "whole",
                 CubeListBuilder.create(),
-                PartPose.offset(-0.75f, 20.75f, -0.75f)
+                PartPose.offsetAndRotation(0.75f, 22.75f, -0.75f, 0.0f, -1.5708f, 0.0f)
             )
 
             val left_fin =
