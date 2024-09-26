@@ -60,7 +60,7 @@ class ModelCommonFish<T : Entity>(root: ModelPart) : EntityModel<T>() {
             val whole = partdefinition.addOrReplaceChild(
                 "whole",
                 CubeListBuilder.create(),
-                PartPose.offset(-0.75f, 21.75f, 0.25f)
+                PartPose.offset(-0.75f, 22.75f, 0.25f)
             )
 
             val right_fin = whole.addOrReplaceChild(

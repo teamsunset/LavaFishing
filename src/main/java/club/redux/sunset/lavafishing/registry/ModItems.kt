@@ -99,7 +99,7 @@ object ModItems {
         ItemBullet(AquacultureAPI.MATS.NEPTUNIUM, Properties()) { ModEntityTypes.NEPTUNIUM_BULLET.get() }
     }
     @JvmField val PROMETHIUM_BULLET = REGISTER.registerKt("promethium_bullet") {
-        ItemBullet(ModTiers.PROMETHIUM, Properties()) { ModEntityTypes.PROMETHIUM_BULLET.get() }
+        ItemBullet(ModTiers.PROMETHIUM, Properties().fireResistant()) { ModEntityTypes.PROMETHIUM_BULLET.get() }
     }
 
     // other
