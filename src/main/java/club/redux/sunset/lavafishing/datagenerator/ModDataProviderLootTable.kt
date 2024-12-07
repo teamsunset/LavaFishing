@@ -18,9 +18,11 @@ import net.minecraftforge.registries.ForgeRegistries
 
 class ModDataProviderLootTable(
     pOutput: PackOutput,
-) : LootTableProvider(pOutput, emptySet(), emptyList()) {
+    subProviders: List<SubProviderEntry>,
+) : LootTableProvider(pOutput, emptySet(), subProviders) {
+
     override fun getTables(): MutableList<SubProviderEntry> {
-        val tables = mutableListOf<SubProviderEntry>()
+        val tables = super.getTables().toMutableList()
 
         val build =
             { resourceLocation: ResourceLocation, builder: LootTable.Builder, lootContextParamSet: LootContextParamSet ->
@@ -49,5 +51,4 @@ class ModDataProviderLootTable(
 
         return tables
     }
-
 }

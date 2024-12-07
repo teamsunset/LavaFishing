@@ -16,6 +16,7 @@ val modLoader: String by project
 val modLoaderVersionRange: String by project
 val minecraftMappingChannel: String by project
 val minecraftMappingVersion: String by project
+val aquacultureVersion: String by project
 val aquacultureVersionRange: String by project
 val kotlinForForgeVersionRange: String by project
 val jeiVersion: String by project
@@ -84,6 +85,7 @@ repositories {
     maven {
         url = uri("https://jitpack.io")
     }
+    maven("Aquaculture") { url = uri("https://girafi.dk/maven/") }
     maven("Kotlin for Forge") {
         url = uri("https://thedarkcolour.github.io/KotlinForForge/")
     }
@@ -103,7 +105,8 @@ repositories {
 dependencies {
     val mc = "net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}"
     val mixinProcessor = "org.spongepowered:mixin:0.8.5:processor"
-    val aquaculture = "com.github.teamsunset:aquaculture:0bba648c2f"
+    val aquaculture =
+        "com.teammetallurgy.aquaculture:aquaculture2_${minecraftVersion}:${minecraftVersion}-${aquacultureVersion}"
     val kotlinforforge = "thedarkcolour:kotlinforforge:4.10.0"
     val jeiCommonApi = "mezz.jei:jei-${minecraftVersion}-common-api:${jeiVersion}"
     val jeiForgeApi = "mezz.jei:jei-${minecraftVersion}-forge-api:${jeiVersion}"
@@ -119,7 +122,7 @@ dependencies {
     annotationProcessor(mixinProcessor)
 
     // Aquaculture2
-    implementation(aquaculture)
+    implementation(fg.deobf(aquaculture))
 
     // Kotlin for Forge
     implementation(kotlinforforge)
