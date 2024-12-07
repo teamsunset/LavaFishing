@@ -1,6 +1,5 @@
 package club.redux.sunset.lavafishing.item.block
 
-import club.redux.sunset.lavafishing.registry.ModItems
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer
@@ -18,9 +17,15 @@ class BlockItemWithoutLevelRenderer(
     pProperties: Properties,
     val blockEntityProvider: () -> BlockEntity,
 ) : BlockItem(pBlock, pProperties) {
+    init {
+        registeredItems.add(this)
+    }
+
     companion object {
+        val registeredItems = mutableSetOf<BlockItemWithoutLevelRenderer>()
+
         fun onRegisterClientExtensions(event: RegisterClientExtensionsEvent) {
-            event.registerItem(
+            registeredItems.forEach { item ->
                 object : IClientItemExtensions {
                     override fun getCustomRenderer(): BlockEntityWithoutLevelRenderer {
                         return object : BlockEntityWithoutLevelRenderer(
@@ -36,13 +41,13 @@ class BlockItemWithoutLevelRenderer(
                                 i1: Int,
                             ) {
                                 Minecraft.getInstance().blockEntityRenderDispatcher.renderItem(
-                                    ModItems.PROMETHEUS_BOUNTY.get().blockEntityProvider(), matrixStack, buffer, i, i1
+                                    item.blockEntityProvider(), matrixStack, buffer, i, i1
                                 )
                             }
                         }
                     }
-                }, ModItems.PROMETHEUS_BOUNTY.get()
-            )
+                }.let { event.registerItem(it, item) }
+            }
         }
     }
 }

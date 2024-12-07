@@ -14,6 +14,7 @@ val neoforgeVersionRange: String by project
 val modLoader: String by project
 val modLoaderVersionRange: String by project
 val minecraftMappingChannel: String by project
+val minecraftMappingMinecraftVersion: String by project
 val minecraftMappingVersion: String by project
 val aquacultureVersion: String by project
 val aquacultureVersionRange: String by project
@@ -161,10 +162,10 @@ mixin {
     config("${modId}.mixins.json")
 }
 subsystems {
-    //    parchment.let {
-//        it.mappingsVersion = minecraftMappingVersion
-//        it.minecraftVersion = minecraftVersion
-//    }
+    parchment.let {
+        it.minecraftVersion = minecraftMappingMinecraftVersion
+        it.mappingsVersion = minecraftMappingVersion
+    }
 }
 
 val props = mapOf(

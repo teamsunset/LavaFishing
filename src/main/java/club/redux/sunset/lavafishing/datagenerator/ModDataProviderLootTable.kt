@@ -21,10 +21,12 @@ import java.util.concurrent.CompletableFuture
 
 class ModDataProviderLootTable(
     pOutput: PackOutput,
+    subProviders: List<SubProviderEntry>,
     lookupProvider: CompletableFuture<HolderLookup.Provider>,
-) : LootTableProvider(pOutput, emptySet(), emptyList(), lookupProvider) {
-    override fun getTables(): MutableList<SubProviderEntry> {
-        val tables = mutableListOf<SubProviderEntry>()
+) : LootTableProvider(pOutput, emptySet(), subProviders, lookupProvider) {
+
+    override fun getTables(): List<SubProviderEntry> {
+        val tables = super.getTables().toMutableList()
 
         val build =
             { resourceKey: ResourceKey<LootTable>, builder: LootTable.Builder, lootContextParamSet: LootContextParamSet ->
@@ -53,6 +55,20 @@ class ModDataProviderLootTable(
                     LootContextParamSets.ENTITY
                 ).let { tables.add(it) }
             }
+
+//        ModBlocks.ITEM_BLOCKS.forEach { entry ->
+//            build(
+//                ResourceKey.create(
+//                    Registries.LOOT_TABLE,
+//                    LavaFishing.resourceLocation("blocks/${entry.key!!.location().path}")
+//                ),
+//                LootTable.lootTable().withPool(
+//                    LootPool.lootPool()
+//                        .add(LootItem.lootTableItem(Item.byBlock(entry.get())))
+//                ),
+//                LootContextParamSets.BLOCK
+//            ).let { tables.add(it) }
+//        }
 
         return tables
     }
