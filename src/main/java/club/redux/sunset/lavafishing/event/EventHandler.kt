@@ -19,12 +19,17 @@ import club.redux.sunset.lavafishing.misc.ModLootTables
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModParticleTypes
 import club.redux.sunset.lavafishing.registry.ModPotions
+import com.teammetallurgy.aquaculture.item.AquaFishingRodItem
+import com.teammetallurgy.aquaculture.item.AquaFishingRodItem.FishingRodEquipmentHandler
 import net.minecraft.client.particle.SpriteSet
+import net.minecraft.world.item.ItemStack
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
+import net.neoforged.neoforge.capabilities.Capabilities
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent
 import net.neoforged.neoforge.client.event.EntityRenderersEvent
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent
 import net.neoforged.neoforge.client.event.RenderBlockScreenEffectEvent
@@ -41,6 +46,7 @@ import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent
 import net.neoforged.neoforge.event.entity.player.PlayerEvent
 import net.neoforged.neoforge.event.tick.EntityTickEvent
+
 
 class EventHandler {
     @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
@@ -121,6 +127,15 @@ class EventHandler {
         @SubscribeEvent
         fun onEntityAttributeCreation(event: EntityAttributeCreationEvent) {
             EntityLavaFish.onEntityAttributeCreation(event)
+        }
+
+        @SubscribeEvent
+        fun onRegisterCapabilities(event: RegisterCapabilitiesEvent) {
+            event.registerItem(
+                Capabilities.ItemHandler.ITEM,
+                { stack: ItemStack?, _: Any? -> FishingRodEquipmentHandler(stack) },
+                *ModItems.REGISTER.entries.map { it.get() }.filterIsInstance<AquaFishingRodItem>().toTypedArray()
+            )
         }
     }
 
