@@ -111,8 +111,8 @@ class EntityPromethiumBullet(
         }
     }
 
-    override fun attachEnchantment(stack: ItemStack) {
-        super.attachEnchantment(stack)
+    override fun attachEnchantmentEffects(stack: ItemStack) {
+        super.attachEnchantmentEffects(stack)
         stack.hasEnchantmentThen(Enchantments.POWER) { this.divisionNum += it }
         stack.hasEnchantmentThen(Enchantments.MULTISHOT) { this.divisionTimes = 3 }
     }

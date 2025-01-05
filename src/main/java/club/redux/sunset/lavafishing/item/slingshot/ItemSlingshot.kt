@@ -120,7 +120,7 @@ open class ItemSlingshot(
                 this.setPos(arrow.x, arrow.y, arrow.z)
                 this.owner = arrow.owner
             }
-        ).apply { attachEnchantment(weaponStack) }
+        ).apply { attachEnchantmentEffects(weaponStack) }
     }
 
     open fun customBullet(bullet: EntityBullet): EntityBullet {

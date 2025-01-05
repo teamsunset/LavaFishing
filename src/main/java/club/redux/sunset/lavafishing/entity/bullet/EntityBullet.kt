@@ -60,9 +60,9 @@ open class EntityBullet(
         this.setSoundEvent(oldSoundEvent)
     }
 
-    open fun attachEnchantment(stack: ItemStack) {
+    open fun attachEnchantmentEffects(stack: ItemStack) {
         stack.hasEnchantmentThen(Enchantments.POWER) { this.baseDamage += it * 0.5 + 0.5 }
-//        stack.hasEnchantmentThen(Enchantments.PUNCH) { this.knockback = it }
+        stack.hasEnchantmentThen(Enchantments.MULTISHOT) { this.pickup = Pickup.DISALLOWED }
         stack.hasEnchantmentThen(Enchantments.FLAME) { this.remainingFireTicks = 100 }
     }
 
