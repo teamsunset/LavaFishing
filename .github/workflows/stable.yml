@@ -81,4 +81,4 @@ jobs:
           changelog: ${{ github.event.head_commit.message }}
           release_type: release
           file_path: build/libs/lavafishing-${{env.VERSION}}-all.jar
-          relations: aquaculture:requiredDependency
+          relations: aquaculture:requiredDependency,kotlin-for-forge::requiredDependency
