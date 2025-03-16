@@ -50,8 +50,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: 'snapshot-${{ env.MINECRAFT_VERSION }}'
-          name: 'snapshot-${{ env.MINECRAFT_VERSION }}-$$-${{ github.run_id }}'
+          tag_name: '${{ env.MINECRAFT_VERSION }}-snapshot'
+          name: '${{ env.MINECRAFT_VERSION }}-snapshot-$$-${{ github.run_id }}'
           prerelease: true
           body: ${{ github.event.head_commit.message }}
           files: |

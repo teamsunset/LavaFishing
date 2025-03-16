@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.mixin;
 
-import club.redux.sunset.lavafishing.api.mixin.IMixinProxyAbstractFish;
+import club.redux.sunset.lavafishing.mixinproxy.IMixinProxyAbstractFish;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.AbstractFish;
 import net.minecraft.world.entity.animal.Bucketable;
