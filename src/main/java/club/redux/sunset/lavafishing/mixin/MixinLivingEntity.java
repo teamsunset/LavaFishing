@@ -36,7 +36,7 @@ public abstract class MixinLivingEntity extends Entity implements Attackable, IL
     public void travel(Vec3 pTravelVector, CallbackInfo ci) {
         if (this.isControlledByLocalInstance()) {
             if (this.isInLava() && this.isAffectedByFluids() && !this.canStandOnFluid(this.level().getFluidState(this.blockPosition()))) {
-                if (this.getItemBySlot(EquipmentSlot.LEGS).is(ModItems.PROMETHIUM_LEGGINGS.get())) {
+                if (this.getItemBySlot(EquipmentSlot.LEGS).is(ModItems.INSTANCE.getPROMETHIUM_LEGGINGS().get())) {
                     this.moveRelative(0.08F, pTravelVector);
                 }
             }

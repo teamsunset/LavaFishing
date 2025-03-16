@@ -1,8 +1,6 @@
-import groovy.util.Node
-import groovy.util.NodeList
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.gradle.ext.settings
 import org.jetbrains.gradle.ext.taskTriggers
-import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -21,7 +19,6 @@ val aquacultureVersionRange: String by project
 val kotlinForForgeVersion: String by project
 val kotlinForForgeVersionRange: String by project
 val jeiVersion: String by project
-val jableVersion: String by project
 val modId: String by project
 val modName: String by project
 val modLicense: String by project
@@ -37,7 +34,6 @@ val fullShade: Configuration by configurations.creating
 val runtimeMaven: Configuration by configurations.creating
 val providedMaven: Configuration by configurations.creating
 val compileMaven: Configuration by configurations.creating
-val libraries: Configuration by configurations.creating
 
 val javaVersion = JavaLanguageVersion.of(21)
 
@@ -48,12 +44,8 @@ base.archivesName.set(modId)
 java.toolchain.languageVersion.set(javaVersion)
 kapt.keepJavacAnnotationProcessors = true
 
-idea {
-    module {
-        isDownloadJavadoc = true
-        isDownloadSources = true
-    }
-}
+idea.module.isDownloadJavadoc = true
+idea.module.isDownloadSources = true
 
 plugins {
     java
@@ -94,8 +86,6 @@ dependencies {
     val jeiForgeApi = "mezz.jei:jei-${minecraftVersion}-neoforge-api:${jeiVersion}"
     val jei = "mezz.jei:jei-${minecraftVersion}-neoforge:${jeiVersion}"
 
-    val jable = "com.github.dsx137:jable:${jableVersion}"
-
     // NeoForge
     implementation("net.neoforged:neoforge:${neoforgeVersion}")
 
@@ -112,11 +102,6 @@ dependencies {
     // Kotlin for Forge
     implementation(kotlinforforge)
 
-    // Jable
-    implementation(jable)
-    libraries(jable)
-    shade(jable)
-
     // Jei
     compileOnly(jeiForgeApi)
     runtimeOnly(jei)
@@ -129,19 +114,9 @@ runs {
         modSource(sourceSets["main"])
     }
 
-    named("client") {
-        systemProperty("neoforge.enabledGameTestNamespaces", modId)
-    }
-
-    named("server") {
-        systemProperty("neoforge.enabledGameTestNamespaces", modId)
-        programArgument("--nogui")
-    }
-
-    named("gameTestServer") {
-        systemProperty("neoforge.enabledGameTestNamespaces", modId)
-    }
-
+    named("client") { systemProperty("neoforge.enabledGameTestNamespaces", modId) }
+    named("server") { systemProperty("neoforge.enabledGameTestNamespaces", modId) }
+    named("gameTestServer") { systemProperty("neoforge.enabledGameTestNamespaces", modId) }
     named("data") {
         programArguments.addAll(
             "--mod",
@@ -190,7 +165,6 @@ val generateTemplates by tasks.registering(Copy::class) {
     val src = file("src/main/templates/java")
     val dst = layout.buildDirectory.dir("generated/sources/templates/java")
     inputs.properties(props)
-    outputs.upToDateWhen { false }
 
     from(src)
     into(dst)
@@ -201,11 +175,9 @@ sourceSets["main"].java.srcDirs(generateTemplates.map { it.destinationDir })
 rootProject.idea.project.settings.taskTriggers.afterSync(generateTemplates)
 project.eclipse.synchronizationTasks(generateTemplates)
 
-tasks.withType(JavaCompile::class.java).configureEach {
-    options.encoding = "UTF-8"
-}
+tasks.withType(JavaCompile::class.java).configureEach { options.encoding = "UTF-8" }
 
-val processResourcesConfig: ProcessResources.() -> Unit = {
+tasks.processResources {
     val targets = listOf("META-INF/neoforge.mods.toml", "pack.mcmeta")
     inputs.properties(props)
 
@@ -213,9 +185,6 @@ val processResourcesConfig: ProcessResources.() -> Unit = {
         expand(props)
     }
 }
-
-// 同一流程中只有一个processResources任务，所以runData必须和其他任务分开执行
-tasks.processResources { processResourcesConfig() }
 
 tasks.jar {
     manifest {
@@ -236,91 +205,18 @@ tasks.jar {
 
 tasks.shadowJar {
     mergeServiceFiles()
-    minimize()
     minimize {
-        fullShade.dependencies.forEach {
-            exclude(dependency(it))
-        }
+        fullShade.dependencies.forEach { exclude(dependency(it)) }
     }
 
-    configurations = listOf(shade, fullShade)
+    configurations = listOf(shade)
 
-    relocate("com.github", "${modGroupId}.${modId}.shadowed.com.github")
-}
-
-tasks.build {
-    dependsOn("shadowJar")
-}
-
-tasks.withType(GenerateModuleMetadata::class.java) {
-    enabled = false
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-            artifactId = project.archivesName.get()
-            groupId = project.group.toString()
-            version = project.version.toString()
-            pom {
-                name.set(modName)
-                licenses {
-                    license {
-                        name.set(modLicense)
-                    }
-                }
-                withXml {
-                    asNode().remove((asNode().get("dependencies") as NodeList).first() as Node)
-
-                    asNode().appendNode("dependencies").apply {
-                        val appendDependency = { configuration: Configuration, scope: String ->
-                            configuration.dependencies.forEach {
-                                appendNode("dependency").apply {
-                                    appendNode("groupId", it.group)
-                                    appendNode("artifactId", it.name)
-                                    appendNode("version", it.version)
-                                    appendNode("scope", scope)
-                                }
-                            }
-                        }
-
-                        appendDependency(compileMaven, "compile")
-                        appendDependency(runtimeMaven, "runtime")
-                        appendDependency(providedMaven, "provided")
-                    }
-                }
-            }
-        }
-    }
-}
-
-/*---TeaCon---*/
-
-fun createAfterRunData(task: String) =
-    tasks.create("${task}AfterRunData", ProcessResources::class) {
-        group = "After runData"
-        dependsOn("runData")
-        finalizedBy(task)
-        tasks.jar.get().mustRunAfter(this)
-        tasks.test.get().mustRunAfter(this)
-        tasks.shadowJar.get().mustRunAfter(this)
-
-        val originDirs = sourceSets["main"].resources.srcDirs.map { it.relativeTo(projectDir) }
-        val outputDir = file("build/resources/main")
-
-        doFirst {
-            delete(outputDir)
-        }
-        from(originDirs) {
-            exclude {
-                it.isDirectory && it.name.startsWith(".")
-            }
-        }
-        into(outputDir)
-        processResourcesConfig()
+    fun ShadowJar.relocateToShadowed(vararg paths: String): ShadowJar {
+        paths.forEach { relocate(it, "${modGroupId}.${modId}.shadowed.$it") }
+        return this
     }
 
-val buildAfterRunData = createAfterRunData("build")
-val runClientAfterRunData = createAfterRunData("runClient")
-val runServerAfterRunData = createAfterRunData("runServer")
+    relocateToShadowed("com.github")
+}
+
+tasks.build { dependsOn("shadowJar") }
