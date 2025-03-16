@@ -42,7 +42,7 @@ object Utils {
     }
 
     fun asciiArt() {
-        this.javaClass.getResourceAsStream("/ascii-art.txt")?.let {
+        this.javaClass.getResourceAsStream("/ascii_art.txt")?.let {
             it.bufferedReader().use { reader ->
                 reader.lines().forEach { line ->
                     LoggerFactory.getLogger(LavaFishing::class.java).info(line)
