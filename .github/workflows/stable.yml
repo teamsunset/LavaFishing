@@ -77,7 +77,7 @@ jobs:
           token: ${{ secrets.CURSEFORGE_TOKEN }}
           display_name: ${{ env.VERSION }}
           project_id: 1035887
-          game_versions: 11774,10150,8326,9639,9638
+          game_versions: Minecraft 1.21.1,NeoForge,Java 21,Client,Server
           changelog: ${{ github.event.head_commit.message }}
           release_type: release
           file_path: build/libs/lavafishing-${{env.VERSION}}-all.jar
