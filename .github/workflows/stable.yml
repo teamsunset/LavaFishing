@@ -28,8 +28,7 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          restore-keys: ${{ runner.os }}-gradle-
 
       - name: Build
         env:
@@ -41,8 +40,7 @@ jobs:
 
       - name: Extract Version
         id: get_version
-        run: |
-          echo "version=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')" >> $GITHUB_OUTPUT
+        run: echo "version=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: andelf/nightly-release@main
@@ -53,8 +51,7 @@ jobs:
           name: ${{ steps.get_version.outputs.version }}
           prerelease: false
           body: ${{ github.event.head_commit.message }}
-          files: |
-            ./build/libs/*-all.jar
+          files: ./build/libs/*-all.jar
 
       - name: Modrinth Release
         uses: dsx137/modrinth-releaser@main
