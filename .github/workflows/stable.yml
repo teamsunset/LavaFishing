@@ -15,8 +15,8 @@ jobs:
     steps:
       - uses: actions/setup-java@v2
         with:
-          distribution: 'adopt'
-          java-version: '21'
+          distribution: adopt
+          java-version: 21
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -27,7 +27,7 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: "${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}"
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
@@ -40,34 +40,36 @@ jobs:
           ./gradlew build
 
       - name: Extract Version
+        id: get_version
         run: |
-          echo "VERSION=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')" >> $GITHUB_ENV
+          echo "version=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: andelf/nightly-release@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.VERSION }}
-          name: ${{ env.VERSION }}
+          tag_name: ${{ steps.get_version.outputs.version }}
+          name: ${{ steps.get_version.outputs.version }}
           prerelease: false
           body: ${{ github.event.head_commit.message }}
           files: |
             ./build/libs/*-all.jar
 
       - name: Modrinth Release
-        uses: dsx137/modrinth-release-action@main
+        uses: dsx137/modrinth-releaser@main
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         with:
-          name: ${{ env.VERSION }}
+          name: ${{ steps.get_version.outputs.version }}
           project_id: puTJzCb0
           loaders: neoforge
           game_versions: 1.21.1
-          version_number: ${{ env.VERSION }}
+          version_number: ${{ steps.get_version.outputs.version }}
           changelog: ${{ github.event.head_commit.message }}
           version_type: release
-          files: build/libs/lavafishing-${{env.VERSION}}.jar
+          upload_mode: update:replace
+          files: build/libs/lavafishing-${{ steps.get_version.outputs.version }}.jar
           dependencies: Vl1uNAuy:required, ordsPcFz:required
 
       - name: CurseForge Release
@@ -75,10 +77,10 @@ jobs:
         with:
           game_endpoint: minecraft
           token: ${{ secrets.CURSEFORGE_TOKEN }}
-          display_name: ${{ env.VERSION }}
+          display_name: ${{ steps.get_version.outputs.version }}
           project_id: 1035887
           game_versions: 11779,NeoForge,Java 21,Client,Server
           changelog: ${{ github.event.head_commit.message }}
           release_type: release
-          file_path: build/libs/lavafishing-${{env.VERSION}}-all.jar
+          file_path: build/libs/lavafishing-${{ steps.get_version.outputs.version }}-all.jar
           relations: aquaculture:requiredDependency,kotlin-for-forge:requiredDependency
