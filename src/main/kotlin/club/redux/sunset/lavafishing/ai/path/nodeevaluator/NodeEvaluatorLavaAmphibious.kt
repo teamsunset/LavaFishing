@@ -95,7 +95,7 @@ class NodeEvaluatorLavaAmphibious(private val prefersShallowSwimming: Boolean) :
             outputNodes[numNeighbors++] = belowNode!!
         }
 
-        // 调整水路径的成本，如果实体偏好浅水且节点在海平面以下一定深度
+        // 调整水路径的成本，如果实体偏好浅水且节点在海平面以下一定深度（但是岩浆平面不是固定的，用seaLevel有点不对）
         for (index in 0 until numNeighbors) {
             val neighborNode = outputNodes[index]
             if (neighborNode.type == PathType.WATER && prefersShallowSwimming && neighborNode.y < mob.level().seaLevel - 10) {
