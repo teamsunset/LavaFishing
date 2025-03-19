@@ -67,7 +67,6 @@ jobs:
           version_number: ${{ steps.get_version.outputs.version }}
           changelog: ${{ github.event.head_commit.message }}
           version_type: release
-          upload_mode: update:replace
           files: build/libs/lavafishing-${{ steps.get_version.outputs.version }}.jar
           dependencies: Vl1uNAuy:required, ordsPcFz:required
 
