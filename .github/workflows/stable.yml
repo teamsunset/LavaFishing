@@ -24,7 +24,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Cache Gradle packages
+      - name: Cache Gradle Packages
         uses: actions/cache@v4
         with:
           path: |
@@ -44,6 +44,18 @@ jobs:
       - name: Extract Version
         id: get_version
         run: echo "version=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')" >> $GITHUB_OUTPUT
+
+      - name: Generate Changelog
+        id: get_changelog
+        run: |
+          tag="$(git --no-pager tag --sort=creatordate --merged ${{ github.ref_name }} | grep -v snapshot | tail -1)"
+          limit="-1"
+          if [ -n "$tag" ]; then
+            limit="$tag..HEAD"
+          fi
+          changelog="$(echo -ne "$(git log "$limit" --pretty=format:'- %s')")"
+          changelog="$(echo -e "$changelog" | sed 's/$/  /')"
+          echo "changelog=$changelog">> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: andelf/nightly-release@main

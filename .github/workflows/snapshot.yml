@@ -25,7 +25,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Cache Gradle packages
+      - name: Cache Gradle Packages
         uses: actions/cache@v4
         with:
           path: |
@@ -54,7 +54,9 @@ jobs:
           if [ -n "$tag" ]; then
             limit="$tag..HEAD"
           fi
-          echo -ne "changelog=$(git log "$limit" --pretty=format:'- %s\n\n')" >> $GITHUB_OUTPUT
+          changelog="$(echo -ne "$(git log "$limit" --pretty=format:'- %s')")"
+          changelog="$(echo -e "$changelog" | sed 's/$/  /')"
+          echo "changelog=$changelog">> $GITHUB_OUTPUT
 
       - name: Update Snapshot Release
         uses: andelf/nightly-release@main
