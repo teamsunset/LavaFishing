@@ -3,7 +3,10 @@ package club.redux.sunset.lavafishing.datagenerator
 import club.redux.sunset.lavafishing.LavaFishing
 import club.redux.sunset.lavafishing.item.recipe.RecipeDivisionTimes
 import club.redux.sunset.lavafishing.registry.ModItems
+import club.redux.sunset.lavafishing.registry.ModItemsAqua
 import com.teammetallurgy.aquaculture.init.AquaItems
+import net.minecraft.advancements.Criterion
+import net.minecraft.advancements.critereon.InventoryChangeTrigger
 import net.minecraft.advancements.critereon.ItemPredicate
 import net.minecraft.core.HolderLookup
 import net.minecraft.data.PackOutput
@@ -22,6 +25,10 @@ class ModDataProviderRecipe(
         this.buildArmors(recipeOutput)
         this.buildMisc(recipeOutput)
         this.buildFood(recipeOutput)
+    }
+
+    private fun checkInventory(vararg ingredients: ItemLike): Criterion<InventoryChangeTrigger.TriggerInstance> {
+        return inventoryTrigger(*ingredients.map { ItemPredicate.Builder.item().of(it).build() }.toTypedArray())
     }
 
     private fun buildTools(recipeOutput: RecipeOutput) {
@@ -95,7 +102,7 @@ class ModDataProviderRecipe(
                 200
             ).unlockedBy(
                 "has_item",
-                inventoryTrigger(*ingredients.map { ItemPredicate.Builder.item().of(it).build() }.toTypedArray())
+                checkInventory(*ingredients.toTypedArray())
             )
         }
 
@@ -156,6 +163,51 @@ class ModDataProviderRecipe(
             .save(recipeOutput)
 
         RecipeDivisionTimes.dataSave(recipeOutput, LavaFishing.resourceLocation("division_times"))
+
+        ShapelessRecipeBuilder.shapeless(category, ModItemsAqua.DOUBLE_OBSIDIAN_HOOK.get())
+            .requires(ModItemsAqua.OBSIDIAN_HOOK.get())
+            .requires(ModItemsAqua.OBSIDIAN_HOOK.get())
+            .unlockedBy("has_item", has(ModItemsAqua.OBSIDIAN_HOOK.get()))
+            .save(recipeOutput)
+
+        ShapedRecipeBuilder.shaped(category, ModItemsAqua.GLOWSTONE_HOOK.get())
+            .define('G', Items.GLOWSTONE_DUST)
+            .define('H', AquaItems.IRON_HOOK)
+            .pattern(" G ")
+            .pattern("GHG")
+            .pattern(" G ")
+            .unlockedBy("has_item", checkInventory(Items.GLOWSTONE_DUST, AquaItems.IRON_HOOK))
+            .save(recipeOutput)
+
+        ShapelessRecipeBuilder.shapeless(category, ModItemsAqua.OBSIDIAN_HOOK.get())
+            .requires(AquaItems.IRON_HOOK)
+            .requires(Items.OBSIDIAN)
+            .unlockedBy("has_item", checkInventory(AquaItems.IRON_HOOK, Items.OBSIDIAN))
+            .save(recipeOutput)
+
+        ShapelessRecipeBuilder.shapeless(category, ModItemsAqua.OBSIDIAN_NOTE_HOOK.get())
+            .requires(AquaItems.IRON_HOOK)
+            .requires(Items.NOTE_BLOCK)
+            .unlockedBy("has_item", checkInventory(AquaItems.IRON_HOOK, Items.NOTE_BLOCK))
+            .save(recipeOutput)
+
+        ShapedRecipeBuilder.shaped(category, ModItemsAqua.QUARTZ_HOOK.get())
+            .define('Q', Items.QUARTZ)
+            .define('O', ModItemsAqua.OBSIDIAN_HOOK.get())
+            .pattern(" Q ")
+            .pattern("QOQ")
+            .pattern(" Q ")
+            .unlockedBy("has_item", checkInventory(Items.QUARTZ, ModItemsAqua.OBSIDIAN_HOOK.get()))
+            .save(recipeOutput)
+
+        ShapedRecipeBuilder.shaped(category, ModItemsAqua.SOUL_SAND_HOOK.get())
+            .define('S', Items.SOUL_SAND)
+            .define('O', ModItemsAqua.OBSIDIAN_HOOK.get())
+            .pattern(" S ")
+            .pattern("SOS")
+            .pattern(" S ")
+            .unlockedBy("has_item", checkInventory(Items.SOUL_SAND, ModItemsAqua.OBSIDIAN_HOOK.get()))
+            .save(recipeOutput)
     }
 
     private fun buildFood(recipeOutput: RecipeOutput) {
