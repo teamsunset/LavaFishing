@@ -16,12 +16,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/setup-java@v2
+      - name: Set up Java
+        uses: actions/setup-java@v2
         with:
           distribution: adopt
           java-version: 21
 
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Cache Gradle packages
@@ -45,6 +46,16 @@ jobs:
         id: get_version
         run: echo "minecraft_version=$(grep 'minecraftVersion=' gradle.properties | sed 's/minecraftVersion=//g')" >> $GITHUB_OUTPUT
 
+      - name: Generate Changelog
+        id: get_changelog
+        run: |
+          tag="$(git --no-pager tag --sort=creatordate --merged ${{ github.ref_name }} | grep snapshot | tail -1)"
+          limit="-1"
+          if [ -n "$tag" ]; then
+            limit="$tag..HEAD"
+          fi
+          echo -ne "changelog=$(git log "$limit" --pretty=format:'- %s\n\n')" >> $GITHUB_OUTPUT
+
       - name: Update Snapshot Release
         uses: andelf/nightly-release@main
         env:
@@ -53,6 +64,6 @@ jobs:
           tag_name: ${{ steps.get_version.outputs.minecraft_version }}-snapshot
           name: ${{ steps.get_version.outputs.minecraft_version }}-snapshot-$$-${{ github.run_id }}
           prerelease: true
-          body: ${{ github.event.head_commit.message }}
+          body: ${{ steps.get_changelog.outputs.changelog }}
           files: |
             ./build/libs/*-all.jar
