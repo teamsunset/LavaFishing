@@ -42,6 +42,7 @@ class ModDataProviderLanguage(
             Locale.US to "Lingering Potion of Lava Walker"
         )
 
+        // Fish
         val fishMap = mapOf(
             ModItems.AGNI_FISH.get() to arrayOf(
                 Locale.PRC to "火神鱼",
@@ -80,21 +81,15 @@ class ModDataProviderLanguage(
                 Locale.US to "Steam Flying Fish"
             ),
         )
-
-        // Fish
         fishMap.forEach { (fish, pairs) -> fish.addTranslation(*pairs) }
-
-        // FishBucket
         fishMap.forEach { (fish, pairs) ->
             "${fish.descriptionId}_bucket".addTranslation(
-                this.locale to choose(*pairs) + choose(
+                this.locale to this.match(*pairs) + this.match(
                     Locale.PRC to "桶",
                     Locale.US to " Bucket"
                 )
             )
         }
-
-        // FishEntity
         fishMap.forEach { (fish, pairs) ->
             val location = BuiltInRegistries.ITEM.getKey(fish)
             "entity.${location.namespace}.${location.path}".addTranslation(*pairs)
@@ -141,22 +136,31 @@ class ModDataProviderLanguage(
             Locale.PRC to "钷弹弓",
             Locale.US to "Promethium Slingshot"
         )
-        ModItems.STONE_BULLET.get().addTranslation(
-            Locale.PRC to "石弹丸",
-            Locale.US to "Stone Bullet"
+
+        // Bullet
+        val bulletMap = mapOf(
+            ModItems.STONE_BULLET.get() to arrayOf(
+                Locale.PRC to "石弹丸",
+                Locale.US to "Stone Bullet"
+            ),
+            ModItems.IRON_BULLET.get() to arrayOf(
+                Locale.PRC to "铁弹丸",
+                Locale.US to "Iron Bullet"
+            ),
+            ModItems.NEPTUNIUM_BULLET.get() to arrayOf(
+                Locale.PRC to "镎弹丸",
+                Locale.US to "Neptunium Bullet"
+            ),
+            ModItems.PROMETHIUM_BULLET.get() to arrayOf(
+                Locale.PRC to "钷弹丸",
+                Locale.US to "Promethium Bullet"
+            )
         )
-        ModItems.IRON_BULLET.get().addTranslation(
-            Locale.PRC to "铁弹丸",
-            Locale.US to "Iron Bullet"
-        )
-        ModItems.NEPTUNIUM_BULLET.get().addTranslation(
-            Locale.PRC to "镎弹丸",
-            Locale.US to "Neptunium Bullet"
-        )
-        ModItems.PROMETHIUM_BULLET.get().addTranslation(
-            Locale.PRC to "钷弹丸",
-            Locale.US to "Promethium Bullet"
-        )
+        bulletMap.forEach { (bullet, pairs) -> bullet.addTranslation(*pairs) }
+        bulletMap.forEach { (bullet, pairs) ->
+            val location = BuiltInRegistries.ITEM.getKey(bullet)
+            "entity.${location.namespace}.${location.path}".addTranslation(*pairs)
+        }
 
         // Material
         ModItems.PROMETHIUM_INGOT.get().addTranslation(
