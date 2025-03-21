@@ -183,6 +183,10 @@ class ModDataProviderLanguage(
             Locale.PRC to "麻辣鱼片",
             Locale.US to "Spicy Fish Fillet"
         )
+        ModItems.FISH_PASTE.get().addTranslation(
+            Locale.PRC to "鱼糜",
+            Locale.US to "Fish Paste"
+        )
 
         //Sound
         "sounds.lavafishing.item.slingshot".addTranslation(

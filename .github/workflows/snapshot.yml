@@ -55,8 +55,12 @@ jobs:
             limit="$tag..HEAD"
           fi
           changelog="$(echo -ne "$(git log "$limit" --pretty=format:'- %s')")"
-          changelog="$(echo -e "$changelog" | sed 's/$/  /')"
-          echo "changelog=$changelog">> $GITHUB_OUTPUT
+          changelog="$(echo "$changelog" | sed 's/$/  /')"
+          {
+            echo 'changelog<<EOF'
+            echo "$changelog"
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
 
       - name: Update Snapshot Release
         uses: andelf/nightly-release@main

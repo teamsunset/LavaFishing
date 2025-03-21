@@ -25,6 +25,7 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
+import net.minecraft.world.food.FoodProperties
 import net.minecraft.world.item.*
 import net.minecraft.world.item.Item.Properties
 import net.minecraft.world.level.Level
@@ -52,6 +53,13 @@ object ModItems : Registrar<Item>(BuiltInRegistries.ITEM, BuiltConstants.MOD_ID)
 
     // Food
     val SPICY_FISH_FILLET by this.register { ItemSpicyFishFillet() }
+    val FISH_PASTE by this.register {
+        Item(
+            Properties().food(
+                FoodProperties.Builder().nutrition(7).saturationModifier(0.5f).build()
+            )
+        )
+    }
 
     // Armor
     val PROMETHIUM_HELMET by this.register {
