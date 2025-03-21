@@ -47,15 +47,7 @@ jobs:
 
       - name: Generate Changelog
         id: get_changelog
-        run: |
-          tag="$(git --no-pager tag --sort=creatordate --merged ${{ github.ref_name }} | grep -v snapshot | tail -1)"
-          limit="-1"
-          if [ -n "$tag" ]; then
-            limit="$tag..HEAD"
-          fi
-          changelog="$(echo -ne "$(git log "$limit" --pretty=format:'- %s')")"
-          changelog="$(echo -e "$changelog" | sed 's/$/  /')"
-          echo "changelog=$changelog">> $GITHUB_OUTPUT
+        run: echo "changelog=$(bash <(curl -sSL https://raw.githubusercontent.com/dsx137/snacks/refs/heads/main/generate_changelog.sh) ${{ github.ref_name }} -v snapshot)">> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: andelf/nightly-release@main
