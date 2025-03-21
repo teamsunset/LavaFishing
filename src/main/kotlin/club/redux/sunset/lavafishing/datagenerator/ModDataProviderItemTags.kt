@@ -48,6 +48,9 @@ class ModDataProviderItemTags(
         tag(ItemTags.LEG_ARMOR).add(ModItems.PROMETHIUM_LEGGINGS.get())
         tag(ItemTags.FOOT_ARMOR).add(ModItems.PROMETHIUM_BOOTS.get())
 
+        tag(Tags.Items.FOODS_SOUP).add(ModItems.SPICY_FISH_FILLET.get())
+        tag(Tags.Items.FOODS_RAW_FISH).add(ModItems.FISH_PASTE.get())
+
         tag(Tags.Items.CHESTS).add(ModItems.PROMETHEUS_BOUNTY.get())
         tag(ItemTags.FISHING_ENCHANTABLE).add(
             *ModItems.getEntriesIsInstance<FishingRodItem>().toTypedArray(),

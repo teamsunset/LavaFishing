@@ -70,6 +70,7 @@ repositories {
     maven("Jared's maven") { url = uri("https://maven.blamejared.com/") }
     maven("Aquaculture") { url = uri("https://girafi.dk/maven/") }
     maven("ModMaven") { url = uri("https://modmaven.dev") }
+    maven("AppleSkin") { url = uri("https://maven.ryanliptak.com/") }
     maven {
         url = uri("https://www.cursemaven.com")
         content { includeGroup("curse.maven") }
@@ -85,6 +86,7 @@ dependencies {
     val kotlinforforge = "thedarkcolour:kotlinforforge-neoforge:${kotlinForForgeVersion}"
     val jeiForgeApi = "mezz.jei:jei-${minecraftVersion}-neoforge-api:${jeiVersion}"
     val jei = "mezz.jei:jei-${minecraftVersion}-neoforge:${jeiVersion}"
+    val appleSkin = "squeek.appleskin:appleskin-neoforge:mc1.21-3.0.5"
 
     // NeoForge
     implementation("net.neoforged:neoforge:${neoforgeVersion}")
@@ -105,6 +107,9 @@ dependencies {
     // Jei
     compileOnly(jeiForgeApi)
     runtimeOnly(jei)
+
+    // AppleSkin
+    runtimeOnly(appleSkin)
 }
 
 runs {

@@ -173,8 +173,7 @@ class ModDataProviderRecipe(
         RecipeDivisionTimes.dataSave(recipeOutput, LavaFishing.resourceLocation("division_times"))
 
         ShapelessRecipeBuilder.shapeless(category, ModItemsAqua.DOUBLE_OBSIDIAN_HOOK.get())
-            .requires(ModItemsAqua.OBSIDIAN_HOOK.get())
-            .requires(ModItemsAqua.OBSIDIAN_HOOK.get())
+            .requires(ModItemsAqua.OBSIDIAN_HOOK.get(), 2)
             .unlockedBy("has_item", has(ModItemsAqua.OBSIDIAN_HOOK.get()))
             .save(recipeOutput)
 
@@ -226,6 +225,11 @@ class ModDataProviderRecipe(
             .requires(AquaItems.COOKED_FILLET)
             .requires(Items.BOWL)
             .unlockedBy("has_item", has(AquaItems.COOKED_FILLET))
+            .save(recipeOutput)
+
+        ShapelessRecipeBuilder.shapeless(category, ModItems.FISH_PASTE.get())
+            .requires(AquaItems.FISH_FILLET, 9)
+            .unlockedBy("has_item", has(AquaItems.FISH_FILLET))
             .save(recipeOutput)
     }
 }

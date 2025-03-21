@@ -34,6 +34,7 @@ class ModDataProviderItemModel(
 
         // Food
         registerForCommon(ModItems.SPICY_FISH_FILLET.get())
+        registerForCommon(ModItems.FISH_PASTE.get())
 
         // Misc
         registerForCommon(ModItems.PROMETHIUM_NUGGET.get())
