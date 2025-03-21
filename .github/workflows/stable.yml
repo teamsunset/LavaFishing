@@ -95,3 +95,14 @@ jobs:
           release_type: release
           file_path: build/libs/lavafishing-${{ steps.get_version.outputs.version }}-all.jar
           relations: aquaculture:requiredDependency,kotlin-for-forge:requiredDependency
+
+      - name: Mcmod Release
+        uses: dsx137/mcmod-releaser@main
+        env:
+          MCMOD_ACCOUNT: ${{secrets.MCMOD_ACCOUNT}}
+        with:
+          project_id: 7611
+          game_versions: 1.21.1
+          file: build/libs/lavafishing-${{ steps.get_version.outputs.version }}-all.jar
+          platforms: java
+          loaders: neoforge
