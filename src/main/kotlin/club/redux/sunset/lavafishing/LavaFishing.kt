@@ -5,12 +5,9 @@ import club.redux.sunset.lavafishing.util.Utils
 import club.redux.sunset.lavafishing.util.Utils.resourceLocation
 import net.neoforged.fml.common.Mod
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
-import java.security.SecureRandom
 
 @Mod(BuiltConstants.MOD_ID)
 object LavaFishing {
-    val RANDOM = SecureRandom()
-
     fun resourceLocation(path: String) = BuiltConstants.MOD_ID.resourceLocation(path)
 
     init {
