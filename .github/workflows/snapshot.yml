@@ -67,5 +67,4 @@ jobs:
           name: ${{ steps.get_version.outputs.minecraft_version }}-snapshot-$$-${{ github.run_id }}
           prerelease: true
           body: ${{ steps.get_changelog.outputs.changelog }}
-          files: |
-            ./build/libs/*-all.jar
+          files: ./build/libs/*-all.jar
