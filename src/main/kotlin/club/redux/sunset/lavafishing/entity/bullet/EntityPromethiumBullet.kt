@@ -4,6 +4,7 @@ import club.redux.sunset.lavafishing.misc.ModTiers
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import club.redux.sunset.lavafishing.util.UtilItemStack.hasEnchantmentThen
 import club.redux.sunset.lavafishing.util.Utils
+import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.ItemStack
@@ -12,13 +13,13 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.Vec3
+import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.toVec3
 
 class EntityPromethiumBullet(
     entityType: EntityType<EntityPromethiumBullet>,
     level: Level,
 ) : EntityBullet(entityType, level, ModTiers.PROMETHIUM) {
 
-    var dividable = true
     var divisionTimes = 1
     var divisionNum = 2
 
@@ -26,10 +27,9 @@ class EntityPromethiumBullet(
         this.level().explode(this, this.x, this.y, this.z, radius, this.isOnFire, Level.ExplosionInteraction.NONE)
     }
 
-    private fun dividedBullet(dividable: Boolean, divisionNum: Int, divisionTimes: Int): EntityPromethiumBullet {
+    private fun dividedBullet(divisionNum: Int, divisionTimes: Int): EntityPromethiumBullet {
         return ModEntityTypes.PROMETHIUM_BULLET.get().create(this.level())!!.also {
             it.setPos(this.x, this.y, this.z)
-            it.dividable = dividable
             it.divisionNum = divisionNum
             it.divisionTimes = divisionTimes
             it.owner = this.owner
@@ -40,7 +40,7 @@ class EntityPromethiumBullet(
 
     private fun divide(num: Int, velocity: Double, b: Double = 1.0) {
         Utils.generateArchimedianScrew(num, b).forEach { point ->
-            this.level().addFreshEntity(dividedBullet(false, 0, 0).also {
+            this.level().addFreshEntity(dividedBullet(0, 0).also {
                 it.deltaMovement = Vec3(point.first, -3.0 * velocity, point.second)
                 it.waterInertia = this.waterInertia
             })
@@ -50,25 +50,33 @@ class EntityPromethiumBullet(
     override fun onHitEntity(pResult: EntityHitResult) {
         super.onHitEntity(pResult)
         if (this.level().isClientSide) return
-
-        if (this.dividable) {
-            this.hitDivide()
-        } else {
-            this.explode(1.5f)
+        if (this.pierceLevel > 0) {
+            this.explode(0.5f)
+            return
         }
-        this.remove(RemovalReason.DISCARDED)
+
+        if (this.divisionTimes == 0) {
+            this.explode(1.5f)
+            this.remove(RemovalReason.DISCARDED)
+        } else if (this.divisionTimes > 0) this.hitDivide()
     }
 
     override fun onHitBlock(pResult: BlockHitResult) {
-        super.onHitBlock(pResult)
+//        val originV = this.deltaMovement
+//        super.onHitBlock(pResult)
+//        this.deltaMovement = originV
+
         if (this.level().isClientSide) return
 
-        if (!this.dividable) {
+        if (this.divisionTimes == 0) {
             this.explode(1.5f)
             this.remove(RemovalReason.DISCARDED)
-        } else if (this.xRot <= 0) {
-            this.hitDivide()
-            this.remove(RemovalReason.DISCARDED)
+            return
+        }
+
+        when (pResult.direction) {
+            Direction.UP -> this.hitDivide()
+            else -> this.bounce(pResult.direction.normal.toVec3())
         }
     }
 
@@ -76,19 +84,12 @@ class EntityPromethiumBullet(
         super.tick()
         if (this.level().isClientSide) return
 
-        if (!this.dividable) {
-            if (!this.inGround) return
-            this.explode(1.5f)
+        if (this.divisionTimes < 0) {
             this.remove(RemovalReason.DISCARDED)
             return
         }
 
-        if (this.divisionTimes <= 0) {
-            this.remove(RemovalReason.DISCARDED)
-            return
-        }
-
-        if (this.divisionTimes > 0 && ((!this.inGround && this.deltaMovement.length() < 2 && this.deltaMovement.y in (-1.0..-0.5)) || (this.inGround && this.xRot > 0))) {
+        if (this.divisionTimes > 0 && ((!this.inGround && this.deltaMovement.length() < 2 && this.deltaMovement.y in (-1.0..-0.5)))) {
             this.explode(1f)
             this.divide(this.divisionNum, this.deltaMovement.length())
             this.deltaMovement = Vec3(this.deltaMovement.x, 0.5, this.deltaMovement.z)
@@ -96,17 +97,27 @@ class EntityPromethiumBullet(
         }
     }
 
+    private fun bounce(normal: Vec3) {
+        this.explode(2f)
+        val v = this.deltaMovement
+        val n = normal.normalize()
+        val newV = if (n.length() > 0) v.subtract(n.scale(2 * v.dot(n))) else v
+        this.deltaMovement = newV.scale(1.0)
+        this.divisionTimes--
+    }
+
     private fun hitDivide() {
-        if (this.divisionTimes <= 1) {
+        if (this.divisionTimes == 1) {
             this.explode(1f)
-            this.divide(this.divisionNum, -0.3, 0.5)
-        } else {
+            this.divide(this.divisionNum, -0.3)
+        } else if (this.divisionTimes > 1) {
             this.explode(2f)
-            this.level().addFreshEntity(dividedBullet(true, this.divisionNum, this.divisionTimes - 1).also {
+            this.level().addFreshEntity(dividedBullet(this.divisionNum, this.divisionTimes - 1).also {
                 it.deltaMovement = Vec3(0.0, 1.0, 0.0)
                 it.waterInertia = this.waterInertia
             })
         }
+        this.remove(RemovalReason.DISCARDED)
     }
 
     override fun attachEnchantmentEffects(stack: ItemStack) {
@@ -119,14 +130,12 @@ class EntityPromethiumBullet(
 
     override fun addAdditionalSaveData(pCompound: CompoundTag) {
         super.addAdditionalSaveData(pCompound)
-        pCompound.putBoolean("dividable", this.dividable)
         pCompound.putInt("divisionNum", this.divisionNum)
         pCompound.putInt("divisionTimes", this.divisionTimes)
     }
 
     override fun readAdditionalSaveData(pCompound: CompoundTag) {
         super.readAdditionalSaveData(pCompound)
-        this.dividable = pCompound.getBoolean("dividable")
         this.divisionNum = pCompound.getInt("divisionNum")
         this.divisionTimes = pCompound.getInt("divisionTimes")
     }

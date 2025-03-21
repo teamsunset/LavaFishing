@@ -55,11 +55,12 @@ class ModelBullet(
             val whole = partDefinition.addOrReplaceChild(
                 "whole",
                 CubeListBuilder.create().texOffs(0, 0)
-                    .addBox(-1.0f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.0f)),
-                PartPose.offset(0.0f, 23.0f, 0.0f)
+                    .addBox(-1.0f, -2.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.0f)),
+                PartPose.offset(0.0f, 24.0f, 0.0f)
             )
 
             return LayerDefinition.create(meshDefinition, 16, 16)
         }
+
     }
 }

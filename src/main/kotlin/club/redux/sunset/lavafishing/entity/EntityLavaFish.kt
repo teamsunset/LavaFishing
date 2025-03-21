@@ -122,9 +122,7 @@ open class EntityLavaFish(
     }
 
     override fun stopFollowing() {
-        if (this.leader != null) {
-            super.stopFollowing()
-        }
+        if (this.leader != null) super.stopFollowing()
     }
 
     override fun aiStep() = this.castToProxy(IMixinProxyAbstractFish::class).aiStepFromMob()
