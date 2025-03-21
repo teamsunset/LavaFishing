@@ -46,7 +46,7 @@ object ModEntityTypes : Registrar<EntityType<*>>(BuiltInRegistries.ENTITY_TYPE, 
     ): Delegator<EntityType<T>> {
         return this.registerWithMap {
             EntityType.Builder.of(constructor, MobCategory.MISC)
-                .sized(0.5f, 0.5f)
+                .sized(0.2f, 0.2f)
                 .clientTrackingRange(4)
                 .updateInterval(10)
                 .build(LavaFishing.resourceLocation(it).toString())

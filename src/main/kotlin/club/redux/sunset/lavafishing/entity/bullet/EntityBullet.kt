@@ -5,12 +5,13 @@ import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.util.UtilItemStack.getEnchantmentLevel
 import club.redux.sunset.lavafishing.util.UtilItemStack.hasEnchantmentThen
 import net.minecraft.network.RegistryFriendlyByteBuf
-import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Pose
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.projectile.AbstractArrow
 import net.minecraft.world.item.ItemStack
@@ -84,7 +85,7 @@ open class EntityBullet(
     fun setWaterInertia(value: Float) = this.run { this.waterInertia = value }
     override fun doKnockback(pEntity: LivingEntity, pDamageSource: DamageSource) {
         if (this.firedFromWeapon == null) return
-        if (this.level() !is ServerLevel) return
+        if (this.level().isClientSide) return
 
         val d0 = this.firedFromWeapon!!.getEnchantmentLevel(Enchantments.PUNCH) + 1
         val d1 = max(0.0, 1.0 - pEntity.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE))
@@ -94,7 +95,10 @@ open class EntityBullet(
         }
     }
 
-    //-----------------network----------------//
+    override fun getDimensions(pPose: Pose): EntityDimensions {
+        return super.getDimensions(pPose)
+    }
+//-----------------network----------------//
 
     override fun writeSpawnData(buffer: RegistryFriendlyByteBuf) {
 //        buffer.writeResourceLocation(this.soundEvent.location)

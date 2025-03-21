@@ -37,9 +37,7 @@ object Utils {
         return points
     }
 
-    fun dot(vecA: Vec3, vecB: Vec3): Double {
-        return vecA.x * vecB.x + vecA.y * vecB.y + vecA.z * vecB.z
-    }
+    fun dot(vecA: Vec3, vecB: Vec3) = vecA.x * vecB.x + vecA.y * vecB.y + vecA.z * vecB.z
 
     fun asciiArt() {
         this.javaClass.getResourceAsStream("/ascii_art.txt")?.let {
