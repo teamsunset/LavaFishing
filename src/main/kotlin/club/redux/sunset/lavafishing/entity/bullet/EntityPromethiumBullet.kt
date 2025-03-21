@@ -94,6 +94,7 @@ class EntityPromethiumBullet(
             this.divide(this.divisionNum, this.deltaMovement.length())
             this.deltaMovement = Vec3(this.deltaMovement.x, 0.5, this.deltaMovement.z)
             this.divisionTimes--
+            if (this.divisionTimes == 0) this.remove(RemovalReason.DISCARDED)
         }
     }
 
