@@ -20,8 +20,10 @@ class EntityPromethiumBullet(
     level: Level,
 ) : EntityBullet(entityType, level, ModTiers.PROMETHIUM) {
 
-    var divisionTimes = 1
+    var divisionTimes = 0
     var divisionNum = 2
+
+    private fun destroy() = if (!this.level().isClientSide) this.remove(RemovalReason.DISCARDED) else Unit
 
     private fun explode(radius: Float) {
         this.level().explode(this, this.x, this.y, this.z, radius, this.isOnFire, Level.ExplosionInteraction.NONE)
@@ -49,28 +51,27 @@ class EntityPromethiumBullet(
 
     override fun onHitEntity(pResult: EntityHitResult) {
         super.onHitEntity(pResult)
-        if (this.level().isClientSide) return
-        if (this.pierceLevel > 0) {
+
+        if (this.piercingIgnoreEntityIds != null && this.piercingIgnoreEntityIds!!.size <= this.pierceLevel) {
             this.explode(0.5f)
             return
         }
 
         if (this.divisionTimes == 0) {
             this.explode(1.5f)
-            this.remove(RemovalReason.DISCARDED)
+            this.destroy()
         } else if (this.divisionTimes > 0) this.hitDivide()
     }
 
     override fun onHitBlock(pResult: BlockHitResult) {
-//        val originV = this.deltaMovement
-//        super.onHitBlock(pResult)
-//        this.deltaMovement = originV
-
-        if (this.level().isClientSide) return
+        val originV = this.deltaMovement
+        super.onHitBlock(pResult)
+        this.inGround = false
+        this.deltaMovement = originV
 
         if (this.divisionTimes == 0) {
             this.explode(1.5f)
-            this.remove(RemovalReason.DISCARDED)
+            this.destroy()
             return
         }
 
@@ -82,10 +83,9 @@ class EntityPromethiumBullet(
 
     override fun tick() {
         super.tick()
-        if (this.level().isClientSide) return
 
         if (this.divisionTimes < 0) {
-            this.remove(RemovalReason.DISCARDED)
+            this.destroy()
             return
         }
 
@@ -94,7 +94,7 @@ class EntityPromethiumBullet(
             this.divide(this.divisionNum, this.deltaMovement.length())
             this.deltaMovement = Vec3(this.deltaMovement.x, 0.5, this.deltaMovement.z)
             this.divisionTimes--
-            if (this.divisionTimes == 0) this.remove(RemovalReason.DISCARDED)
+            if (this.divisionTimes == 0) this.destroy()
         }
     }
 
@@ -118,13 +118,12 @@ class EntityPromethiumBullet(
                 it.waterInertia = this.waterInertia
             })
         }
-        this.remove(RemovalReason.DISCARDED)
+        this.destroy()
     }
 
     override fun attachEnchantmentEffects(stack: ItemStack) {
         super.attachEnchantmentEffects(stack)
         stack.hasEnchantmentThen(Enchantments.POWER) { this.divisionNum += it }
-//        stack.hasEnchantmentThen(Enchantments.MULTISHOT) { this.divisionTimes = 3 }
     }
 
     //-----------------network----------------//
