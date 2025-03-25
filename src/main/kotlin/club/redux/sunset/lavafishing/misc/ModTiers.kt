@@ -2,42 +2,23 @@ package club.redux.sunset.lavafishing.misc
 
 import club.redux.sunset.lavafishing.registry.ModItems
 import net.minecraft.tags.BlockTags
-import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Items
-import net.minecraft.world.item.Tier
 import net.minecraft.world.item.crafting.Ingredient
-import net.minecraft.world.level.block.Block
+import net.neoforged.neoforge.common.SimpleTier
 
-enum class ModTiers(
-    private val tag: TagKey<Block>,
-    private val maxUses: Int,
-    private val speed: Float,
-    private val attackDamage: Float,
-    private val enchantmentValue: Int,
-    private val repairIngredientSupplier: () -> Ingredient,
-) : Tier {
-
-    OBSIDIAN(
+object ModTiers {
+    val OBSIDIAN = SimpleTier(
         BlockTags.INCORRECT_FOR_IRON_TOOL,
         400,
         7.0f,
         2.0f,
         9,
-        { Ingredient.of(Items.OBSIDIAN) },
-    ),
-    PROMETHIUM(
+    ) { Ingredient.of(Items.OBSIDIAN) }
+    val PROMETHIUM = SimpleTier(
         BlockTags.INCORRECT_FOR_NETHERITE_TOOL,
         2250,
         10.0f,
         5.0f,
         18,
-        { Ingredient.of(ModItems.PROMETHIUM_INGOT.get()) },
-    );
-
-    override fun getUses() = this.maxUses
-    override fun getSpeed() = this.speed
-    override fun getAttackDamageBonus() = this.attackDamage
-    override fun getEnchantmentValue() = this.enchantmentValue
-    override fun getRepairIngredient() = this.repairIngredientSupplier()
-    override fun getIncorrectBlocksForDrops(): TagKey<Block> = this.tag // 定义了哪些方块在使用该等级的工具时不会从中掉落物品
+    ) { Ingredient.of(ModItems.PROMETHIUM_INGOT.get()) }
 }
