@@ -9,32 +9,29 @@ import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.level.block.Block
 
 enum class ModTiers(
-    private val level: Int,
+    private val tag: TagKey<Block>,
     private val maxUses: Int,
     private val speed: Float,
     private val attackDamage: Float,
     private val enchantmentValue: Int,
     private val repairIngredientSupplier: () -> Ingredient,
-    private val tag: TagKey<Block>,
 ) : Tier {
 
     OBSIDIAN(
-        2,
-        1500,
+        BlockTags.INCORRECT_FOR_IRON_TOOL,
+        400,
         7.0f,
         2.0f,
         9,
         { Ingredient.of(Items.OBSIDIAN) },
-        BlockTags.INCORRECT_FOR_IRON_TOOL
     ),
     PROMETHIUM(
-        4,
-        2000,
+        BlockTags.INCORRECT_FOR_NETHERITE_TOOL,
+        2250,
         10.0f,
-        4.0f,
-        15,
+        5.0f,
+        18,
         { Ingredient.of(ModItems.PROMETHIUM_INGOT.get()) },
-        BlockTags.INCORRECT_FOR_NETHERITE_TOOL
     );
 
     override fun getUses() = this.maxUses

@@ -50,8 +50,19 @@ class ModDataProviderRecipe(
         }
         fishingRodPattern(ModItems.OBSIDIAN_FISHING_ROD.get(), Ingredient.of(Tags.Items.OBSIDIANS))
             .save(recipeOutput)
-        fishingRodPattern(ModItems.NETHERITE_FISHING_ROD.get(), Ingredient.of(Tags.Items.INGOTS_NETHERITE))
-            .save(recipeOutput)
+//        fishingRodPattern(ModItems.NETHERITE_FISHING_ROD.get(), Ingredient.of(Tags.Items.INGOTS_NETHERITE))
+//            .save(recipeOutput)
+
+        SmithingTransformRecipeBuilder.smithing(
+            Ingredient.of(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
+            Ingredient.of(AquaItems.DIAMOND_FISHING_ROD),
+            Ingredient.of(Items.NETHERITE_INGOT),
+            category,
+            ModItems.NETHERITE_FISHING_ROD.get()
+        ).unlocks("has_item", has(Items.NETHERITE_INGOT)).save(
+            recipeOutput,
+            LavaFishing.resourceLocation(ModItems.NETHERITE_FISHING_ROD.key!!.location().path + "_smithing")
+        )
 
         val slingshotPattern = { result: ItemLike, ingredient: Ingredient ->
             ShapedRecipeBuilder.shaped(category, result)

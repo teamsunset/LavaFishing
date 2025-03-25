@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.client.resources.model.ModelBakery
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffect
@@ -40,7 +39,7 @@ import org.lwjgl.opengl.GL11
 class ItemPromethiumArmor(
     armorMaterial: Holder<ArmorMaterial>,
     type: Type,
-) : ArmorItem(armorMaterial, type, Properties().fireResistant().stacksTo(1)) {
+) : ArmorItem(armorMaterial, type, Properties().durability(type.getDurability(40)).fireResistant().stacksTo(1)) {
 
     private var texture: String? = null
 
@@ -55,9 +54,7 @@ class ItemPromethiumArmor(
         slot: EquipmentSlot,
         layer: ArmorMaterial.Layer,
         innerModel: Boolean,
-    ): ResourceLocation {
-        return LavaFishing.resourceLocation("textures/armor/" + this.texture + ".png")
-    }
+    ) = LavaFishing.resourceLocation("textures/armor/" + this.texture + ".png")
 
     override fun getXpRepairRatio(stack: ItemStack): Float = super.getXpRepairRatio(stack)
 
