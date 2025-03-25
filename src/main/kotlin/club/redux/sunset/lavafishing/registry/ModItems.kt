@@ -5,10 +5,12 @@ import club.redux.sunset.lavafishing.block.blockentity.BlockEntityPrometheusBoun
 import club.redux.sunset.lavafishing.entity.EntityAmphibious
 import club.redux.sunset.lavafishing.entity.EntityCommonFish
 import club.redux.sunset.lavafishing.entity.EntityLavaFish
+import club.redux.sunset.lavafishing.item.ItemFishingRod
 import club.redux.sunset.lavafishing.item.ItemPromethiumArmor
 import club.redux.sunset.lavafishing.item.block.BlockItemWithoutLevelRenderer
 import club.redux.sunset.lavafishing.item.bullet.ItemBullet
 import club.redux.sunset.lavafishing.item.bullet.ItemPromethiumBullet
+import club.redux.sunset.lavafishing.item.cuisine.ItemSimpleFood
 import club.redux.sunset.lavafishing.item.cuisine.ItemSpicyFishFillet
 import club.redux.sunset.lavafishing.item.fish.*
 import club.redux.sunset.lavafishing.item.slingshot.ItemNeptuniumSlingshot
@@ -18,14 +20,12 @@ import club.redux.sunset.lavafishing.misc.LavaFishType
 import club.redux.sunset.lavafishing.misc.ModTiers
 import club.redux.sunset.lavafishing.tool.registry.Registrar
 import com.teammetallurgy.aquaculture.client.ClientHandler
-import com.teammetallurgy.aquaculture.item.AquaFishingRodItem
 import com.teammetallurgy.aquaculture.item.FishItem.SMALL_FISH_RAW
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
-import net.minecraft.world.food.FoodProperties
 import net.minecraft.world.item.*
 import net.minecraft.world.item.Item.Properties
 import net.minecraft.world.level.Level
@@ -33,12 +33,10 @@ import net.minecraft.world.level.material.Fluids
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 
 object ModItems : Registrar<Item>(BuiltInRegistries.ITEM, BuiltConstants.MOD_ID) {
-    val OBSIDIAN_FISHING_ROD by this.register {
-        AquaFishingRodItem(ModTiers.OBSIDIAN, Properties().durability(128))
-    }
-    val NETHERITE_FISHING_ROD by this.register {
-        AquaFishingRodItem(Tiers.NETHERITE, Properties().fireResistant().durability(800))
-    }
+
+    // Fishing Rods
+    val OBSIDIAN_FISHING_ROD by this.register { ItemFishingRod(ModTiers.OBSIDIAN) }
+    val NETHERITE_FISHING_ROD by this.register { ItemFishingRod(Tiers.NETHERITE) { fireResistant() } }
 
     // Fish
     val FLAME_SQUAT_LOBSTER by this.registerFish(::EntityAmphibious, LavaFishType.LOBSTER) { ItemFlameSquatLobster() }
@@ -53,13 +51,7 @@ object ModItems : Registrar<Item>(BuiltInRegistries.ITEM, BuiltConstants.MOD_ID)
 
     // Food
     val SPICY_FISH_FILLET by this.register { ItemSpicyFishFillet() }
-    val FISH_PASTE by this.register {
-        Item(
-            Properties().food(
-                FoodProperties.Builder().nutrition(7).saturationModifier(0.5f).build()
-            )
-        )
-    }
+    val FISH_PASTE by this.register { ItemSimpleFood { nutrition(7).saturationModifier(0.5f) } }
 
     // Armor
     val PROMETHIUM_HELMET by this.register {

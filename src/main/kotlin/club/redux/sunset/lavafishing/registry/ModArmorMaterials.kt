@@ -21,12 +21,12 @@ object ModArmorMaterials : Registrar<ArmorMaterial>(BuiltInRegistries.ARMOR_MATE
                 put(ArmorItem.Type.LEGGINGS, 7)
                 put(ArmorItem.Type.BOOTS, 4)
             },
-            14,
+            18,
             SoundEvents.ARMOR_EQUIP_NETHERITE,
             { Ingredient.of(ModItems.PROMETHIUM_INGOT.get()) },
             listOf(ArmorMaterial.Layer(LavaFishing.resourceLocation("promethium"))),
-            2.5f,
-            0.1f
+            3.5f,
+            0.2f
         )
     }
 }
