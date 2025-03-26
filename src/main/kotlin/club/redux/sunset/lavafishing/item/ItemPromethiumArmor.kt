@@ -65,25 +65,20 @@ class ItemPromethiumArmor(
             if (entity !is LivingEntity) return
 
             val level = entity.level()
-            for (itemStack in entity.armorSlots) {
-                val item = itemStack.item
-                if (item is ItemPromethiumArmor) {
-                    val applyEffect = { effect: Holder<MobEffect> ->
-                        entity.addEffect(MobEffectInstance(effect, 20, 0, false, false, true))
-                    }
-                    val futureBlockPos =
-                        BlockPos.containing(event.entity.position().add(event.entity.deltaMovement.scale(1.5)))
-                    if (event.entity.isOnFire ||
-                        level.getBlockState(event.entity.onPos).`is`(Blocks.LAVA) ||
-                        level.getBlockState(futureBlockPos).`is`(Blocks.LAVA)
-                    ) {
-                        if (item.type == Type.LEGGINGS) {
-                            applyEffect(MobEffects.MOVEMENT_SPEED)
-                        } else if (item.type == Type.BOOTS) {
-                            applyEffect(ModMobEffects.LAVA_WALKER)
-                        }
-                    }
-                }
+            val futureBlockPos = BlockPos.containing(entity.position().add(entity.deltaMovement.scale(1.5)))
+            val applyEffect = { effect: Holder<MobEffect> ->
+                entity.addEffect(MobEffectInstance(effect, 20, 0, false, false, true))
+            }
+
+            val isOnFire = entity.isOnFire
+            val isOnLava = listOf(entity.onPos, futureBlockPos).any { level.getBlockState(it).`is`(Blocks.LAVA) }
+            val isOnHotFloor = level.getBlockState(entity.onPos).`is`(Blocks.MAGMA_BLOCK)
+
+            val types = entity.armorSlots.map { it.item }.filterIsInstance<ItemPromethiumArmor>().map { it.type }
+
+            when {
+                types.contains(Type.LEGGINGS) && (isOnLava || isOnFire || isOnHotFloor) -> applyEffect(MobEffects.MOVEMENT_SPEED)
+                types.contains(Type.BOOTS) && isOnLava -> applyEffect(ModMobEffects.LAVA_WALKER)
             }
         }
 
@@ -167,23 +162,13 @@ class ItemPromethiumArmor(
         }
 
         /**
-         * # 每一件护甲减少 1/4 的伤害
+         * # 每一件护甲减少 1/4 的火焰伤害
          */
         fun onLivingDamagePre(event: LivingDamageEvent.Pre) {
             val damage = event.newDamage
-            if (
-                event.source.`is`(DamageTypes.LAVA) ||
-                event.source.`is`(DamageTypes.IN_FIRE) ||
-                event.source.`is`(DamageTypes.ON_FIRE)
-            ) {
-                var promethiumArmorCount = 0
-                for (itemStack in event.entity.armorSlots) {
-                    val item = itemStack.item
-                    if (item is ItemPromethiumArmor) {
-                        event.newDamage -= 1f / 4 * damage
-                        promethiumArmorCount++
-                    }
-                }
+            if (listOf(DamageTypes.LAVA, DamageTypes.IN_FIRE, DamageTypes.ON_FIRE).any { event.source.`is`(it) }) {
+                val count = event.entity.armorSlots.map { it.item }.filterIsInstance<ItemPromethiumArmor>().count()
+                event.newDamage -= count / 4f * damage
             }
         }
 
@@ -193,23 +178,12 @@ class ItemPromethiumArmor(
         fun onLivingIncomingDamage(event: LivingIncomingDamageEvent) {
             val armorItems = event.entity.armorSlots.map { it.item }.filterIsInstance<ItemPromethiumArmor>()
 
-            if (
-                event.source.`is`(DamageTypes.LAVA) ||
-                event.source.`is`(DamageTypes.IN_FIRE) ||
-                event.source.`is`(DamageTypes.ON_FIRE)
-            ) {
-                if (armorItems.any { it.type == Type.CHESTPLATE }) {
-                    event.entity.heal(0.04f)
-                }
-                if (armorItems.count() == 4) {
-                    event.isCanceled = true
-                }
+            if (listOf(DamageTypes.LAVA, DamageTypes.IN_FIRE, DamageTypes.ON_FIRE).any { event.source.`is`(it) }) {
+                if (armorItems.any { it.type == Type.CHESTPLATE }) event.entity.heal(0.04f)
+                if (armorItems.count() == 4) event.isCanceled = true
             }
 
             if (event.source.`is`(DamageTypes.HOT_FLOOR) && armorItems.any { it.type == Type.BOOTS }) {
-                if (armorItems.any { it.type == Type.CHESTPLATE }) {
-                    event.entity.heal(0.04f)
-                }
                 event.isCanceled = true
             }
         }

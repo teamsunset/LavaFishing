@@ -50,6 +50,7 @@ open class EntityLavaFish(
     init {
         this.init()
         this.setPathfindingMalus(PathType.LAVA, 0.0f)
+        this.setPathfindingMalus(PathType.WATER, -1.0f)
     }
 
     protected open fun init(): Unit = Unit

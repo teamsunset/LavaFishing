@@ -55,14 +55,12 @@ open class EntityBullet(
         }
     }
 
-
-    /**
-     * # 去掉强制设置声音
-     */
     override fun onHitBlock(pResult: BlockHitResult) {
         val oldSoundEvent = this.soundEvent
+        val oldPierceLevel = this.pierceLevel
         super.onHitBlock(pResult)
         this.setSoundEvent(oldSoundEvent)
+        this.pierceLevel = oldPierceLevel
     }
 
     open fun attachEnchantmentEffects(stack: ItemStack) {
