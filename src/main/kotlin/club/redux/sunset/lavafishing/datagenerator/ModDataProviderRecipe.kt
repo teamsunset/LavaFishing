@@ -111,8 +111,8 @@ class ModDataProviderRecipe(
             .pattern("# #")
             .save(recipeOutput)
 
-        val smeltingPattern = { result: ItemLike, ingredients: List<ItemLike> ->
-            SimpleCookingRecipeBuilder.smelting(
+        val blastingPattern = { result: ItemLike, ingredients: List<ItemLike> ->
+            SimpleCookingRecipeBuilder.blasting(
                 Ingredient.of(*ingredients.toTypedArray()),
                 category,
                 result,
@@ -124,8 +124,8 @@ class ModDataProviderRecipe(
             )
         }
 
-        smeltingPattern(
-            ModItems.PROMETHIUM_NUGGET.get(), listOf(
+        blastingPattern(
+            ModItems.PROMETHIUM_INGOT.get(), listOf(
                 ModItems.PROMETHIUM_HELMET.get(),
                 ModItems.PROMETHIUM_CHESTPLATE.get(),
                 ModItems.PROMETHIUM_LEGGINGS.get(),
