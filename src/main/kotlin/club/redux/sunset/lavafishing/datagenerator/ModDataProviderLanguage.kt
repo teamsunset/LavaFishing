@@ -24,21 +24,21 @@ class ModDataProviderLanguage(
             Locale.US to "Endless Flame"
         )
         ModMobEffects.LAVA_WALKER.get().addTranslation(
-            Locale.PRC to "岩浆行者",
+            Locale.PRC to "熔岩行者",
             Locale.US to "Lava Walker"
         )
 
         // Potion
         "item.minecraft.potion.effect.lava_walker".addTranslation(
-            Locale.PRC to "岩浆行者药水",
+            Locale.PRC to "熔岩行者药水",
             Locale.US to "Potion of Lava Walker"
         )
         "item.minecraft.splash_potion.effect.lava_walker".addTranslation(
-            Locale.PRC to "喷溅型岩浆行者药水",
+            Locale.PRC to "喷溅型熔岩行者药水",
             Locale.US to "Splash Potion of Lava Walker"
         )
         "item.minecraft.lingering_potion.effect.lava_walker".addTranslation(
-            Locale.PRC to "滞留型岩浆行者药水",
+            Locale.PRC to "滞留型熔岩行者药水",
             Locale.US to "Lingering Potion of Lava Walker"
         )
 
@@ -200,7 +200,7 @@ class ModDataProviderLanguage(
 
         // Creative Tab
         "itemGroup.lavafishing".addTranslation(
-            Locale.PRC to "岩浆钓鱼",
+            Locale.PRC to "熔岩钓鱼",
             Locale.US to "Lava Fishing"
         )
 
@@ -327,7 +327,7 @@ class ModDataProviderLanguage(
                 Locale.US to "Golden Eyes"
             )
             .desc(
-                Locale.PRC to "在岩浆下和着火时拥有良好视野",
+                Locale.PRC to "在熔岩下和着火时拥有良好视野",
                 Locale.US to "Watch under the lava and on fire clearly"
             )
         Tooltip(ModItems.PROMETHIUM_CHESTPLATE.get()).modId(BuiltConstants.MOD_ID)
@@ -357,7 +357,7 @@ class ModDataProviderLanguage(
                 Locale.US to "Steam"
             )
             .desc(
-                Locale.PRC to "在岩浆上行走",
+                Locale.PRC to "在熔岩上行走",
                 Locale.US to "Walk on the lava"
             )
     }

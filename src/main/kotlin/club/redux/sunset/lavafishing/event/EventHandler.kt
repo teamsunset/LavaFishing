@@ -19,16 +19,12 @@ import club.redux.sunset.lavafishing.misc.ModLootTables
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModParticleTypes
 import club.redux.sunset.lavafishing.registry.ModPotions
-import com.teammetallurgy.aquaculture.item.AquaFishingRodItem
-import com.teammetallurgy.aquaculture.item.AquaFishingRodItem.FishingRodEquipmentHandler
 import net.minecraft.client.particle.SpriteSet
-import net.minecraft.world.item.ItemStack
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
-import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent
 import net.neoforged.neoforge.client.event.EntityRenderersEvent
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent
@@ -132,11 +128,7 @@ class EventHandler {
 
         @SubscribeEvent
         fun onRegisterCapabilities(event: RegisterCapabilitiesEvent) {
-            event.registerItem(
-                Capabilities.ItemHandler.ITEM,
-                { stack: ItemStack?, _: Any? -> FishingRodEquipmentHandler(stack) },
-                *ModItems.getEntriesIsInstance<AquaFishingRodItem>().toTypedArray()
-            )
+            ModItems.onRegisterCapabilities(event)
         }
 
         @SubscribeEvent

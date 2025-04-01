@@ -20,6 +20,8 @@ import club.redux.sunset.lavafishing.misc.LavaFishType
 import club.redux.sunset.lavafishing.misc.ModTiers
 import club.redux.sunset.lavafishing.tool.registry.Registrar
 import com.teammetallurgy.aquaculture.client.ClientHandler
+import com.teammetallurgy.aquaculture.item.AquaFishingRodItem
+import com.teammetallurgy.aquaculture.item.AquaFishingRodItem.FishingRodEquipmentHandler
 import com.teammetallurgy.aquaculture.item.FishItem.SMALL_FISH_RAW
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.BuiltInRegistries
@@ -31,6 +33,8 @@ import net.minecraft.world.item.Item.Properties
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.material.Fluids
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
+import net.neoforged.neoforge.capabilities.Capabilities
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent
 
 object ModItems : Registrar<Item>(BuiltInRegistries.ITEM, BuiltConstants.MOD_ID) {
 
@@ -118,5 +122,13 @@ object ModItems : Registrar<Item>(BuiltInRegistries.ITEM, BuiltConstants.MOD_ID)
                 ClientHandler.registerFishingRodModelProperties(it)
             }
         }
+    }
+
+    fun onRegisterCapabilities(event: RegisterCapabilitiesEvent) {
+        event.registerItem(
+            Capabilities.ItemHandler.ITEM,
+            { stack: ItemStack?, _: Any? -> FishingRodEquipmentHandler(stack) },
+            *this.getEntriesIsInstance<AquaFishingRodItem>().toTypedArray()
+        )
     }
 }
