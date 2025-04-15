@@ -9,6 +9,7 @@ import com.teammetallurgy.aquaculture.Aquaculture
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.locale.Language
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
@@ -38,7 +39,7 @@ object EventTooltip {
         var index = 1
         val indexKey = { "$key.$index" }
         val indexComponent = { Component.translatable(indexKey()).withStyle(style) }
-        while (indexComponent().string != indexKey()) {
+        while (Language.getInstance().has(indexKey())) {
             tooltips.add(
                 indexComponent()
                     .let(processor)
