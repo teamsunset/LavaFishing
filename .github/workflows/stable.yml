@@ -98,7 +98,7 @@ jobs:
       - name: Mcmod Release
         uses: dsx137/mcmod-releaser@main
         env:
-          MCMOD_ACCOUNT: ${{secrets.MCMOD_ACCOUNT}}
+          MCMOD_ACCOUNT: ${{ secrets.MCMOD_ACCOUNT }}
         with:
           project_id: 7611
           game_version: ${{ steps.get_version.outputs.minecraft_version }}
