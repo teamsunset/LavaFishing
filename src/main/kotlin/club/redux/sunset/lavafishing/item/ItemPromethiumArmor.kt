@@ -76,10 +76,8 @@ class ItemPromethiumArmor(
 
             val types = entity.armorSlots.map { it.item }.filterIsInstance<ItemPromethiumArmor>().map { it.type }
 
-            when {
-                types.contains(Type.LEGGINGS) && (isOnLava || isOnFire || isOnHotFloor) -> applyEffect(MobEffects.MOVEMENT_SPEED)
-                types.contains(Type.BOOTS) && isOnLava -> applyEffect(ModMobEffects.LAVA_WALKER)
-            }
+            if (types.contains(Type.LEGGINGS) && (isOnLava || isOnFire || isOnHotFloor)) applyEffect(MobEffects.MOVEMENT_SPEED)
+            if (types.contains(Type.BOOTS) && isOnLava) applyEffect(ModMobEffects.LAVA_WALKER)
         }
 
         fun onFogRender(event: ViewportEvent.RenderFog) {
