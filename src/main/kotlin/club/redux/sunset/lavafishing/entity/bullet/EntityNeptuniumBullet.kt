@@ -1,7 +1,5 @@
 package club.redux.sunset.lavafishing.entity.bullet
 
-import club.redux.sunset.lavafishing.misc.ModTiers
-import com.teammetallurgy.aquaculture.Aquaculture
 import com.teammetallurgy.aquaculture.api.AquacultureAPI
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
