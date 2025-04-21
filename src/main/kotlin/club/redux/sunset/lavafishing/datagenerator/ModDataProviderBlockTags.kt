@@ -17,5 +17,7 @@ class ModDataProviderBlockTags(
     override fun addTags(pProvider: HolderLookup.Provider) {
         tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.PROMETHIUM_BLOCK.get())
         tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.PROMETHEUS_BOUNTY.get())
+        tag(BlockTags.NEEDS_IRON_TOOL).add(ModBlocks.PROMETHEUS_BOUNTY.get())
+        tag(BlockTags.NEEDS_IRON_TOOL).add(ModBlocks.PROMETHEUS_BOUNTY.get())
     }
 }
