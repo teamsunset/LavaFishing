@@ -47,10 +47,7 @@ class ModelCommonFish<T : Entity>(root: ModelPart) : EntityModel<T>() {
 
         fun onRegisterLayerDefinitions(event: EntityRenderersEvent.RegisterLayerDefinitions) {
             event.registerLayerDefinition(LAYER_LOCATION) {
-                BedrockLoader.loadGeometry(
-                    LavaFishing.javaClass.getResourceAsStream("/assets/lavafishing/geo/common_fish.geo.json")
-                        ?: throw RuntimeException("cannot find geo file")
-                )
+                BedrockLoader.loadGeometry("/assets/lavafishing/geo/common_fish.geo.json")
             }
         }
     }

@@ -38,7 +38,7 @@ class ModelLobster<T : Entity>(val root: ModelPart) : HierarchicalModel<T>() {
             this.root().allParts.forEach(ModelPart::resetPose)
             if (pEntity.onGround()) {
                 animateWalk(
-                    ANIMATIONS["walk"] ?: throw RuntimeException("cannot find animation"),
+                    ANIMATIONS["walk"],
                     pLimbSwing,
                     pLimbSwingAmount,
                     10F,
@@ -46,7 +46,7 @@ class ModelLobster<T : Entity>(val root: ModelPart) : HierarchicalModel<T>() {
                 )
             } else if (pEntity.isInLava || pEntity.isInWater) {
                 animateWalk(
-                    ANIMATIONS["swim"] ?: throw RuntimeException("cannot find animation"),
+                    ANIMATIONS["swim"],
                     pLimbSwing,
                     pLimbSwingAmount,
                     10F,
@@ -60,17 +60,11 @@ class ModelLobster<T : Entity>(val root: ModelPart) : HierarchicalModel<T>() {
         @JvmField val LAYER_LOCATION: ModelLayerLocation =
             ModelLayerLocation(LavaFishing.resourceLocation("lobster"), "main")
 
-        val ANIMATIONS = BedrockLoader.loadAnimations(
-            LavaFishing.javaClass.getResourceAsStream("/assets/lavafishing/animation/lobster.animation.json")
-                ?: throw RuntimeException("cannot find animation file")
-        )
+        val ANIMATIONS = BedrockLoader.loadAnimations("/assets/lavafishing/animation/lobster.animation.json")
 
         fun onRegisterLayerDefinitions(event: EntityRenderersEvent.RegisterLayerDefinitions) {
             event.registerLayerDefinition(LAYER_LOCATION) {
-                BedrockLoader.loadGeometry(
-                    LavaFishing.javaClass.getResourceAsStream("/assets/lavafishing/geo/lobster.geo.json")
-                        ?: throw RuntimeException("cannot find geo file")
-                )
+                BedrockLoader.loadGeometry("/assets/lavafishing/geo/lobster.geo.json")
             }
         }
     }

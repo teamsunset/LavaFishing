@@ -38,7 +38,7 @@ class ModelEel<T : Entity>(val root: ModelPart) : HierarchicalModel<T>() {
         if (pEntity is LivingEntity) {
             this.root().allParts.forEach(ModelPart::resetPose)
             animateWalk(
-                ANIMATIONS["swim"] ?: throw RuntimeException("cannot find animation"),
+                ANIMATIONS["swim"],
                 pLimbSwing,
                 pLimbSwingAmount,
                 5F,
@@ -51,17 +51,11 @@ class ModelEel<T : Entity>(val root: ModelPart) : HierarchicalModel<T>() {
         @JvmField val LAYER_LOCATION: ModelLayerLocation =
             ModelLayerLocation(LavaFishing.resourceLocation("eel"), "main")
 
-        val ANIMATIONS = BedrockLoader.loadAnimations(
-            LavaFishing.javaClass.getResourceAsStream("/assets/lavafishing/animation/eel.animation.json")
-                ?: throw RuntimeException("cannot find animation file")
-        )
+        val ANIMATIONS = BedrockLoader.loadAnimations("/assets/lavafishing/animation/eel.animation.json")
 
         fun onRegisterLayerDefinitions(event: EntityRenderersEvent.RegisterLayerDefinitions) {
             event.registerLayerDefinition(LAYER_LOCATION) {
-                BedrockLoader.loadGeometry(
-                    LavaFishing.javaClass.getResourceAsStream("/assets/lavafishing/geo/eel.geo.json")
-                        ?: throw RuntimeException("cannot find geo file")
-                )
+                BedrockLoader.loadGeometry("/assets/lavafishing/geo/eel.geo.json")
             }
         }
     }
