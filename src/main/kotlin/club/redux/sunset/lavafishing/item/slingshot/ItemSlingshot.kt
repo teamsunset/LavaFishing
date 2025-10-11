@@ -28,7 +28,7 @@ import java.util.function.Predicate
 open class ItemSlingshot(
     open val tier: Tier,
     properties: Properties,
-) : BowItem(properties.durability((BASE_DURABILITY * tier.uses).toInt())) {
+) : BowItem(properties.durability((BASE_DURABILITY_MUTIPLIER * tier.uses).toInt())) {
 
     /**
      * # 释放
@@ -50,12 +50,11 @@ open class ItemSlingshot(
                 if (!(f.toDouble() < 0.1)) {
                     val list = draw(pStack, itemStack, pEntityLiving)
                     if (pLevel is ServerLevel) {
-                        val serverLevel = pLevel as ServerLevel
                         if (list.isNotEmpty()) {
                             this.shoot(
-                                serverLevel,
+                                pLevel,
                                 pEntityLiving,
-                                pEntityLiving.getUsedItemHand(),
+                                pEntityLiving.usedItemHand,
                                 pStack,
                                 list,
                                 f * 3.0f,
@@ -68,9 +67,9 @@ open class ItemSlingshot(
 
                     pLevel.playSound(
                         null,
-                        pEntityLiving.getX(),
-                        pEntityLiving.getY(),
-                        pEntityLiving.getZ(),
+                        pEntityLiving.x,
+                        pEntityLiving.y,
+                        pEntityLiving.z,
                         ModSoundEvents.SLINGSHOT,
                         SoundSource.PLAYERS,
                         1.0f,
@@ -115,8 +114,8 @@ open class ItemSlingshot(
     }
 
     override fun customArrow(pArrow: AbstractArrow, pAmmo: ItemStack, pWeapon: ItemStack) = this.customBullet(
-        if (pArrow is EntityBullet) pArrow
-        else ModItems.STONE_BULLET.get().createBullet(pArrow.level(), pAmmo, pArrow.owner, pWeapon)
+        pArrow as? EntityBullet ?: ModItems.STONE_BULLET.get()
+            .createBullet(pArrow.level(), pAmmo, pArrow.owner, pWeapon)
     ).apply { attachEnchantmentEffects(pWeapon) }
 
     open fun customBullet(bullet: EntityBullet) = bullet
@@ -177,6 +176,6 @@ open class ItemSlingshot(
             }
         }
 
-        const val BASE_DURABILITY = 0.5
+        const val BASE_DURABILITY_MUTIPLIER = 0.5
     }
 }
