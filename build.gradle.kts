@@ -35,6 +35,8 @@ val runtimeMaven: Configuration by configurations.creating
 val providedMaven: Configuration by configurations.creating
 val compileMaven: Configuration by configurations.creating
 
+val mainSourceSet = extensions.getByType(JavaPluginExtension::class.java).sourceSets.getByName("main")
+
 val javaVersion = JavaLanguageVersion.of(21)
 
 version = "$minecraftVersion-$modVersion"
@@ -53,14 +55,13 @@ plugins {
     idea
     `maven-publish`
     `java-library`
-    id("com.gradleup.shadow") version "8.3.2"
-    id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
-    id("net.neoforged.gradle.userdev") version "7.0.145"
-    id("net.neoforged.gradle.mixin") version "7.0.145"
-    kotlin("jvm") version "1.9.23"
-    kotlin("kapt") version "1.9.23"
-    kotlin("plugin.serialization") version "1.9.23"
-    kotlin("plugin.lombok") version "1.9.23"
+    id("com.gradleup.shadow") version "9.3.1"
+    id("org.jetbrains.gradle.plugin.idea-ext") version "1.3"
+    id("net.neoforged.moddev") version "2.0.137"
+    kotlin("jvm") version "2.2.21"
+    kotlin("kapt") version "2.2.21"
+    kotlin("plugin.serialization") version "2.2.21"
+    kotlin("plugin.lombok") version "2.2.21"
 }
 
 repositories {
@@ -80,20 +81,18 @@ repositories {
 }
 
 dependencies {
-    val mixinProcessor = "org.spongepowered:mixin:0.8.5:processor"
+    val mixinProcessor = "org.spongepowered:mixin:0.8.7:processor"
     val aquaculture =
         "com.teammetallurgy.aquaculture:aquaculture2_${minecraftVersion}:${minecraftVersion}-${aquacultureVersion}"
     val kotlinforforge = "thedarkcolour:kotlinforforge-neoforge:${kotlinForForgeVersion}"
     val jeiForgeApi = "mezz.jei:jei-${minecraftVersion}-neoforge-api:${jeiVersion}"
     val jei = "mezz.jei:jei-${minecraftVersion}-neoforge:${jeiVersion}"
-    val appleSkin = "squeek.appleskin:appleskin-neoforge:mc1.21-3.0.5"
-
-    // NeoForge
-    implementation("net.neoforged:neoforge:${neoforgeVersion}")
+    val appleSkin = "squeek.appleskin:appleskin-neoforge:mc1.21-3.0.7"
 
     // JUnit
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.3")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.3")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // Mixin
     annotationProcessor(mixinProcessor)
@@ -112,39 +111,43 @@ dependencies {
     runtimeOnly(appleSkin)
 }
 
-runs {
-    configureEach {
-        systemProperty("forge.logging.markers", "REGISTRIES")
-        systemProperty("forge.logging.console.level", "debug")
-        modSource(sourceSets["main"])
+neoForge {
+    version = neoforgeVersion
+
+    runs {
+        configureEach {
+            systemProperty("forge.logging.markers", "REGISTRIES")
+            systemProperty("forge.logging.console.level", "debug")
+            systemProperty("neoforge.enabledGameTestNamespaces", modId)
+        }
+        register("client") { client() }
+        register("server") { server() }
+        register("gameTestServer") { type.set("gameTestServer") }
+        register("data") {
+            data()
+            programArguments.addAll(
+                listOf(
+                    "--mod",
+                    modId,
+                    "--all",
+                    "--output",
+                    file("src/generated/resources/").absolutePath,
+                    "--existing",
+                    file("src/main/resources/").absolutePath,
+                ),
+            )
+        }
     }
 
-    named("client") { systemProperty("neoforge.enabledGameTestNamespaces", modId) }
-    named("server") { systemProperty("neoforge.enabledGameTestNamespaces", modId) }
-    named("gameTestServer") { systemProperty("neoforge.enabledGameTestNamespaces", modId) }
-    named("data") {
-        programArguments.addAll(
-            "--mod",
-            modId,
-            "--all",
-            "--output",
-            file("src/generated/resources/").absolutePath,
-            "--existing",
-            file("src/main/resources/").absolutePath
-        )
+    mods {
+        register(modId) {
+            sourceSet(mainSourceSet)
+        }
     }
-}
 
-minecraft {
-    accessTransformers { file("src/main/resources/META-INF/accesstransformer.cfg") }
-}
-mixin {
-    config("${modId}.mixins.json")
-}
-subsystems {
-    parchment.let {
-        it.minecraftVersion = minecraftMappingMinecraftVersion
-        it.mappingsVersion = minecraftMappingVersion
+    parchment {
+        minecraftVersion = minecraftMappingMinecraftVersion
+        mappingsVersion = minecraftMappingVersion
     }
 }
 
@@ -189,6 +192,11 @@ tasks.processResources {
     filesMatching(targets) {
         expand(props)
     }
+}
+
+tasks.test {
+    useJUnitPlatform()
+    failOnNoDiscoveredTests = false
 }
 
 tasks.jar {

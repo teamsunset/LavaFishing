@@ -3,6 +3,7 @@ package club.redux.sunset.lavafishing.entity.bullet
 import club.redux.sunset.lavafishing.misc.ModTiers
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import club.redux.sunset.lavafishing.util.UtilItemStack.hasEnchantmentThen
+import club.redux.sunset.lavafishing.util.UtilVec3.toVec3
 import club.redux.sunset.lavafishing.util.Utils
 import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
@@ -13,7 +14,6 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.Vec3
-import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.toVec3
 
 class EntityPromethiumBullet(
     entityType: EntityType<EntityPromethiumBullet>,
