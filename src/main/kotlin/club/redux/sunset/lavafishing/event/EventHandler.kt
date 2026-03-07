@@ -46,7 +46,7 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent
 
 
 class EventHandler {
-    @EventBusSubscriber(modid = BuiltConstants.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+    @EventBusSubscriber(modid = BuiltConstants.MOD_ID)
     object ForgeEventBoth {
         @SubscribeEvent
         fun onLivingDamagePre(event: LivingDamageEvent.Pre) {
@@ -85,7 +85,7 @@ class EventHandler {
         }
     }
 
-    @EventBusSubscriber(modid = BuiltConstants.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = [Dist.CLIENT])
+    @EventBusSubscriber(modid = BuiltConstants.MOD_ID, value = [Dist.CLIENT])
     object ForgeEventClient {
         @SubscribeEvent
         fun onItemTooltip(event: ItemTooltipEvent) {
@@ -103,7 +103,7 @@ class EventHandler {
         }
     }
 
-    @EventBusSubscriber(modid = BuiltConstants.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber(modid = BuiltConstants.MOD_ID)
     object ModEventBoth {
         @SubscribeEvent
         fun onSetup(event: FMLCommonSetupEvent) {
@@ -137,7 +137,7 @@ class EventHandler {
         }
     }
 
-    @EventBusSubscriber(modid = BuiltConstants.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = [Dist.CLIENT])
+    @EventBusSubscriber(modid = BuiltConstants.MOD_ID, value = [Dist.CLIENT])
     object ModEventClient {
 
         @SubscribeEvent
