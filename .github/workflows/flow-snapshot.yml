@@ -1,0 +1,46 @@
+name: flow-snapshot
+
+on:
+  push:
+    branches:
+      - mc*/dev
+  pull_request:
+    branches:
+      - mc*/dev
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup
+        with:
+          snapshot: true
+
+      - name: Build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ./gradlew runData
+          ./gradlew build
+
+      - name: Update Snapshot Release
+        uses: andelf/nightly-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.setup.outputs.minecraft_version }}-snapshot
+          name: ${{ steps.setup.outputs.minecraft_version }}-snapshot-$$-${{ github.run_id }}
+          prerelease: true
+          body: ${{ steps.setup.outputs.changelog }}
+          files: ./build/libs/*-all.jar
