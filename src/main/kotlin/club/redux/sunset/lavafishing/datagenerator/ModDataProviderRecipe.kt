@@ -227,11 +227,11 @@ class ModDataProviderRecipe(
             .unlockedBy("has_item", has(ModItemsAqua.OBSIDIAN_HOOK.get()))
             .save(recipeOutput)
 
-        ShapelessRecipeBuilder.shapeless(category, ModItems.HYDROTHERMAL_HOOK.get())
-            .requires(ModItemsAqua.OBSIDIAN_HOOK.get())
-            .requires(Items.PRISMARINE_CRYSTALS)
-            .unlockedBy("has_obsidian_hook", has(ModItemsAqua.OBSIDIAN_HOOK.get()))
-            .save(recipeOutput)
+//        ShapelessRecipeBuilder.shapeless(category, ModItems.HYDROTHERMAL_HOOK.get())
+//            .requires(ModItemsAqua.OBSIDIAN_HOOK.get())
+//            .requires(Items.PRISMARINE_CRYSTALS)
+//            .unlockedBy("has_obsidian_hook", has(ModItemsAqua.OBSIDIAN_HOOK.get()))
+//            .save(recipeOutput)
     }
 
     private fun buildFood(recipeOutput: RecipeOutput) {

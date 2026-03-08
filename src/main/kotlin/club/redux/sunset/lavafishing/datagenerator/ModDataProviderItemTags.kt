@@ -6,6 +6,7 @@ import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
 import club.redux.sunset.lavafishing.misc.ModTags
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModItemsAqua
+import com.teammetallurgy.aquaculture.api.AquacultureAPI
 import net.minecraft.core.HolderLookup
 import net.minecraft.data.PackOutput
 import net.minecraft.data.tags.ItemTagsProvider
@@ -87,6 +88,15 @@ class ModDataProviderItemTags(
                 ModItems.PROMETHIUM_BULLET.get(),
                 ModItems.NEPTUNIUM_SLINGSHOT.get(),
                 ModItems.NEPTUNIUM_BULLET.get(),
+            )
+
+        tag(AquacultureAPI.Tags.TOOLTIP)
+            .add(
+                ModItemsAqua.DOUBLE_OBSIDIAN_HOOK.get(),
+                ModItemsAqua.GLOWSTONE_HOOK.get(),
+                ModItemsAqua.QUARTZ_HOOK.get(),
+                ModItemsAqua.SOUL_SAND_HOOK.get(),
+                ModItemsAqua.OBSIDIAN_NOTE_HOOK.get(),
             )
     }
 }

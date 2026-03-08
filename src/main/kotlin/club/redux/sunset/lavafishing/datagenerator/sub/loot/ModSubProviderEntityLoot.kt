@@ -20,14 +20,15 @@ class ModSubProviderEntityLoot(
             .forEach {
                 this.add(
                     it.get(),
-                    LootTable.lootTable().withPool(
-                        LootPool.lootPool()
-                            .add(LootItem.lootTableItem(BuiltInRegistries.ITEM.get(it.key!!.location())))
-                    ).withPool(
-                        LootPool.lootPool()
-                            .add(LootItem.lootTableItem(Items.BONE_MEAL))
-                            .`when`(LootItemRandomChanceCondition.randomChance(0.05f))
-                    )
+                    LootTable.lootTable()
+                        .withPool(
+                            LootPool.lootPool()
+                                .add(LootItem.lootTableItem(BuiltInRegistries.ITEM.get(it.key!!.location())))
+                        ).withPool(
+                            LootPool.lootPool()
+                                .add(LootItem.lootTableItem(Items.BONE_MEAL))
+                                .`when`(LootItemRandomChanceCondition.randomChance(0.05f))
+                        )
                 )
             }
     }
