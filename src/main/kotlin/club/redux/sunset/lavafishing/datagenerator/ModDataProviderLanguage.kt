@@ -105,6 +105,11 @@ class ModDataProviderLanguage(
             Locale.US to "Netherite Fishing Rod"
         )
 
+        ModItems.HYDROTHERMAL_HOOK.get().addTranslation(
+            Locale.PRC to "热液鱼钩",
+            Locale.US to "Hydrothermal Hook"
+        )
+
         // Armor
         ModItems.PROMETHIUM_BOOTS.get().addTranslation(
             Locale.PRC to "钷靴子",
@@ -204,6 +209,16 @@ class ModDataProviderLanguage(
             Locale.US to "Lava Fishing"
         )
 
+        // Message
+        "message.${BuiltConstants.MOD_ID}.hook.invalid_fluid".addTranslation(
+            Locale.PRC to "请使用适用于%s的鱼钩",
+            Locale.US to "Use a hook suited for %s"
+        )
+        "message.${BuiltConstants.MOD_ID}.hook.invalid_fluid_generic".addTranslation(
+            Locale.PRC to "请使用正确类型的鱼钩",
+            Locale.US to "Use the correct type of hook"
+        )
+
         // Tooltip
         class Tooltip(val item: Item) {
             private var modId = Aquaculture.MOD_ID
@@ -275,50 +290,14 @@ class ModDataProviderLanguage(
                 Locale.PRC to "连发",
                 Locale.US to "Repeating"
             )
-        Tooltip(ModItemsAqua.DOUBLE_OBSIDIAN_HOOK.get()).modId(BuiltConstants.MOD_ID)
+        Tooltip(ModItems.HYDROTHERMAL_HOOK.get()).modId(BuiltConstants.MOD_ID)
             .title(
-                Locale.PRC to "双钩",
-                Locale.US to "Double Barb"
+                Locale.PRC to "通用",
+                Locale.US to "Universal"
             )
             .desc(
-                Locale.PRC to "有几率钓到两个东西",
-                Locale.US to "Chance to catch two things"
-            )
-        Tooltip(ModItemsAqua.GLOWSTONE_HOOK.get()).modId(BuiltConstants.MOD_ID)
-            .title(
-                Locale.PRC to "幸运",
-                Locale.US to "Lucky"
-            )
-            .desc(
-                Locale.PRC to "提升运气",
-                Locale.US to "Increased luck"
-            )
-        Tooltip(ModItemsAqua.QUARTZ_HOOK.get()).modId(BuiltConstants.MOD_ID)
-            .title(
-                Locale.PRC to "耐用",
-                Locale.US to "Durable"
-            )
-            .desc(
-                Locale.PRC to "30% 几率不消耗耐久度",
-                Locale.US to "30% chance to not use durability"
-            )
-        Tooltip(ModItemsAqua.SOUL_SAND_HOOK.get()).modId(BuiltConstants.MOD_ID)
-            .title(
-                Locale.PRC to "诱惑",
-                Locale.US to "Enticing"
-            )
-            .desc(
-                Locale.PRC to "延长钓上鱼所需的时间",
-                Locale.US to "Increases how long you have to reel in fish"
-            )
-        Tooltip(ModItemsAqua.OBSIDIAN_NOTE_HOOK.get()).modId(BuiltConstants.MOD_ID)
-            .title(
-                Locale.PRC to "警报",
-                Locale.US to "Alert"
-            )
-            .desc(
-                Locale.PRC to "当鱼接近时发出警报声",
-                Locale.US to "Plays an alert when a fish is approaching"
+                Locale.PRC to "可在水和岩浆中垂钓",
+                Locale.US to "Can fish in both water and lava"
             )
         Tooltip(ModItems.PROMETHIUM_HELMET.get()).modId(BuiltConstants.MOD_ID)
             .title(*heatLoverTitle).desc(*heatLoverDesc)

@@ -14,6 +14,7 @@ val modLoaderVersionRange: String by project
 val minecraftMappingChannel: String by project
 val minecraftMappingMinecraftVersion: String by project
 val minecraftMappingVersion: String by project
+val aquacultureArtifactMinecraftVersion: String by project
 val aquacultureVersion: String by project
 val aquacultureVersionRange: String by project
 val kotlinForForgeVersion: String by project
@@ -66,10 +67,17 @@ plugins {
 
 repositories {
     maven { url = uri("https://maven.aliyun.com/repository/public/") }
+    maven("Aquaculture") {
+        url = uri("https://girafi.dk/maven/")
+        content { includeGroup("com.teammetallurgy.aquaculture") }
+    }
+    maven("ParchmentMC") {
+        url = uri("https://maven.parchmentmc.org/")
+        content { includeGroup("org.parchmentmc.data") }
+    }
     maven { url = uri("https://jitpack.io") }
     maven("Kotlin for Forge") { url = uri("https://thedarkcolour.github.io/KotlinForForge/") }
     maven("Jared's maven") { url = uri("https://maven.blamejared.com/") }
-    maven("Aquaculture") { url = uri("https://girafi.dk/maven/") }
     maven("ModMaven") { url = uri("https://modmaven.dev") }
     maven("AppleSkin") { url = uri("https://maven.ryanliptak.com/") }
     maven {
@@ -83,7 +91,7 @@ repositories {
 dependencies {
     val mixinProcessor = "org.spongepowered:mixin:0.8.7:processor"
     val aquaculture =
-        "com.teammetallurgy.aquaculture:aquaculture2_${minecraftVersion}:${minecraftVersion}-${aquacultureVersion}"
+        "com.teammetallurgy.aquaculture:aquaculture2_${aquacultureArtifactMinecraftVersion}:${aquacultureArtifactMinecraftVersion}-${aquacultureVersion}"
     val kotlinforforge = "thedarkcolour:kotlinforforge-neoforge:${kotlinForForgeVersion}"
     val jeiForgeApi = "mezz.jei:jei-${minecraftVersion}-neoforge-api:${jeiVersion}"
     val jei = "mezz.jei:jei-${minecraftVersion}-neoforge:${jeiVersion}"

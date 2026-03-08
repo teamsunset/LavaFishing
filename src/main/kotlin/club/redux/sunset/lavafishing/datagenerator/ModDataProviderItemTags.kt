@@ -78,11 +78,7 @@ class ModDataProviderItemTags(
 
         tag(ModTags.Item.TOOLTIP)
             .add(
-                ModItemsAqua.DOUBLE_OBSIDIAN_HOOK.get(),
-                ModItemsAqua.GLOWSTONE_HOOK.get(),
-                ModItemsAqua.QUARTZ_HOOK.get(),
-                ModItemsAqua.SOUL_SAND_HOOK.get(),
-                ModItemsAqua.OBSIDIAN_NOTE_HOOK.get(),
+                ModItems.HYDROTHERMAL_HOOK.get(),
                 ModItems.PROMETHIUM_HELMET.get(),
                 ModItems.PROMETHIUM_CHESTPLATE.get(),
                 ModItems.PROMETHIUM_LEGGINGS.get(),

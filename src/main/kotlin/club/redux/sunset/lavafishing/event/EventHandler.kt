@@ -61,6 +61,7 @@ class EventHandler {
 
         @SubscribeEvent
         fun onEntityTickPost(event: EntityTickEvent.Post) {
+            EventFishingHook.onEntityTickPost(event)
             ItemPromethiumArmor.onEntityTickPost(event)
         }
 

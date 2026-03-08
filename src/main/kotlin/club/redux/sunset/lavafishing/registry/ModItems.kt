@@ -20,12 +20,17 @@ import club.redux.sunset.lavafishing.misc.LavaFishType
 import club.redux.sunset.lavafishing.misc.ModTiers
 import club.redux.sunset.lavafishing.tool.registry.Registrar
 import com.teammetallurgy.aquaculture.client.ClientHandler
+import com.teammetallurgy.aquaculture.api.fishing.Hook
+import com.teammetallurgy.aquaculture.api.fishing.Hook.HookBuilder
 import com.teammetallurgy.aquaculture.item.AquaFishingRodItem
 import com.teammetallurgy.aquaculture.item.AquaFishingRodItem.FishingRodEquipmentHandler
 import com.teammetallurgy.aquaculture.item.FishItem.SMALL_FISH_RAW
+import com.teammetallurgy.aquaculture.item.HookItem
+import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.tags.FluidTags
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
 import net.minecraft.world.item.*
@@ -35,6 +40,7 @@ import net.minecraft.world.level.material.Fluids
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent
+import net.neoforged.neoforge.registries.DeferredItem
 
 object ModItems : Registrar<Item>(BuiltInRegistries.ITEM, BuiltConstants.MOD_ID) {
 
@@ -83,6 +89,15 @@ object ModItems : Registrar<Item>(BuiltInRegistries.ITEM, BuiltConstants.MOD_ID)
     val NEPTUNIUM_BULLET by this.register { ItemBullet(Properties()) { ModEntityTypes.NEPTUNIUM_BULLET.get() } }
     val PROMETHIUM_BULLET by this.register { ItemPromethiumBullet() }
 
+    val HYDROTHERMAL_HOOK by this.registerHook(
+        HookBuilder("hydrothermal")
+            .setModID(BuiltConstants.MOD_ID)
+            .setFluid(FluidTags.WATER)
+            .setFluid(FluidTags.LAVA)
+            .setColor(ChatFormatting.AQUA)
+            .build()
+    )
+
     // Other
     val PROMETHIUM_INGOT by this.register { Item(Properties().fireResistant()) }
     val PROMETHIUM_NUGGET by this.register { Item(Properties().fireResistant()) }
@@ -115,6 +130,9 @@ object ModItems : Registrar<Item>(BuiltInRegistries.ITEM, BuiltConstants.MOD_ID)
             )
         }
     }
+
+    private fun registerHook(hook: Hook) = this.register { HookItem(hook) }
+        .post { Hook.HOOKS[hook.name] = DeferredItem.createItem(it.key!!) }
 
     fun onClientSetup(event: FMLClientSetupEvent) {
         event.enqueueWork {

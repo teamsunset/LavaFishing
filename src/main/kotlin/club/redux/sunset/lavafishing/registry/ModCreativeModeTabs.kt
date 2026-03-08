@@ -14,7 +14,7 @@ object ModCreativeModeTabs : Registrar<CreativeModeTab>(Registries.CREATIVE_MODE
             .title(Component.translatable("itemGroup." + BuiltConstants.MOD_ID))
             .icon { ItemStack(ModItems.OBSIDIAN_FISHING_ROD.get()) }
             .displayItems { _: ItemDisplayParameters, o: CreativeModeTab.Output ->
-                ModItems.getEntries().forEach(o::accept)
+                ModItems.getEntries().filter { it != ModItems.HYDROTHERMAL_HOOK.get() }.forEach(o::accept)
                 ModItemsAqua.getEntries().forEach(o::accept)
             }
             .build()

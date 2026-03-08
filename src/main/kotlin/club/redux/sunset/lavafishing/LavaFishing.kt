@@ -19,6 +19,7 @@ object LavaFishing {
 
         listOf(
             ModArmorMaterials,
+            ModAttachmentTypes,
             ModBlockEntityTypes,
             ModBlocks,
             ModCreativeModeTabs,

@@ -7,6 +7,7 @@ import club.redux.sunset.lavafishing.item.bullet.ItemBullet
 import club.redux.sunset.lavafishing.item.fish.ItemLavaFish
 import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
 import club.redux.sunset.lavafishing.registry.ModItems
+import com.teammetallurgy.aquaculture.item.HookItem
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.data.PackOutput
 import net.minecraft.world.item.FishingRodItem
@@ -29,6 +30,7 @@ class ModDataProviderItemModel(
             ModItems.getEntriesIsInstance<ItemLavaFish>(),
             ModItems.getEntriesIsInstance<ItemPromethiumArmor>(),
             ModItems.getEntriesIsInstance<ItemBullet>(),
+            ModItems.getEntriesIsInstance<HookItem>(),
             ModItems.getEntriesIsInstance<MobBucketItem>()
         ).flatten().forEach(::registerForCommon)
 
