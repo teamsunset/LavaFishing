@@ -94,9 +94,13 @@ open class EntityLavaFish(
 
             this.discard()
             return InteractionResult.sidedSuccess(level.isClientSide)
-        } else {
+        }
+
+        if (itemStack.item === Items.WATER_BUCKET) {
             return InteractionResult.PASS
         }
+
+        return super.mobInteract(pPlayer, pHand)
     }
 
     override fun handleAirSupply(pAirSupply: Int) {

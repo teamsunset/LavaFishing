@@ -3,10 +3,11 @@ package club.redux.sunset.lavafishing.ai.path.nodeevaluator
 import net.minecraft.core.BlockPos
 import net.minecraft.core.BlockPos.MutableBlockPos
 import net.minecraft.core.Direction
-import net.minecraft.tags.FluidTags
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Mob
+import net.minecraft.world.level.PathNavigationRegion
 import net.minecraft.world.level.pathfinder.Node
+import net.minecraft.world.level.pathfinder.PathfindingContext
 import net.minecraft.world.level.pathfinder.PathType
 import net.minecraft.world.level.pathfinder.Target
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator
@@ -18,6 +19,23 @@ import kotlin.math.max
  * @param prefersShallowSwimming 表示实体是否偏好在浅水中游泳。
  */
 class NodeEvaluatorLavaAmphibious(private val prefersShallowSwimming: Boolean) : WalkNodeEvaluator() {
+    private var oldWalkableCost = 0.0f
+    private var oldWaterBorderCost = 0.0f
+
+    override fun prepare(level: PathNavigationRegion, mob: Mob) {
+        super.prepare(level, mob)
+        mob.setPathfindingMalus(PathType.LAVA, 0.0f)
+        oldWalkableCost = mob.getPathfindingMalus(PathType.WALKABLE)
+        mob.setPathfindingMalus(PathType.WALKABLE, 6.0f)
+        oldWaterBorderCost = mob.getPathfindingMalus(PathType.WATER_BORDER)
+        mob.setPathfindingMalus(PathType.WATER_BORDER, 4.0f)
+    }
+
+    override fun done() {
+        this.mob.setPathfindingMalus(PathType.WALKABLE, oldWalkableCost)
+        this.mob.setPathfindingMalus(PathType.WATER_BORDER, oldWaterBorderCost)
+        super.done()
+    }
 
     /**
      * 覆盖 getStart 方法以处理实体不在液体中时的起始节点，以及在液体中时的起始节点。
@@ -98,7 +116,7 @@ class NodeEvaluatorLavaAmphibious(private val prefersShallowSwimming: Boolean) :
         // 调整水路径的成本，如果实体偏好浅水且节点在海平面以下一定深度（但是岩浆平面不是固定的，用seaLevel有点不对）
         for (index in 0 until numNeighbors) {
             val neighborNode = outputNodes[index]
-            if (neighborNode.type == PathType.WATER && prefersShallowSwimming && neighborNode.y < mob.level().seaLevel - 10) {
+            if (neighborNode.type == PathType.LAVA && prefersShallowSwimming && neighborNode.y < mob.level().seaLevel - 10) {
                 ++neighborNode.costMalus
             }
         }
@@ -130,14 +148,17 @@ class NodeEvaluatorLavaAmphibious(private val prefersShallowSwimming: Boolean) :
      * @param pZ Z 坐标。
      * @return 根据位置和下方方块类型计算得出的路径类型。
      */
-    override fun getPathType(mob: Mob, pos: BlockPos): PathType {
+    override fun getPathType(context: PathfindingContext, pX: Int, pY: Int, pZ: Int): PathType {
         val mutableBlockPos = MutableBlockPos()
-        val fluidState = mob.level().getFluidState(mutableBlockPos.set(pos.x, pos.y, pos.z))
-        if (fluidState.`is`(FluidTags.LAVA)) {
+        if (context.getPathTypeFromState(pX, pY, pZ) == PathType.LAVA) {
             // 遍历方向，检查周围是否有阻碍类型，如果有，则将路径类型更改为水边。
             for (direction in Direction.entries) {
                 val blockPathTypeAround =
-                    getPathTypeStatic(mob, mutableBlockPos.set(pos.x, pos.y, pos.z).move(direction))
+                    context.getPathTypeFromState(
+                        mutableBlockPos.set(pX, pY, pZ).move(direction).x,
+                        mutableBlockPos.y,
+                        mutableBlockPos.z,
+                    )
                 if (blockPathTypeAround == PathType.BLOCKED) {
                     return PathType.WATER_BORDER
                 }
@@ -146,7 +167,7 @@ class NodeEvaluatorLavaAmphibious(private val prefersShallowSwimming: Boolean) :
             return PathType.LAVA
         } else {
             // 如果当前位置不是岩浆，则根据下方方块类型获取路径类型。
-            val staticBlockPathType = getPathTypeStatic(mob, mutableBlockPos)
+            val staticBlockPathType = getPathTypeStatic(context, mutableBlockPos.set(pX, pY, pZ))
             return if (staticBlockPathType == PathType.WATER)
                 PathType.BLOCKED
             else staticBlockPathType

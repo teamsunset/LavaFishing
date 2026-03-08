@@ -46,7 +46,7 @@ class EntityCommonFish(
             )
             this.setOnGround(false)
             this.hasImpulse = true
-            this.playSound(this.flopSound, this.soundVolume, this.voicePitch)
+            this.makeSound(this.flopSound)
         }
         super.aiStep()
     }
