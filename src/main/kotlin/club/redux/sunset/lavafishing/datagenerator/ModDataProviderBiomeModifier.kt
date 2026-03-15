@@ -14,7 +14,7 @@ class ModDataProviderBiomeModifier(
     override fun addModifiers() {
         addModifier("nether_spawn", ModifierAddSpawns(
             BiomeTags.IS_NETHER,
-            ModEntityTypes.getEntriesByEntityParentClass(EntityLavaFish::class.java).map {
+            ModEntityTypes.getEntriesByEntityParentClass<EntityLavaFish>().map {
                 ModifierAddSpawns.Spawner(it.get(), 1, 1, 3)
             }
         ))

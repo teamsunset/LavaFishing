@@ -1,6 +1,7 @@
 package club.redux.sunset.lavafishing.entity.bullet
 
 import club.redux.sunset.lavafishing.item.bullet.ItemBullet
+import club.redux.sunset.lavafishing.item.bullet.ItemPromethiumBullet
 import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.util.hasEnchantmentThen
@@ -21,6 +22,7 @@ import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraftforge.entity.IEntityAdditionalSpawnData
 import net.minecraftforge.network.NetworkHooks
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet
 
 open class EntityBullet(
     entityType: EntityType<out EntityBullet>,
@@ -29,9 +31,11 @@ open class EntityBullet(
 ) : AbstractArrow(entityType, level), IEntityAdditionalSpawnData {
     private val inaccuracyMultiplier: Float = 3.0F
     private var waterInertia: Float = 0.6F
+    protected val piercedEntityIds = IntOpenHashSet()
+    private var hitGroundSoundEvent: SoundEvent = SoundEvents.MUD_HIT
 
     init {
-        this.setSoundEvent(SoundEvents.MUD_HIT)
+        this.setHitGroundSoundEvent(SoundEvents.MUD_HIT)
         this.baseDamage = this.calculateBaseDamage()
     }
 
@@ -52,6 +56,8 @@ open class EntityBullet(
         } else {
             super.onHitEntity(pResult)
         }
+
+        piercedEntityIds.add(entity.id)
     }
 
 
@@ -59,9 +65,11 @@ open class EntityBullet(
      * # 去掉强制设置声音
      */
     override fun onHitBlock(pResult: BlockHitResult) {
-        val oldSoundEvent = this.soundEvent
+        val oldSoundEvent = this.hitGroundSoundEvent
+        val oldPierceLevel = this.pierceLevel
         super.onHitBlock(pResult)
-        this.setSoundEvent(oldSoundEvent)
+        this.setHitGroundSoundEvent(oldSoundEvent)
+        this.pierceLevel = oldPierceLevel
     }
 
     override fun setEnchantmentEffectsFromEntity(pShooter: LivingEntity, pVelocity: Float) {
@@ -74,6 +82,7 @@ open class EntityBullet(
         stack.hasEnchantmentThen(Enchantments.POWER_ARROWS) { this.baseDamage += it * 0.5 + 0.5 }
         stack.hasEnchantmentThen(Enchantments.PUNCH_ARROWS) { this.knockback = it }
         stack.hasEnchantmentThen(Enchantments.FLAMING_ARROWS) { this.setSecondsOnFire(100) }
+        stack.hasEnchantmentThen(Enchantments.MULTISHOT) { this.pickup = Pickup.DISALLOWED }
     }
 
     override fun shoot(pX: Double, pY: Double, pZ: Double, pVelocity: Float, pInaccuracy: Float) {
@@ -81,9 +90,12 @@ open class EntityBullet(
     }
 
     override fun getPickupItem(): ItemStack {
-        return ModItems.REGISTER.entries
-            .map { it.get() }.filterIsInstance<ItemBullet>().first { it.entityTypeProvider() == this.type }
-            .let { ItemStack(it) }
+        val item = ModItems.getEntriesIsInstance<ItemBullet>().first { it.entityTypeProvider() == this.type }
+        return ItemStack(item).also { stack ->
+            if (this is EntityPromethiumBullet && item is ItemPromethiumBullet) {
+                ItemPromethiumBullet.setDivisionTimes(stack, this.divisionTimes)
+            }
+        }
     }
 
     public override fun getWaterInertia(): Float = this.waterInertia
@@ -92,7 +104,12 @@ open class EntityBullet(
         this.waterInertia = value
     }
 
-    override fun getDefaultHitGroundSoundEvent(): SoundEvent = this.soundEvent ?: SoundEvents.EMPTY
+    protected fun setHitGroundSoundEvent(value: SoundEvent) {
+        this.hitGroundSoundEvent = value
+        this.setSoundEvent(value)
+    }
+
+    override fun getDefaultHitGroundSoundEvent(): SoundEvent = this.hitGroundSoundEvent
     //-----------------network----------------//
 
     override fun writeSpawnData(buffer: FriendlyByteBuf) {

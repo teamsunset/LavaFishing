@@ -14,12 +14,16 @@ import club.redux.sunset.lavafishing.entity.EntityLavaFish
 import club.redux.sunset.lavafishing.item.ItemPromethiumArmor
 import club.redux.sunset.lavafishing.item.fish.ItemLavaFish
 import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
+import club.redux.sunset.lavafishing.misc.ModLootTables
+import club.redux.sunset.lavafishing.registry.ModItemsAqua
 import club.redux.sunset.lavafishing.registry.ModItems
-import club.redux.sunset.lavafishing.registry.ModLootTables
 import club.redux.sunset.lavafishing.registry.ModParticleTypes
 import club.redux.sunset.lavafishing.registry.ModPotions
+import com.teammetallurgy.aquaculture.Aquaculture
 import net.minecraft.client.particle.SpriteSet
+import net.minecraft.world.item.ItemStack
 import net.minecraftforge.api.distmarker.Dist
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent
 import net.minecraftforge.client.event.EntityRenderersEvent
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers
@@ -40,6 +44,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
+import net.minecraftforge.registries.ForgeRegistries
 
 class EventHandler {
     @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.FORGE)
@@ -77,7 +82,7 @@ class EventHandler {
 
         @SubscribeEvent
         fun onPlayerTick(event: TickEvent.PlayerTickEvent) {
-
+            EventFishingHook.onPlayerTick(event)
         }
     }
 
@@ -96,12 +101,37 @@ class EventHandler {
 
     @EventBusSubscriber(modid = BuildConstants.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
     object ModEventBoth {
+        private val aquaLavaHooks = setOf(
+            ModItemsAqua.OBSIDIAN_HOOK,
+            ModItemsAqua.DOUBLE_OBSIDIAN_HOOK,
+            ModItemsAqua.GLOWSTONE_HOOK,
+            ModItemsAqua.QUARTZ_HOOK,
+            ModItemsAqua.SOUL_SAND_HOOK,
+            ModItemsAqua.OBSIDIAN_NOTE_HOOK,
+        )
+
         @SubscribeEvent
         fun onSetup(event: FMLCommonSetupEvent) {
             BehaviorDispenserBullet.onSetup(event)
             ModPotions.onCommonSetupEvent(event)
             ItemLavaFish.onSetup(event)
-            EntityLavaFish.onSetup(event)
+        }
+
+        @SubscribeEvent
+        fun onBuildCreativeModeTabContents(event: BuildCreativeModeTabContentsEvent) {
+            if (event.tabKey == Aquaculture.GROUP.key) {
+                val iterator = event.entries.iterator()
+                while (iterator.hasNext()) {
+                    val stack: ItemStack = iterator.next().key
+                    val itemId = ForgeRegistries.ITEMS.getKey(stack.item)
+                    if (
+                        aquaLavaHooks.any { stack.`is`(it.get()) } ||
+                        (itemId?.namespace == Aquaculture.MOD_ID && itemId.path == "hydrothermal_hook")
+                    ) {
+                        iterator.remove()
+                    }
+                }
+            }
         }
 
         @SubscribeEvent

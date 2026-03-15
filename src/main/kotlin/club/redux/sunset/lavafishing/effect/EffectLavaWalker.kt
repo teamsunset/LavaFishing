@@ -43,7 +43,6 @@ class EffectLavaWalker : MobEffect(MobEffectCategory.BENEFICIAL, 0xCC3300) {
                 val multiplier = max(0.5, 20.0.pow(movement.y()))
                 pLivingEntity.setDeltaMovement(movement.x(), max(movement.y(), movement.y() * multiplier), movement.z())
             }
-            super.applyEffectTick(pLivingEntity, pAmplifier)
         }
     }
 

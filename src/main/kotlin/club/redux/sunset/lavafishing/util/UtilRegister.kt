@@ -11,7 +11,7 @@ object UtilRegister {
         return DeferredRegister.create(reg, modId)
     }
 
-    fun <T> create(key: ResourceKey<Registry<T>>, modId: String): DeferredRegister<T> {
+    fun <T> create(key: ResourceKey<out Registry<T>>, modId: String): DeferredRegister<T> {
         return DeferredRegister.create(key, modId)
     }
 }

@@ -16,9 +16,7 @@ class EntityAmphibious(
 
     override fun aiStep() {
         super.aiStep()
-        this.speed =
-            if (this.isInLava) 1F
-            else 0.1F
+        this.speed = if (this.isInLava) 1F else 0.1F
     }
 
     override fun registerGoals() {

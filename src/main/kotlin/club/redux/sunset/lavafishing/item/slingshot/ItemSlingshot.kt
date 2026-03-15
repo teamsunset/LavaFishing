@@ -4,16 +4,31 @@ import club.redux.sunset.lavafishing.entity.bullet.EntityBullet
 import club.redux.sunset.lavafishing.item.bullet.ItemBullet
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModSoundEvents
+import club.redux.sunset.lavafishing.util.setShooter
 import club.redux.sunset.lavafishing.util.isServerSide
 import net.minecraft.client.renderer.item.ItemProperties
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundSource
 import net.minecraft.stats.Stats
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.AbstractArrow
+import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.entity.projectile.SmallFireball
+import net.minecraft.world.entity.projectile.Snowball
+import net.minecraft.world.entity.projectile.ThrownEgg
+import net.minecraft.world.entity.projectile.ThrownEnderpearl
+import net.minecraft.world.entity.projectile.ThrownExperienceBottle
+import net.minecraft.world.entity.projectile.ThrownPotion
+import net.minecraft.world.entity.projectile.ThrownTrident
+import net.minecraft.world.entity.projectile.WitherSkull
 import net.minecraft.world.item.BowItem
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraft.world.item.Tier
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.item.enchantment.EnchantmentHelper
@@ -27,6 +42,8 @@ open class ItemSlingshot(
     open val tier: Tier,
     properties: Properties,
 ) : BowItem(properties.defaultDurability((BASE_DURABILITY * tier.uses).toInt())) {
+
+    protected open fun getUseDuration(stack: ItemStack, entity: LivingEntity): Int = this.getUseDuration(stack)
 
     /**
      * # 释放
@@ -44,7 +61,7 @@ open class ItemSlingshot(
         val hasFreeAmmo = instabuild || infinity
 
         // 获取物品的使用持续时间
-        val duration = this.getUseDuration(pStack)
+        val duration = this.getUseDuration(pStack, pEntityLiving)
 
         // 尝试获取可用的发射物，如果不支持则使用空物品堆栈
         var itemStack =
@@ -73,41 +90,27 @@ open class ItemSlingshot(
         val timePower = getPowerForTime(overtime)
         if (timePower.toDouble() < 0.1) return
 
+        val ammoToShoot = this.draw(pStack, itemStack, pEntityLiving)
+        if (ammoToShoot.isEmpty()) return
+
         // 仅在服务器端执行发射逻辑
         if (pLevel.isServerSide()) {
-            // 创建弹丸实体并赋予初始属性
-            val itemBullet = itemStack.item as ItemBullet
-            val bullet = customBullet(itemBullet.createBullet(pLevel, itemStack, pEntityLiving)).apply {
-                shootFromRotation(
-                    pEntityLiving,
-                    pEntityLiving.getXRot(),
-                    pEntityLiving.getYRot(),
-                    0.0f,
-                    timePower * 3.0f,
-                    1.0f
-                )
-            }
-
-            // 如果力量值为最大，则设置有暴击尾迹
-            if (timePower == 1.0f) {
-                bullet.isCritArrow = true
-            }
-
-            // 绑定附魔效果到箭矢上
-            bullet.attachEnchantment(pStack)
+            this.shoot(
+                pLevel as ServerLevel,
+                pEntityLiving,
+                pEntityLiving.usedItemHand,
+                pStack,
+                ammoToShoot,
+                timePower * 3.0f,
+                1.0f,
+                timePower == 1.0f,
+                if (infinity) AbstractArrow.Pickup.CREATIVE_ONLY else null
+            )
 
             // 广播消耗耐久事件
             pStack.hurtAndBreak(1, pEntityLiving) { player ->
                 player.broadcastBreakEvent(pEntityLiving.getUsedItemHand())
             }
-
-            // 如果具有无限箭矢附魔，则设置箭矢为仅限创造模式拾取
-            if (infinity) {
-                bullet.pickup = AbstractArrow.Pickup.CREATIVE_ONLY
-            }
-
-            // 将箭矢实体添加到游戏世界中
-            pLevel.addFreshEntity(bullet)
 
             // 播放发射声音，声音强度随力量值变化
             pLevel.playSound(
@@ -135,7 +138,80 @@ open class ItemSlingshot(
         }
     }
 
-    override fun getAllSupportedProjectiles(): Predicate<ItemStack> = Predicate { pStack -> pStack.item is ItemBullet }
+    protected open fun draw(weapon: ItemStack, ammo: ItemStack, shooter: LivingEntity): List<ItemStack> {
+        return if (ammo.isEmpty) emptyList() else listOf(ammo)
+    }
+
+    protected open fun shoot(
+        level: ServerLevel,
+        shooter: LivingEntity,
+        usedHand: InteractionHand,
+        weapon: ItemStack,
+        ammo: List<ItemStack>,
+        velocity: Float,
+        inaccuracy: Float,
+        isCrit: Boolean,
+        pickupMode: AbstractArrow.Pickup?,
+    ) {
+        ammo.forEach { ammoStack ->
+            val projectile = this.createProjectile(level, shooter, weapon, ammoStack, isCrit).apply {
+                when (this) {
+                    is AbstractArrow -> this.shootFromRotation(
+                        shooter,
+                        shooter.xRot,
+                        shooter.yRot,
+                        0.0f,
+                        velocity,
+                        inaccuracy
+                    )
+
+                    else -> this.shootFromRotation(
+                        shooter,
+                        shooter.xRot,
+                        shooter.yRot,
+                        0.0f,
+                        velocity / 2.0f,
+                        inaccuracy
+                    )
+                }
+
+                if (this is AbstractArrow) {
+                    if (isCrit) {
+                        this.isCritArrow = true
+                    }
+
+                    if (pickupMode != null) {
+                        this.pickup = pickupMode
+                    }
+                }
+
+                if (this is EntityBullet) {
+                    this.attachEnchantment(weapon)
+                }
+            }
+
+            level.addFreshEntity(projectile)
+        }
+    }
+
+    open fun createProjectile(
+        level: Level,
+        shooter: LivingEntity,
+        weapon: ItemStack,
+        ammo: ItemStack,
+        isCrit: Boolean,
+    ): Projectile {
+        val ammoItem = ammo.item
+        return when {
+            ammoItem is ItemBullet -> customBullet(ammoItem.createBullet(level, ammo, shooter, weapon))
+            ammoItem in SUPPORTED_PROJECTILES -> SUPPORTED_PROJECTILES.getValue(ammoItem)(level, shooter, ammo)
+            else -> ModItems.STONE_BULLET.get().createBullet(level, ammo, shooter, weapon)
+        }
+    }
+
+    override fun getAllSupportedProjectiles(): Predicate<ItemStack> = Predicate { stack ->
+        stack.item is ItemBullet || SUPPORTED_PROJECTILES.keys.any { stack.item == it }
+    }
 
     override fun isValidRepairItem(pStack: ItemStack, pRepairCandidate: ItemStack): Boolean =
         this.tier.repairIngredient.test(pRepairCandidate)
@@ -144,8 +220,8 @@ open class ItemSlingshot(
 
     override fun canApplyAtEnchantingTable(stack: ItemStack?, enchantment: Enchantment?): Boolean {
         return (super.canApplyAtEnchantingTable(stack, enchantment) ||
-                enchantment == Enchantments.MULTISHOT ||
                 enchantment == Enchantments.QUICK_CHARGE) &&
+                enchantment != Enchantments.MULTISHOT &&
                 enchantment != Enchantments.INFINITY_ARROWS
     }
 
@@ -159,13 +235,17 @@ open class ItemSlingshot(
      */
     @Deprecated("不建议用", ReplaceWith("this.customBullet(bullet)"))
     override fun customArrow(arrow: AbstractArrow): AbstractArrow {
+        return this.customArrow(arrow, ItemStack.EMPTY, ItemStack.EMPTY)
+    }
+
+    protected open fun customArrow(arrow: AbstractArrow, ammo: ItemStack, weapon: ItemStack): AbstractArrow {
         return this.customBullet(
             if (arrow is EntityBullet) arrow
-            else ModItems.STONE_BULLET.get().createBullet(arrow.level()).apply {
+            else ModItems.STONE_BULLET.get().createBullet(arrow.level(), ammo, arrow.owner as? LivingEntity, weapon).apply {
                 this.setPos(arrow.x, arrow.y, arrow.z)
                 this.owner = arrow.owner
             }
-        )
+        ).apply { attachEnchantment(weapon) }
     }
 
     open fun customBullet(bullet: EntityBullet): EntityBullet {
@@ -177,18 +257,31 @@ open class ItemSlingshot(
     }
 
     companion object {
+        val SUPPORTED_PROJECTILES: Map<Item, (Level, LivingEntity, ItemStack) -> Projectile> = mapOf(
+            Items.SNOWBALL to { level, entity, _ -> Snowball(level, entity) },
+            Items.EGG to { level, entity, _ -> ThrownEgg(level, entity) },
+            Items.FIRE_CHARGE to { level, entity, _ -> SmallFireball(EntityType.SMALL_FIREBALL, level).setShooter(entity) },
+            Items.WITHER_SKELETON_SKULL to { level, entity, _ -> WitherSkull(EntityType.WITHER_SKULL, level).setShooter(entity) },
+            Items.EXPERIENCE_BOTTLE to { level, entity, _ -> ThrownExperienceBottle(level, entity) },
+            Items.TRIDENT to { level, entity, stack -> ThrownTrident(level, entity, stack.copy()) },
+            Items.ENDER_PEARL to { level, entity, _ -> ThrownEnderpearl(level, entity) },
+            Items.POTION to { level, entity, stack -> ThrownPotion(level, entity).apply { item = stack } },
+            Items.SPLASH_POTION to { level, entity, stack -> ThrownPotion(level, entity).apply { item = stack } },
+            Items.LINGERING_POTION to { level, entity, stack -> ThrownPotion(level, entity).apply { item = stack } },
+        )
+
         @JvmStatic
         fun onClientSetup(event: FMLClientSetupEvent) {
             event.enqueueWork {
-                ModItems.REGISTER.entries.map { it.get() }.filterIsInstance<ItemSlingshot>().forEach { item ->
-                    ItemProperties.register(item, ResourceLocation("pull")) { pStack, _, pEntity, _ ->
+                ModItems.getEntriesIsInstance<ItemSlingshot>().forEach { item ->
+                    ItemProperties.register(item, ResourceLocation.parse("pull")) { pStack, _, pEntity, _ ->
                         if (pEntity == null || pEntity.useItem != pStack) {
                             0f
                         } else {
                             (pStack.useDuration - pEntity.useItemRemainingTicks) / 20f * item.getChargeMultiplier(pStack)
                         }
                     }
-                    ItemProperties.register(item, ResourceLocation("pulling")) { pStack, _, pEntity, _ ->
+                    ItemProperties.register(item, ResourceLocation.parse("pulling")) { pStack, _, pEntity, _ ->
                         if (pEntity != null && pEntity.isUsingItem && pEntity.useItem === pStack) {
                             1f
                         } else {

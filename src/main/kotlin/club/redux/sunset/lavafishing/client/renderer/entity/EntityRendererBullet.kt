@@ -1,8 +1,8 @@
 package club.redux.sunset.lavafishing.client.renderer.entity
 
+import club.redux.sunset.lavafishing.LavaFishing
 import club.redux.sunset.lavafishing.client.model.ModelBullet
 import club.redux.sunset.lavafishing.entity.bullet.EntityBullet
-import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import club.redux.sunset.lavafishing.util.getTexture
 import com.mojang.blaze3d.vertex.PoseStack
@@ -23,7 +23,7 @@ class EntityRendererBullet<T : EntityBullet>(
     private var model: ModelBullet = ModelBullet(context.bakeLayer(ModelBullet.LAYER_LOCATION))
 
     override fun getTextureLocation(pEntity: T): ResourceLocation {
-        return pEntity.getTexture(ModResourceLocation("textures/entity/bullet/default_bullet.png"))
+        return pEntity.getTexture(LavaFishing.resourceLocation("textures/entity/bullet/default_bullet.png"))
     }
 
     override fun render(
@@ -56,10 +56,11 @@ class EntityRendererBullet<T : EntityBullet>(
     companion object {
         @JvmStatic
         fun onRegisterRenderers(event: RegisterRenderers) {
-            ModEntityTypes.getEntriesByEntityParentClass(EntityBullet::class.java).map { it.get() }
-                .forEach { entityType ->
-                    event.registerEntityRenderer(entityType) { EntityRendererBullet(it) }
+            ModEntityTypes.getEntriesByEntityParentClass<EntityBullet>().forEach { entityType ->
+                event.registerEntityRenderer(entityType.get()) { context ->
+                    EntityRendererBullet<EntityBullet>(context)
                 }
+            }
         }
     }
 }

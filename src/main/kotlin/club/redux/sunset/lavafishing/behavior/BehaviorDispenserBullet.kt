@@ -23,7 +23,7 @@ class BehaviorDispenserBullet : AbstractProjectileDispenseBehavior() {
     companion object {
         @JvmStatic
         fun onSetup(event: FMLCommonSetupEvent) {
-            ModItems.REGISTER.entries.map { it.get() }.filterIsInstance<ItemBullet>().forEach {
+            ModItems.getEntriesIsInstance<ItemBullet>().forEach {
                 DispenserBlock.registerBehavior(it, BehaviorDispenserBullet())
             }
         }

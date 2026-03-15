@@ -8,6 +8,7 @@ import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
 import club.redux.sunset.lavafishing.misc.ModResourceLocation
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.util.getKey
+import com.teammetallurgy.aquaculture.item.HookItem
 import net.minecraft.data.PackOutput
 import net.minecraft.world.item.FishingRodItem
 import net.minecraft.world.item.Item
@@ -25,32 +26,21 @@ class ModDataProviderItemModel(
     override fun registerModels() {
         LoggerFactory.getLogger("ModItemModelProvider").info("Registering item models...")
 
-        registerByParentClasses(
-            ::registerForCommon,
-            ItemLavaFish::class.java,
-            ItemPromethiumArmor::class.java,
-            ItemBullet::class.java,
-            MobBucketItem::class.java
-        )
+        listOf(
+            ModItems.getEntriesIsInstance<ItemLavaFish>(),
+            ModItems.getEntriesIsInstance<ItemPromethiumArmor>(),
+            ModItems.getEntriesIsInstance<ItemBullet>(),
+            ModItems.getEntriesIsInstance<HookItem>(),
+            ModItems.getEntriesIsInstance<MobBucketItem>(),
+        ).flatten().forEach(::registerForCommon)
 
-        // Food
         registerForCommon(ModItems.SPICY_FISH_FILLET.get())
-
-        // Misc
+        registerForCommon(ModItems.FISH_PASTE.get())
         registerForCommon(ModItems.PROMETHIUM_NUGGET.get())
         registerForCommon(ModItems.PROMETHIUM_INGOT.get())
 
-        // Slingshot
-        registerByParentClasses(::registerForSlingshot, ItemSlingshot::class.java)
-        // FishingRod
-        registerByParentClasses(::registerForFishingRod, FishingRodItem::class.java)
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun <T : Item> registerByParentClasses(register: (T) -> Unit, vararg parentClasses: Class<out T>) {
-        ModItems.REGISTER.entries.map { it.get() }
-            .filter { entry -> parentClasses.any { parentClass -> parentClass.isInstance(entry) } }
-            .forEach { register(it as T) }
+        ModItems.getEntriesIsInstance<ItemSlingshot>().forEach(::registerForSlingshot)
+        ModItems.getEntriesIsInstance<FishingRodItem>().forEach(::registerForFishingRod)
     }
 
     private fun registerForCommon(item: Item) {
@@ -58,7 +48,6 @@ class ModDataProviderItemModel(
         withExistingParent("item/${path}", "item/generated")
             .texture("layer0", "item/${path}")
     }
-
 
     private fun registerForSlingshot(item: ItemSlingshot) {
         val path = item.getKey()!!.path

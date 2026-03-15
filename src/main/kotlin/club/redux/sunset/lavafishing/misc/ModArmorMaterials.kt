@@ -38,7 +38,7 @@ enum class ModArmorMaterials(
     );
 
     override fun getDurabilityForType(type: ArmorItem.Type): Int =
-        ArmorMaterials.HEALTH_FUNCTION_FOR_TYPE[type]!! * this.durabilityMultiplier
+        ArmorMaterials.LEATHER.getDurabilityForType(type) / 5 * this.durabilityMultiplier
 
     override fun getDefenseForType(type: ArmorItem.Type): Int = defenseForType[type]!!
     override fun getEnchantmentValue(): Int = this.enchantmentValue

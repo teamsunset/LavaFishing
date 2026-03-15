@@ -47,6 +47,10 @@ open class ItemBullet(
     }
 
     open fun createBullet(pLevel: Level, pStack: ItemStack, pShooter: LivingEntity): EntityBullet {
+        return this.createBullet(pLevel, pStack, pShooter, null)
+    }
+
+    open fun createBullet(pLevel: Level, pStack: ItemStack, pShooter: LivingEntity?, pWeapon: ItemStack?): EntityBullet {
         return this.createBullet(pLevel).setShooter(pShooter)
     }
 }

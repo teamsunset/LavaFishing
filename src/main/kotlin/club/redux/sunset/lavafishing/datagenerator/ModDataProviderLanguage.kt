@@ -2,15 +2,15 @@ package club.redux.sunset.lavafishing.datagenerator
 
 import club.redux.sunset.lavafishing.BuildConstants
 import club.redux.sunset.lavafishing.api.dagagenerator.DataProviderLanguage
-import club.redux.sunset.lavafishing.misc.Hooks
 import club.redux.sunset.lavafishing.registry.ModBlocks
 import club.redux.sunset.lavafishing.registry.ModItems
+import club.redux.sunset.lavafishing.registry.ModItemsAqua
 import club.redux.sunset.lavafishing.registry.ModMobEffects
 import club.redux.sunset.lavafishing.util.getKey
 import com.teammetallurgy.aquaculture.Aquaculture
 import net.minecraft.data.PackOutput
 import net.minecraft.world.item.Item
-import java.util.*
+import java.util.Locale
 
 class ModDataProviderLanguage(
     packOutput: PackOutput,
@@ -18,27 +18,25 @@ class ModDataProviderLanguage(
 ) : DataProviderLanguage(packOutput, BuildConstants.MOD_ID, locale) {
 
     override fun addTranslations() {
-        // MobEffect
         ModMobEffects.ENDLESS_FLAME.get().addTranslation(
             Locale.PRC to "无尽之火",
             Locale.US to "Endless Flame"
         )
         ModMobEffects.LAVA_WALKER.get().addTranslation(
-            Locale.PRC to "岩浆行者",
+            Locale.PRC to "熔岩行者",
             Locale.US to "Lava Walker"
         )
 
-        // Potion
         "item.minecraft.potion.effect.lava_walker".addTranslation(
-            Locale.PRC to "岩浆行者药水",
+            Locale.PRC to "熔岩行者药水",
             Locale.US to "Potion of Lava Walker"
         )
         "item.minecraft.splash_potion.effect.lava_walker".addTranslation(
-            Locale.PRC to "喷溅型岩浆行者药水",
+            Locale.PRC to "喷溅型熔岩行者药水",
             Locale.US to "Splash Potion of Lava Walker"
         )
         "item.minecraft.lingering_potion.effect.lava_walker".addTranslation(
-            Locale.PRC to "滞留型岩浆行者药水",
+            Locale.PRC to "滞留型熔岩行者药水",
             Locale.US to "Lingering Potion of Lava Walker"
         )
 
@@ -81,10 +79,7 @@ class ModDataProviderLanguage(
             ),
         )
 
-        // Fish
         fishMap.forEach { (fish, pairs) -> fish.addTranslation(*pairs) }
-
-        // FishBucket
         fishMap.forEach { (fish, pairs) ->
             "${fish.descriptionId}_bucket".addTranslation(
                 this.locale to choose(*pairs) + choose(
@@ -93,14 +88,10 @@ class ModDataProviderLanguage(
                 )
             )
         }
-
-        // FishEntity
         fishMap.forEach { (fish, pairs) ->
             "entity${fish.descriptionId.substring(fish.descriptionId.indexOf('.'))}".addTranslation(*pairs)
         }
 
-
-        // Tool
         ModItems.OBSIDIAN_FISHING_ROD.get().addTranslation(
             Locale.PRC to "黑曜石鱼竿",
             Locale.US to "Obsidian Fishing Rod"
@@ -110,7 +101,35 @@ class ModDataProviderLanguage(
             Locale.US to "Netherite Fishing Rod"
         )
 
-        // Armor
+        ModItemsAqua.OBSIDIAN_HOOK.get().addTranslation(
+            Locale.PRC to "黑曜石鱼钩",
+            Locale.US to "Obsidian Hook"
+        )
+        ModItemsAqua.DOUBLE_OBSIDIAN_HOOK.get().addTranslation(
+            Locale.PRC to "双黑曜石鱼钩",
+            Locale.US to "Double Obsidian Hook"
+        )
+        ModItemsAqua.GLOWSTONE_HOOK.get().addTranslation(
+            Locale.PRC to "荧石鱼钩",
+            Locale.US to "Glowstone Hook"
+        )
+        ModItemsAqua.QUARTZ_HOOK.get().addTranslation(
+            Locale.PRC to "石英鱼钩",
+            Locale.US to "Quartz Hook"
+        )
+        ModItemsAqua.SOUL_SAND_HOOK.get().addTranslation(
+            Locale.PRC to "灵魂沙鱼钩",
+            Locale.US to "Soul Sand Hook"
+        )
+        ModItemsAqua.OBSIDIAN_NOTE_HOOK.get().addTranslation(
+            Locale.PRC to "黑曜石音符鱼钩",
+            Locale.US to "Obsidian Note Hook"
+        )
+        ModItems.HYDROTHERMAL_HOOK.get().addTranslation(
+            Locale.PRC to "热液鱼钩",
+            Locale.US to "Hydrothermal Hook"
+        )
+
         ModItems.PROMETHIUM_BOOTS.get().addTranslation(
             Locale.PRC to "钷靴子",
             Locale.US to "Promethium Boots"
@@ -128,7 +147,10 @@ class ModDataProviderLanguage(
             Locale.US to "Promethium Helmet"
         )
 
-        // Slingshot
+        ModItems.IRON_SLINGSHOT.get().addTranslation(
+            Locale.PRC to "铁弹弓",
+            Locale.US to "Iron Slingshot"
+        )
         ModItems.NEPTUNIUM_SLINGSHOT.get().addTranslation(
             Locale.PRC to "镎弹弓",
             Locale.US to "Neptunium Slingshot"
@@ -154,7 +176,6 @@ class ModDataProviderLanguage(
             Locale.US to "Promethium Bullet"
         )
 
-        // Material
         ModItems.PROMETHIUM_INGOT.get().addTranslation(
             Locale.PRC to "钷锭",
             Locale.US to "Promethium Ingot"
@@ -164,7 +185,6 @@ class ModDataProviderLanguage(
             Locale.US to "Promethium Nugget"
         )
 
-        // Block
         ModBlocks.PROMETHEUS_BOUNTY.get().addTranslation(
             Locale.PRC to "普罗米修斯的恩惠",
             Locale.US to "Prometheus Bounty"
@@ -174,26 +194,35 @@ class ModDataProviderLanguage(
             Locale.US to "Promethium Block"
         )
 
-        // Food
         ModItems.SPICY_FISH_FILLET.get().addTranslation(
             Locale.PRC to "麻辣鱼片",
             Locale.US to "Spicy Fish Fillet"
         )
+        ModItems.FISH_PASTE.get().addTranslation(
+            Locale.PRC to "鱼糜",
+            Locale.US to "Fish Paste"
+        )
 
-        //Sound
         "sounds.lavafishing.item.slingshot".addTranslation(
             Locale.PRC to "弹弓",
             Locale.US to "Slingshot"
         )
 
-        // Creative Tab
         "itemGroup.lavafishing".addTranslation(
-            Locale.PRC to "岩浆钓鱼",
+            Locale.PRC to "熔岩钓鱼",
             Locale.US to "Lava Fishing"
         )
 
-        // Tooltip
-        class Tooltip(val item: Item) {
+        "message.${BuildConstants.MOD_ID}.hook.invalid_fluid".addTranslation(
+            Locale.PRC to "请使用适用于%s的鱼钩",
+            Locale.US to "Use a hook suited for %s"
+        )
+        "message.${BuildConstants.MOD_ID}.hook.invalid_fluid_generic".addTranslation(
+            Locale.PRC to "请使用正确类型的鱼钩",
+            Locale.US to "Use the correct type of hook"
+        )
+
+        class Tooltip(private val item: Item) {
             private var modId = Aquaculture.MOD_ID
             private var titleCount = 0
             private var descCount = 0
@@ -201,6 +230,7 @@ class ModDataProviderLanguage(
             fun modId(modId: String): Tooltip = this.apply { this.modId = modId }
             fun title(vararg pairs: Pair<Locale, String>): Tooltip = addTranslation(pairs, "title")
             fun desc(vararg pairs: Pair<Locale, String>): Tooltip = addTranslation(pairs, "desc")
+
             private fun addTranslation(pairs: Array<out Pair<Locale, String>>, type: String): Tooltip {
                 val count = if (type == "title") titleCount++ else descCount++
                 val key = "${modId}.${item.getKey()!!.path}.tooltip.$type${if (count == 0) "" else ".$count"}"
@@ -218,7 +248,15 @@ class ModDataProviderLanguage(
             Locale.US to "25% fire damage reduction"
         )
 
-        Tooltip(ModItems.NEPTUNIUM_BULLET.get()).modId(Aquaculture.MOD_ID)
+        Tooltip(ModItems.NEPTUNIUM_BULLET.get()).modId(BuildConstants.MOD_ID)
+            .title(
+                Locale.PRC to "海王突击",
+                Locale.US to "Neptune's Strike"
+            )
+            .desc(
+                Locale.PRC to "能顺畅地通过水体",
+                Locale.US to "Can pass smoothly through water"
+            )
             .title(
                 Locale.PRC to "海洋公敌",
                 Locale.US to "Enemy of the sea"
@@ -227,7 +265,7 @@ class ModDataProviderLanguage(
                 Locale.PRC to "追踪所有种类的水生生物",
                 Locale.US to "Track all kinds of aquatic life"
             )
-        Tooltip(ModItems.NEPTUNIUM_SLINGSHOT.get()).modId(Aquaculture.MOD_ID)
+        Tooltip(ModItems.NEPTUNIUM_SLINGSHOT.get()).modId(BuildConstants.MOD_ID)
             .title(
                 Locale.PRC to "海王突击",
                 Locale.US to "Neptune's Strike"
@@ -254,50 +292,14 @@ class ModDataProviderLanguage(
                 Locale.PRC to "连发",
                 Locale.US to "Repeating"
             )
-        Tooltip(Hooks.DOUBLE_OBSIDIAN.item).modId(BuildConstants.MOD_ID)
+        Tooltip(ModItems.HYDROTHERMAL_HOOK.get()).modId(BuildConstants.MOD_ID)
             .title(
-                Locale.PRC to "双钩",
-                Locale.US to "Double Barb"
+                Locale.PRC to "通用",
+                Locale.US to "Universal"
             )
             .desc(
-                Locale.PRC to "有几率钓到两个东西",
-                Locale.US to "Chance to catch two things"
-            )
-        Tooltip(Hooks.GLOWSTONE.item).modId(BuildConstants.MOD_ID)
-            .title(
-                Locale.PRC to "幸运",
-                Locale.US to "Lucky"
-            )
-            .desc(
-                Locale.PRC to "提升运气",
-                Locale.US to "Increased luck"
-            )
-        Tooltip(Hooks.QUARTZ.item).modId(BuildConstants.MOD_ID)
-            .title(
-                Locale.PRC to "耐用",
-                Locale.US to "Durable"
-            )
-            .desc(
-                Locale.PRC to "30% 几率不消耗耐久度",
-                Locale.US to "30% chance to not use durability"
-            )
-        Tooltip(Hooks.SOUL_SAND.item).modId(BuildConstants.MOD_ID)
-            .title(
-                Locale.PRC to "诱惑",
-                Locale.US to "Enticing"
-            )
-            .desc(
-                Locale.PRC to "延长钓上鱼所需的时间",
-                Locale.US to "Increases how long you have to reel in fish"
-            )
-        Tooltip(Hooks.OBSIDIAN_NOTE.item).modId(BuildConstants.MOD_ID)
-            .title(
-                Locale.PRC to "警报",
-                Locale.US to "Alert"
-            )
-            .desc(
-                Locale.PRC to "当鱼接近时发出警报声",
-                Locale.US to "Plays an alert when a fish is approaching"
+                Locale.PRC to "可在水和岩浆中垂钓",
+                Locale.US to "Can fish in both water and lava"
             )
         Tooltip(ModItems.PROMETHIUM_HELMET.get()).modId(BuildConstants.MOD_ID)
             .title(*heatLoverTitle).desc(*heatLoverDesc)
@@ -306,8 +308,8 @@ class ModDataProviderLanguage(
                 Locale.US to "Golden Eyes"
             )
             .desc(
-                Locale.PRC to "在岩浆下拥有良好视野",
-                Locale.US to "Watch under the lava clearly"
+                Locale.PRC to "在熔岩下和着火时拥有良好视野",
+                Locale.US to "Watch under the lava and on fire clearly"
             )
         Tooltip(ModItems.PROMETHIUM_CHESTPLATE.get()).modId(BuildConstants.MOD_ID)
             .title(*heatLoverTitle).desc(*heatLoverDesc)

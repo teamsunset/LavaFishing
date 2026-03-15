@@ -45,13 +45,15 @@ class EffectEndlessFlame : MobEffect(MobEffectCategory.HARMFUL, 0xCC3300) {
                 !source.`is`(DamageTypes.MOB_PROJECTILE) &&
                 !source.`is`(DamageTypes.MAGIC) &&
                 sourceEntity.getEffect(ModMobEffects.ENDLESS_FLAME.get()) != null &&
-                target.getEffect(ModMobEffects.ENDLESS_FLAME.get()) == null &&
                 sourceEntity.mainHandItem.`is`(Items.AIR)
             ) {
-                target.addEffect(
-                    MobEffectInstance(ModMobEffects.ENDLESS_FLAME.get(), 1200),
-                    sourceEntity
-                )
+                val targetEffect = target.getEffect(ModMobEffects.ENDLESS_FLAME.get())
+                if (targetEffect == null || targetEffect.duration < 1200) {
+                    target.addEffect(
+                        MobEffectInstance(ModMobEffects.ENDLESS_FLAME.get(), 1200),
+                        sourceEntity
+                    )
+                }
                 val level = target.level()
                 val pos = target.position()
                 if (level is ServerLevel) {

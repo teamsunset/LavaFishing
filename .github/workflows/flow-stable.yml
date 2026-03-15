@@ -1,0 +1,85 @@
+name: flow-stable
+
+on:
+  push:
+    branches:
+      - mc*/release
+  pull_request:
+    branches:
+      - mc*/release
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup
+        with:
+          snapshot: false
+
+      - name: Build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ./gradlew runData
+          ./gradlew build
+
+      - name: Create GitHub Release
+        uses: andelf/nightly-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.setup.outputs.version }}
+          name: ${{ steps.setup.outputs.version }}
+          prerelease: false
+          body: ${{ steps.setup.outputs.changelog }}
+          files: build/libs/lavafishing-${{ steps.setup.outputs.version }}-all.jar
+
+      - name: Modrinth Release
+        uses: dsx137/modrinth-releaser@main
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        with:
+          name: ${{ steps.setup.outputs.version }}
+          project_id: puTJzCb0
+          loaders: forge
+          game_versions: ${{ steps.setup.outputs.minecraft_version }}
+          version_number: ${{ steps.setup.outputs.version }}
+          changelog: ${{ steps.setup.outputs.changelog }}
+          version_type: release
+          files: build/libs/lavafishing-${{ steps.setup.outputs.version }}-all.jar
+          dependencies: Vl1uNAuy:required, ordsPcFz:required
+
+      - name: CurseForge Release
+        uses: itsmeow/curseforge-upload@v3.1.2
+        with:
+          game_endpoint: minecraft
+          token: ${{ secrets.CURSEFORGE_TOKEN }}
+          display_name: ${{ steps.setup.outputs.version }}
+          project_id: 1035887
+          game_versions: 8326,7498,9638,9639,9990
+          changelog: ${{ steps.setup.outputs.changelog }}
+          release_type: release
+          file_path: build/libs/lavafishing-${{ steps.setup.outputs.version }}-all.jar
+          relations: aquaculture:requiredDependency
+
+      - name: Mcmod Release
+        uses: dsx137/mcmod-releaser@main
+        env:
+          MCMOD_ACCOUNT: ${{ secrets.MCMOD_ACCOUNT }}
+        with:
+          project_id: 7611
+          game_version: ${{ steps.setup.outputs.minecraft_version }}
+          file: build/libs/lavafishing-${{ steps.setup.outputs.version }}-all.jar
+          platforms: java
+          loaders: forge

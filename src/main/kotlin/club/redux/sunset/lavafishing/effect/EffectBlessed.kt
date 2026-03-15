@@ -16,8 +16,6 @@ class EffectBlessed : MobEffect(MobEffectCategory.NEUTRAL, 0xCC3300) {
             }
             hurt(damageSources().onFire(), 0.1f)
         }
-
-        super.applyEffectTick(pLivingEntity, pAmplifier)
     }
 
     override fun isDurationEffectTick(pDuration: Int, pAmplifier: Int): Boolean {

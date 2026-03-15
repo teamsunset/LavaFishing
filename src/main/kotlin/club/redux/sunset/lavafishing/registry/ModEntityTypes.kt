@@ -1,12 +1,11 @@
 package club.redux.sunset.lavafishing.registry
 
 import club.redux.sunset.lavafishing.BuildConstants
+import club.redux.sunset.lavafishing.LavaFishing
 import club.redux.sunset.lavafishing.entity.bullet.EntityBullet
 import club.redux.sunset.lavafishing.entity.bullet.EntityNeptuniumBullet
 import club.redux.sunset.lavafishing.entity.bullet.EntityPromethiumBullet
-import club.redux.sunset.lavafishing.misc.ModResourceLocation
-import club.redux.sunset.lavafishing.util.UtilRegister
-import club.redux.sunset.lavafishing.util.registerKt
+import club.redux.sunset.lavafishing.tool.registry.Registrar
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
@@ -14,49 +13,37 @@ import net.minecraft.world.item.Tiers
 import net.minecraft.world.level.Level
 import net.minecraftforge.registries.ForgeRegistries
 import net.minecraftforge.registries.RegistryObject
-import kotlin.reflect.full.isSubclassOf
 
-object ModEntityTypes {
-    @JvmField val REGISTER = UtilRegister.create(ForgeRegistries.ENTITY_TYPES, BuildConstants.MOD_ID)
+object ModEntityTypes : Registrar<EntityType<*>>(ForgeRegistries.ENTITY_TYPES, BuildConstants.MOD_ID) {
+    private val typeMap = mutableMapOf<RegistryObject<EntityType<*>>, Class<out Entity>>()
 
-    @JvmField val TYPE_MAP: MutableMap<RegistryObject<out EntityType<out Entity>>, Class<out Entity>> = mutableMapOf()
-
-    // EntityTypes
-    @JvmField
-    val STONE_BULLET = registerBullet("stone_bullet") { entityType: EntityType<EntityBullet>, level: Level ->
-        EntityBullet(entityType, level, Tiers.STONE)
-    }
-
-    @JvmField val IRON_BULLET = registerBullet("iron_bullet") { entityType: EntityType<EntityBullet>, level: Level ->
-        EntityBullet(entityType, level, Tiers.IRON)
-    }
-
-    @JvmField val NEPTUNIUM_BULLET = registerBullet("neptunium_bullet", ::EntityNeptuniumBullet)
-
-    @JvmField val PROMETHIUM_BULLET = registerBullet("promethium_bullet", ::EntityPromethiumBullet)
+    val STONE_BULLET by this.registerBullet { entityType, level -> EntityBullet(entityType, level, Tiers.STONE) }
+    val IRON_BULLET by this.registerBullet { entityType, level -> EntityBullet(entityType, level, Tiers.IRON) }
+    val NEPTUNIUM_BULLET by this.registerBullet(::EntityNeptuniumBullet)
+    val PROMETHIUM_BULLET by this.registerBullet(::EntityPromethiumBullet)
 
     @Suppress("UNCHECKED_CAST")
-    fun <T : Entity> getEntriesByEntityParentClass(clazz: Class<T>): List<RegistryObject<EntityType<T>>> {
-        return REGISTER.entries.filter {
-            TYPE_MAP[it]?.kotlin?.isSubclassOf(clazz.kotlin) ?: false
-        } as List<RegistryObject<EntityType<T>>>
+    fun <T : Entity> getEntriesByEntityParentClass(entityClass: Class<T>): List<RegistryObject<EntityType<T>>> {
+        return this.getHolders()
+            .filter { holder -> typeMap[holder]?.let(entityClass::isAssignableFrom) == true }
+            .map { it as RegistryObject<EntityType<T>> }
     }
 
-    inline fun <reified T : Entity> register(
-        name: String,
-        noinline supplier: () -> EntityType<T>,
-    ): RegistryObject<EntityType<T>> = REGISTER.registerKt(name, supplier).also { TYPE_MAP[it] = T::class.java }
+    inline fun <reified T : Entity> getEntriesByEntityParentClass(): List<RegistryObject<EntityType<T>>> {
+        return this.getEntriesByEntityParentClass(T::class.java)
+    }
+
+    fun <T : Entity> register(name: String, entityClass: Class<T>, supplier: () -> EntityType<T>): RegistryObject<EntityType<T>> {
+        return this.register(name, supplier).also { typeMap[it as RegistryObject<EntityType<*>>] = entityClass }
+    }
 
     private inline fun <reified T : EntityBullet> registerBullet(
-        name: String,
         noinline constructor: (EntityType<T>, Level) -> T,
-    ): RegistryObject<EntityType<T>> {
-        return register(name) {
-            EntityType.Builder.of(constructor, MobCategory.MISC)
-                .sized(0.5f, 0.5f)
-                .clientTrackingRange(4)
-                .updateInterval(10)
-                .build(ModResourceLocation(name).toString())
-        }
-    }
+    ) = this.register {
+        EntityType.Builder.of(constructor, MobCategory.MISC)
+            .sized(0.2f, 0.2f)
+            .clientTrackingRange(4)
+            .updateInterval(10)
+            .build(LavaFishing.resourceLocation(it).toString())
+    }.post { typeMap[it as RegistryObject<EntityType<*>>] = T::class.java }
 }

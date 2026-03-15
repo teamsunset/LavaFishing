@@ -1,8 +1,12 @@
 package club.redux.sunset.lavafishing.event
 
 import club.redux.sunset.lavafishing.datagenerator.*
-import club.redux.sunset.lavafishing.datagenerator.sub.ModSubProviderBlockLoot
+import club.redux.sunset.lavafishing.datagenerator.sub.loot.ModSubProviderBlockLoot
+import club.redux.sunset.lavafishing.datagenerator.sub.loot.ModSubProviderBoxLoot
+import club.redux.sunset.lavafishing.datagenerator.sub.loot.ModSubProviderEntityLoot
+import club.redux.sunset.lavafishing.datagenerator.sub.loot.ModSubProviderFishingLoot
 import net.minecraft.data.loot.LootTableProvider
+import net.minecraft.data.loot.LootTableProvider.SubProviderEntry
 import net.minecraft.data.tags.TagsProvider
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
 import net.minecraftforge.data.event.GatherDataEvent
@@ -31,7 +35,12 @@ object EventDataGenerator {
                 event.includeServer(),
                 ModDataProviderLootTable(
                     packOutput,
-                    listOf(LootTableProvider.SubProviderEntry(::ModSubProviderBlockLoot, LootContextParamSets.BLOCK)),
+                    listOf(
+                        SubProviderEntry(::ModSubProviderBlockLoot, LootContextParamSets.BLOCK),
+                        SubProviderEntry(::ModSubProviderEntityLoot, LootContextParamSets.ENTITY),
+                        SubProviderEntry(::ModSubProviderBoxLoot, LootContextParamSets.CHEST),
+                        SubProviderEntry(::ModSubProviderFishingLoot, LootContextParamSets.FISHING),
+                    ),
                 )
             )
             addProvider(event.includeClient(), ModDataProviderItemModel(packOutput, event.existingFileHelper))

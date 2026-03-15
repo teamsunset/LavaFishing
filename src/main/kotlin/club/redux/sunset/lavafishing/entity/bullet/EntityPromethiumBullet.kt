@@ -3,7 +3,9 @@ package club.redux.sunset.lavafishing.entity.bullet
 import club.redux.sunset.lavafishing.misc.ModTiers
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import club.redux.sunset.lavafishing.util.Utils
+import club.redux.sunset.lavafishing.util.UtilVec3.toVec3
 import club.redux.sunset.lavafishing.util.hasEnchantmentThen
+import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.ItemStack
@@ -19,7 +21,9 @@ class EntityPromethiumBullet(
 ) : EntityBullet(entityType, level, ModTiers.PROMETHIUM) {
     var dividable = true
     var divisionTimes = 1
-    var divisionNum = 3
+    var divisionNum = 2
+
+    private fun destroy() = this.remove(RemovalReason.DISCARDED)
 
     private fun explode(radius: Float) {
         this.level().explode(
@@ -56,48 +60,89 @@ class EntityPromethiumBullet(
 
     override fun onHitEntity(pResult: EntityHitResult) {
         super.onHitEntity(pResult)
+
+        if (this.piercedEntityIds.size <= this.pierceLevel) {
+            this.explode(0.5f)
+            return
+        }
+
         if (this.dividable) {
             this.hitDivide()
         } else {
             this.explode(1.5f)
         }
-        this.remove(RemovalReason.DISCARDED)
+        this.destroy()
     }
 
     override fun onHitBlock(pResult: BlockHitResult) {
+        val originVelocity = this.deltaMovement
         super.onHitBlock(pResult)
+        this.inGround = false
+        this.deltaMovement = originVelocity
+
         if (!this.dividable) {
             this.explode(1.5f)
-            this.remove(RemovalReason.DISCARDED)
-        } else if (this.xRot <= 0) {
-            this.hitDivide()
-            this.remove(RemovalReason.DISCARDED)
+            this.destroy()
+            return
         }
+
+        when (pResult.direction) {
+            Direction.UP -> {
+                this.hitDivide()
+                this.destroy()
+            }
+
+            else -> this.bounce(pResult.direction.normal.toVec3())
+        }
+    }
+
+    private fun bounce(normal: Vec3) {
+        this.explode(2f)
+        val velocity = this.deltaMovement
+        val normalized = normal.normalize()
+        val reflected = if (normalized.length() > 0) {
+            velocity.subtract(normalized.scale(2 * Utils.dot(velocity, normalized)))
+        } else {
+            velocity
+        }
+        this.deltaMovement = reflected
+        this.divisionTimes--
     }
 
     override fun tick() {
         super.tick()
         if (this.level().isClientSide) return
 
-        if (this.dividable && this.divisionTimes <= 0) {
-            this.remove(RemovalReason.DISCARDED)
+        if (this.divisionTimes < 0) {
+            this.destroy()
+            return
         }
-        if (this.dividable && this.divisionTimes > 0 && ((!this.inGround && this.deltaMovement.length() < 2 && this.deltaMovement.y in (-1.0..-0.3)) || (this.inGround && this.xRot > 0))) {
+
+        if (this.dividable && this.divisionTimes > 0 && (!this.inGround && this.deltaMovement.length() < 2 && this.deltaMovement.y in (-1.0..-0.5))) {
             this.explode(1f)
             this.divide(this.divisionNum, this.deltaMovement.length())
             this.deltaMovement = Vec3(this.deltaMovement.x, 0.5, this.deltaMovement.z)
             this.divisionTimes--
+            if (this.divisionTimes == 0) {
+                this.destroy()
+            }
+            return
         }
+
         if (!this.dividable && this.inGround) {
             this.explode(1.5f)
-            this.remove(RemovalReason.DISCARDED)
+            this.destroy()
         }
+    }
+
+    private fun hitDivideOnce() {
+        this.explode(1f)
+        this.divide(this.divisionNum, -0.3)
     }
 
     private fun hitDivide() {
         if (this.divisionTimes <= 1) {
-            this.explode(1f)
-            this.divide(this.divisionNum, -0.3, 0.5)
+            this.hitDivideOnce()
         } else {
             this.explode(2f)
             this.level().addFreshEntity(dividedBullet(true, this.divisionNum, this.divisionTimes - 1).also {
@@ -110,7 +155,6 @@ class EntityPromethiumBullet(
     override fun attachEnchantment(stack: ItemStack) {
         super.attachEnchantment(stack)
         stack.hasEnchantmentThen(Enchantments.POWER_ARROWS) { this.divisionNum += it }
-        stack.hasEnchantmentThen(Enchantments.MULTISHOT) { this.divisionTimes = 3 }
     }
 
     //-----------------network----------------//

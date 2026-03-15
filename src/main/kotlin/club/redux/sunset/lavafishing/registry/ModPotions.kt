@@ -1,9 +1,8 @@
 package club.redux.sunset.lavafishing.registry
 
-import club.redux.sunset.lavafishing.BuildConstants
+import club.redux.sunset.lavafishing.BuiltConstants
 import club.redux.sunset.lavafishing.potion.PotionLavaWalker
-import club.redux.sunset.lavafishing.util.UtilRegister
-import club.redux.sunset.lavafishing.util.registerKt
+import club.redux.sunset.lavafishing.tool.registry.Registrar
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -17,12 +16,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
 import net.minecraftforge.registries.ForgeRegistries
 
 
-object ModPotions {
-    @JvmField val REGISTER = UtilRegister.create(ForgeRegistries.POTIONS, BuildConstants.MOD_ID)
+object ModPotions : Registrar<Potion>(ForgeRegistries.POTIONS, BuiltConstants.MOD_ID) {
+    val LAVA_WALKER by this.register { PotionLavaWalker() }
 
-    @JvmField val LAVA_WALKER = REGISTER.registerKt("lava_walker") { PotionLavaWalker() }
-
-    @JvmStatic
     fun onCommonSetupEvent(event: FMLCommonSetupEvent) {
         val createBrewingRecipe = { input: Potion, ingredient: Item, output: Potion ->
             BrewingRecipe(

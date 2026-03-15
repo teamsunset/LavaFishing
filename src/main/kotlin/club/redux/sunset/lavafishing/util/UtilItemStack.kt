@@ -14,3 +14,6 @@ object UtilItemStack {
 
 fun ItemStack.hasEnchantmentThen(enchantment: Enchantment, action: (Int) -> Unit) =
     UtilItemStack.hasEnchantmentThen(this, enchantment, action)
+
+
+

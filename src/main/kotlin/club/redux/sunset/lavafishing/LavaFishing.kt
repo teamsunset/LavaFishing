@@ -1,21 +1,34 @@
 package club.redux.sunset.lavafishing
 
 import club.redux.sunset.lavafishing.registry.*
+import club.redux.sunset.lavafishing.util.Utils
+import club.redux.sunset.lavafishing.util.Utils.resourceLocation
+import com.mojang.logging.LogUtils
 import net.minecraftforge.fml.common.Mod
+import org.slf4j.Logger
 import thedarkcolour.kotlinforforge.forge.MOD_BUS
 
-@Mod(BuildConstants.MOD_ID)
-class LavaFishing {
+@Mod(BuiltConstants.MOD_ID)
+object LavaFishing {
+    val Any.logger: Logger by lazy { LogUtils.getLogger() }
+
+    fun resourceLocation(path: String) = BuiltConstants.MOD_ID.resourceLocation(path)
+
     init {
-//        val eventBus = FMLJavaModLoadingContext.get().modEventBus
-        ModBlocks.REGISTER.register(MOD_BUS)
-        ModBlockEntityTypes.REGISTER.register(MOD_BUS)
-        ModCreativeModeTabs.REGISTER.register(MOD_BUS)
-        ModItems.REGISTER.register(MOD_BUS)
-        ModEntityTypes.REGISTER.register(MOD_BUS)
-        ModMobEffects.REGISTER.register(MOD_BUS)
-        ModParticleTypes.REGISTER.register(MOD_BUS)
-        ModPotions.REGISTER.register(MOD_BUS)
-        ModSoundEvents.REGISTER.register(MOD_BUS)
+        Utils.asciiArt()
+
+        listOf(
+            ModBlockEntityTypes,
+            ModBlocks,
+            ModCreativeModeTabs,
+            ModEntityTypes,
+            ModItems,
+            ModItemsAqua,
+            ModMobEffects,
+            ModParticleTypes,
+            ModPotions,
+            ModRecipeSerializers,
+            ModSoundEvents
+        ).forEach { it.attach(MOD_BUS) }
     }
 }

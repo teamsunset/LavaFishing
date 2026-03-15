@@ -1,31 +1,21 @@
 package club.redux.sunset.lavafishing.registry
 
-import club.redux.sunset.lavafishing.BuildConstants
-import club.redux.sunset.lavafishing.util.UtilRegister
-import club.redux.sunset.lavafishing.util.registerKt
+import club.redux.sunset.lavafishing.BuiltConstants
+import club.redux.sunset.lavafishing.tool.registry.Registrar
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-import net.minecraftforge.registries.RegistryObject
-import java.util.function.Consumer
 
-object ModCreativeModeTabs {
-    @JvmField val REGISTER = UtilRegister.create(Registries.CREATIVE_MODE_TAB, BuildConstants.MOD_ID)
-
-    @JvmField val LAVA_FISHING = REGISTER.registerKt(BuildConstants.MOD_ID) {
+object ModCreativeModeTabs : Registrar<CreativeModeTab>(Registries.CREATIVE_MODE_TAB, BuiltConstants.MOD_ID) {
+    val LAVA_FISHING = BuiltConstants.MOD_ID.register {
         CreativeModeTab.builder()
-            .title(Component.translatable("itemGroup." + BuildConstants.MOD_ID))
+            .title(Component.translatable("itemGroup." + BuiltConstants.MOD_ID))
             .icon { ItemStack(ModItems.OBSIDIAN_FISHING_ROD.get()) }
-            .displayItems { p: ItemDisplayParameters?, o: CreativeModeTab.Output ->
-                ModItems.REGISTER.entries.forEach(
-                    Consumer { i: RegistryObject<Item?> ->
-                        o.accept(
-                            i.get()
-                        )
-                    })
+            .displayItems { _: ItemDisplayParameters, o: CreativeModeTab.Output ->
+                ModItems.getEntries().filter { it != ModItems.HYDROTHERMAL_HOOK.get() }.forEach(o::accept)
+                ModItemsAqua.getEntries().forEach(o::accept)
             }
             .build()
     }

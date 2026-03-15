@@ -1,16 +1,13 @@
 package club.redux.sunset.lavafishing.registry
 
-import club.redux.sunset.lavafishing.BuildConstants
+import club.redux.sunset.lavafishing.BuiltConstants
 import club.redux.sunset.lavafishing.effect.EffectEndlessFlame
 import club.redux.sunset.lavafishing.effect.EffectLavaWalker
-import club.redux.sunset.lavafishing.util.UtilRegister
-import club.redux.sunset.lavafishing.util.registerKt
+import club.redux.sunset.lavafishing.tool.registry.Registrar
+import net.minecraft.world.effect.MobEffect
 import net.minecraftforge.registries.ForgeRegistries
 
-object ModMobEffects {
-    @JvmField val REGISTER = UtilRegister.create(ForgeRegistries.MOB_EFFECTS, BuildConstants.MOD_ID)
-
-    //    @JvmField val BLESSED = REGISTER.registerKt("blessed") { EffectBlessed() }
-    @JvmField val ENDLESS_FLAME = REGISTER.registerKt("endless_flame") { EffectEndlessFlame() }
-    @JvmField val LAVA_WALKER = REGISTER.registerKt("lava_walker") { EffectLavaWalker() }
+object ModMobEffects : Registrar<MobEffect>(ForgeRegistries.MOB_EFFECTS, BuiltConstants.MOD_ID) {
+    val ENDLESS_FLAME by this.register { EffectEndlessFlame() }
+    val LAVA_WALKER by this.register { EffectLavaWalker() }
 }

@@ -1,14 +1,12 @@
 package club.redux.sunset.lavafishing.entity
 
 import club.redux.sunset.lavafishing.ai.path.pathnavigation.PathNavigationLavaBound
-import club.redux.sunset.lavafishing.api.mixin.IMixinProxyAbstractFish
 import club.redux.sunset.lavafishing.client.renderer.entity.EntityRendererLavaFish
 import club.redux.sunset.lavafishing.misc.LavaFishType
+import club.redux.sunset.lavafishing.mixinproxy.IMixinProxyAbstractFish
 import club.redux.sunset.lavafishing.registry.ModEntityTypes
 import club.redux.sunset.lavafishing.util.castToProxy
-import com.teammetallurgy.aquaculture.init.AquaItems
 import com.teammetallurgy.aquaculture.init.AquaSounds
-import com.teammetallurgy.aquaculture.misc.StackHelper
 import net.minecraft.advancements.CriteriaTriggers
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
@@ -24,8 +22,6 @@ import net.minecraft.world.entity.ai.goal.PanicGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.animal.AbstractFish
 import net.minecraft.world.entity.animal.AbstractSchoolingFish
-import net.minecraft.world.entity.animal.Cat
-import net.minecraft.world.entity.animal.Ocelot
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ItemUtils
@@ -36,6 +32,7 @@ import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.LiquidBlock
 import net.minecraft.world.level.levelgen.Heightmap
+import net.minecraft.world.level.pathfinder.BlockPathTypes
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import net.minecraftforge.client.event.EntityRenderersEvent
@@ -53,6 +50,8 @@ open class EntityLavaFish(
 
     init {
         this.init()
+        this.setPathfindingMalus(BlockPathTypes.LAVA, 0.0f)
+        this.setPathfindingMalus(BlockPathTypes.WATER, -1.0f)
     }
 
     protected open fun init(): Unit = Unit
@@ -73,9 +72,7 @@ open class EntityLavaFish(
     override fun getBucketItemStack(): ItemStack {
         return ItemStack(
             ForgeRegistries.ITEMS.getValue(
-                ResourceLocation(
-                    ForgeRegistries.ENTITY_TYPES.getKey(this.type).toString() + "_bucket"
-                )
+                ResourceLocation.parse(ForgeRegistries.ENTITY_TYPES.getKey(this.type).toString() + "_bucket")
             )!!
         )
     }
@@ -95,9 +92,13 @@ open class EntityLavaFish(
 
             this.discard()
             return InteractionResult.sidedSuccess(level.isClientSide)
-        } else {
+        }
+
+        if (itemStack.item === Items.WATER_BUCKET) {
             return InteractionResult.PASS
         }
+
+        return super.mobInteract(pPlayer, pHand)
     }
 
     override fun handleAirSupply(pAirSupply: Int) {
@@ -124,7 +125,7 @@ open class EntityLavaFish(
     }
 
     override fun stopFollowing() {
-        if (this.leader != null) {
+        if (this.isFollower) {
             super.stopFollowing()
         }
     }
@@ -169,7 +170,7 @@ open class EntityLavaFish(
         }
 
         fun onSpawnPlacementRegister(event: SpawnPlacementRegisterEvent) {
-            ModEntityTypes.getEntriesByEntityParentClass(EntityLavaFish::class.java).forEach {
+            ModEntityTypes.getEntriesByEntityParentClass<EntityLavaFish>().forEach {
                 event.register(
                     it.get(),
                     SpawnPlacements.Type.IN_LAVA,
@@ -181,36 +182,13 @@ open class EntityLavaFish(
         }
 
         fun onEntityAttributeCreation(event: EntityAttributeCreationEvent) {
-            ModEntityTypes.getEntriesByEntityParentClass(EntityLavaFish::class.java).forEach {
+            ModEntityTypes.getEntriesByEntityParentClass<EntityLavaFish>().forEach {
                 event.put(it.get(), AbstractFish.createAttributes().build())
             }
         }
 
-        fun onSetup(event: FMLCommonSetupEvent) {
-            try {
-                // CatBreeding
-                val catBreedingItems = Cat.TEMPT_INGREDIENT
-                val ocelotBreedingItems = Ocelot.TEMPT_INGREDIENT
-                val lavaFish: MutableList<ItemStack> = ArrayList()
-                ModEntityTypes.getEntriesByEntityParentClass(EntityLavaFish::class.java)
-                    .forEach {
-                        lavaFish.add(
-                            ItemStack(ForgeRegistries.ITEMS.getValue(it.key!!.location())!!)
-                        )
-                    }
-                lavaFish.removeIf { p: ItemStack -> p.item == AquaItems.JELLYFISH.get() }
-
-                Cat.TEMPT_INGREDIENT =
-                    StackHelper.mergeIngredient(catBreedingItems, StackHelper.ingredientFromStackList(lavaFish))
-                Ocelot.TEMPT_INGREDIENT =
-                    StackHelper.mergeIngredient(ocelotBreedingItems, StackHelper.ingredientFromStackList(lavaFish))
-            } catch (t: Throwable) {
-                t.printStackTrace()
-            }
-        }
-
         fun onRegisterEntityRenderers(event: EntityRenderersEvent.RegisterRenderers) {
-            ModEntityTypes.getEntriesByEntityParentClass(EntityLavaFish::class.java).forEach {
+            ModEntityTypes.getEntriesByEntityParentClass<EntityLavaFish>().forEach {
                 event.registerEntityRenderer(it.get(), ::EntityRendererLavaFish)
             }
         }

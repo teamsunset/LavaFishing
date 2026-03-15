@@ -3,7 +3,6 @@ import groovy.util.NodeList
 import net.minecraftforge.gradle.common.util.RunConfig
 import org.jetbrains.gradle.ext.settings
 import org.jetbrains.gradle.ext.taskTriggers
-import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -18,6 +17,7 @@ val minecraftMappingChannel: String by project
 val minecraftMappingVersion: String by project
 val aquacultureVersion: String by project
 val aquacultureVersionRange: String by project
+val kotlinForForgeVersion: String by project
 val kotlinForForgeVersionRange: String by project
 val jeiVersion: String by project
 val modId: String by project
@@ -43,7 +43,9 @@ group = modGroupId
 
 base.archivesName.set(modId)
 java.toolchain.languageVersion.set(javaVersion)
-kapt.keepJavacAnnotationProcessors = true
+
+idea.module.isDownloadJavadoc = true
+idea.module.isDownloadSources = true
 
 buildscript {
     repositories {
@@ -69,10 +71,9 @@ plugins {
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("org.spongepowered.mixin") version "0.7.+"
-    kotlin("jvm") version "1.9.23"
-    kotlin("kapt") version "1.9.23"
-    kotlin("plugin.serialization") version "1.9.23"
-    kotlin("plugin.lombok") version "1.9.23"
+    kotlin("jvm") version "2.2.21"
+    kotlin("plugin.serialization") version "2.2.21"
+    kotlin("plugin.lombok") version "2.2.21"
 }
 
 repositories {
@@ -84,19 +85,23 @@ repositories {
     }
     maven {
         url = uri("https://jitpack.io")
+        content { includeGroup("com.github.dsx137") }
     }
-    maven("Aquaculture") { url = uri("https://girafi.dk/maven/") }
+    maven("Aquaculture") {
+        url = uri("https://girafi.dk/maven/")
+        content { includeGroup("com.teammetallurgy.aquaculture") }
+    }
     maven("Kotlin for Forge") {
         url = uri("https://thedarkcolour.github.io/KotlinForForge/")
+        content { includeGroup("thedarkcolour") }
     }
     maven("Jared's maven") {
         url = uri("https://maven.blamejared.com/")
+        content { includeGroup("mezz.jei") }
     }
     maven {
         url = uri("https://www.cursemaven.com")
-        content {
-            includeGroup("curse.maven")
-        }
+        content { includeGroup("curse.maven") }
     }
     mavenLocal()
     mavenCentral()
@@ -107,13 +112,11 @@ dependencies {
     val mixinProcessor = "org.spongepowered:mixin:0.8.5:processor"
     val aquaculture =
         "com.teammetallurgy.aquaculture:aquaculture2_${minecraftVersion}:${minecraftVersion}-${aquacultureVersion}"
-    val kotlinforforge = "thedarkcolour:kotlinforforge:4.10.0"
+    val kotlinforforge = "thedarkcolour:kotlinforforge:$kotlinForForgeVersion"
     val jeiCommonApi = "mezz.jei:jei-${minecraftVersion}-common-api:${jeiVersion}"
     val jeiForgeApi = "mezz.jei:jei-${minecraftVersion}-forge-api:${jeiVersion}"
     val jei = "mezz.jei:jei-${minecraftVersion}-forge:${jeiVersion}"
     val configured = "curse.maven:configured-457570:5180900"
-
-    val jable = "com.github.dsx137:jable:1.0.10"
 
     // Minecraft
     minecraft(mc)
@@ -127,17 +130,13 @@ dependencies {
     // Kotlin for Forge
     implementation(kotlinforforge)
 
-    // Jable
-    minecraftLibrary(jable)
-    shade(jable)
-
     // Jei
     compileOnly(fg.deobf(jeiCommonApi))
     compileOnly(fg.deobf(jeiForgeApi))
-    runtimeOnly(fg.deobf(jei))
+    compileOnly(fg.deobf(jei))
 
     // Configured
-    implementation(fg.deobf(configured))
+    compileOnly(fg.deobf(configured))
 }
 
 minecraft {
@@ -154,6 +153,12 @@ minecraft {
 
                 property("forge.logging.markers", "REGISTRIES")
                 property("forge.logging.console.level", "debug")
+                property("io.netty.tryReflectionSetAccessible", "true")
+                environment(
+                    "JAVA_TOOL_OPTIONS",
+                    "-Dio.netty.tryReflectionSetAccessible=true --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-exports=java.base/jdk.internal.misc=ALL-UNNAMED --add-opens=java.base/java.nio=io.netty.common --add-opens=java.base/sun.nio.ch=io.netty.common --add-exports=java.base/jdk.internal.misc=io.netty.common"
+                )
+                arg("--mixin.config=${modId}.mixins.json")
 
                 this.additionalConfig()
 
@@ -221,6 +226,10 @@ sourceSets["main"].java.srcDirs(generateTemplates.map { it.destinationDir })
 rootProject.idea.project.settings.taskTriggers.afterSync(generateTemplates)
 project.eclipse.synchronizationTasks(generateTemplates)
 
+tasks.withType(JavaCompile::class.java).configureEach {
+    options.encoding = "UTF-8"
+}
+
 val processResourceConfig: ProcessResources.() -> Unit = {
     val targets = listOf("META-INF/mods.toml", "pack.mcmeta")
     inputs.properties(props)
@@ -239,7 +248,7 @@ tasks.jar {
             mapOf(
                 "Specification-Title" to modId,
                 "Specification-Vendor" to modAuthors,
-                "Specification-Version" to "1", // We are version 1 of ourselves
+                "Specification-Version" to "1",
                 "Implementation-Title" to project.name,
                 "Implementation-Version" to modVersion,
                 "Implementation-Vendor" to modAuthors,
@@ -247,26 +256,9 @@ tasks.jar {
                     .format(Date().toInstant().atOffset(ZoneOffset.UTC))
             )
         )
-    }
-}
-
-tasks.shadowJar {
-    mergeServiceFiles()
-    minimize()
-    minimize {
-        fullShade.dependencies.forEach {
-            exclude(dependency(it))
-        }
+        attributes["MixinConfigs"] = "${modId}.mixins.json"
     }
 
-    configurations = listOf(shade, fullShade)
-
-    relocate("com.github", "${modGroupId}.${modId}.shadowed.com.github")
-}
-
-val reobfShadowJar = reobf.create("shadowJar")
-
-tasks.jar {
     doFirst {
         val modToml = file("build/resources/main/META-INF/mods.toml")
         modToml.writeText(
@@ -278,6 +270,41 @@ tasks.jar {
     }
 }
 
+tasks.shadowJar {
+    mergeServiceFiles()
+    minimize {
+        fullShade.dependencies.forEach {
+            exclude(dependency(it))
+        }
+    }
+
+    configurations = listOf(shade, fullShade)
+
+    arrayOf("com.github").forEach { path ->
+        relocate(path, "${modGroupId}.${modId}.shadowed.$path")
+    }
+}
+
+val reobfShadowJar = reobf.create("shadowJar")
+reobfShadowJar.extraMappings.from(layout.buildDirectory.file("tmp/compileJava/compileJava-mappings.tsrg"))
+
+tasks.matching {
+    it.name in setOf(
+        "addMixinsToJar",
+        "addMixinsToJarJar",
+        "configureReobfTaskForReobfJar",
+        "configureReobfTaskForReobfJarJar",
+        "reobfJar",
+        "reobfJarJar"
+    )
+}.configureEach {
+    enabled = false
+}
+
+tasks.build {
+    dependsOn(reobfShadowJar)
+}
+
 tasks.withType(GenerateModuleMetadata::class.java) {
     enabled = false
 }
@@ -286,7 +313,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
-            artifactId = project.archivesName.get()
+            artifactId = base.archivesName.get()
             groupId = project.group.toString()
             version = project.version.toString()
             pom {
@@ -323,7 +350,7 @@ publishing {
 
 /*---TeaCon---*/
 
-val oneStepBuild = tasks.create("oneStepBuild", ProcessResources::class) {
+val oneStepBuild = tasks.register<ProcessResources>("oneStepBuild") {
     dependsOn("runData")
     finalizedBy("build")
     processResourceConfig()

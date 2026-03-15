@@ -1,6 +1,6 @@
 package club.redux.sunset.lavafishing.item.fish
 
-import club.redux.sunset.lavafishing.registry.ModItems.REGISTER
+import club.redux.sunset.lavafishing.registry.ModItems
 import com.teammetallurgy.aquaculture.api.AquacultureAPI
 import com.teammetallurgy.aquaculture.item.FishItem
 import net.minecraft.world.food.FoodProperties
@@ -24,7 +24,7 @@ open class ItemLavaFish : FishItem {
         // TODO
         @JvmStatic
         fun onSetup(event: FMLCommonSetupEvent) {
-            REGISTER.entries.map { it.get() }.filterIsInstance<ItemLavaFish>().forEach {
+            ModItems.getEntriesIsInstance<ItemLavaFish>().forEach {
                 AquacultureAPI.FISH_DATA.add(it, 100.0, 200.0, it.filletAmount)
             }
         }

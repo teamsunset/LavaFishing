@@ -2,11 +2,14 @@
   "required": true,
   "minVersion": "0.8",
   "package": "club.redux.sunset.lavafishing.mixin",
-  "compatibilityLevel": "JAVA_8",
   "refmap": "lavafishing.refmap.json",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
     "MixinAbstractFish",
-    "MixinLivingEntity"
+    "MixinAbstractSkeleton",
+    "MixinLivingEntity",
+    "accessor.AccessorCat",
+    "accessor.AccessorOcelot"
   ],
   "client": [
   ],

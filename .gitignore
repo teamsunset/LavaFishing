@@ -5,6 +5,7 @@ bin
 .metadata
 .classpath
 .project
+.factorypath
 
 # idea
 out
@@ -19,9 +20,12 @@ build
 
 # other
 eclipse
-run
 runs
+run
 
 # Files from Forge MDK
 forge*changelog.txt
 src/generated
+.xcodemap
+
+.kotlin
