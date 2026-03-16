@@ -286,7 +286,6 @@ tasks.shadowJar {
 }
 
 val reobfShadowJar = reobf.create("shadowJar")
-reobfShadowJar.extraMappings.from(layout.buildDirectory.file("tmp/compileJava/compileJava-mappings.tsrg"))
 
 tasks.matching {
     it.name in setOf(
