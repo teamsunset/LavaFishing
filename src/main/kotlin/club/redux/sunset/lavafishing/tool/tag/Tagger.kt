@@ -8,7 +8,7 @@ import kotlin.reflect.KProperty
 
 abstract class Tagger<T>(private val registry: ResourceKey<out Registry<T>>, private val modId: String) {
     protected fun tag(path: String): TagKey<T> =
-        TagKey.create(registry, ResourceLocation.fromNamespaceAndPath(modId, path))
+        TagKey.create(registry, ResourceLocation(modId, path))
 
     @JvmName("stringTag")
     protected fun String.tag() = this@Tagger.tag(this)

@@ -4,8 +4,8 @@ import club.redux.sunset.lavafishing.entity.bullet.EntityBullet
 import club.redux.sunset.lavafishing.item.bullet.ItemBullet
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModSoundEvents
-import club.redux.sunset.lavafishing.util.setShooter
 import club.redux.sunset.lavafishing.util.isServerSide
+import club.redux.sunset.lavafishing.util.setShooter
 import net.minecraft.client.renderer.item.ItemProperties
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
@@ -15,21 +15,8 @@ import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.entity.projectile.AbstractArrow
-import net.minecraft.world.entity.projectile.Projectile
-import net.minecraft.world.entity.projectile.SmallFireball
-import net.minecraft.world.entity.projectile.Snowball
-import net.minecraft.world.entity.projectile.ThrownEgg
-import net.minecraft.world.entity.projectile.ThrownEnderpearl
-import net.minecraft.world.entity.projectile.ThrownExperienceBottle
-import net.minecraft.world.entity.projectile.ThrownPotion
-import net.minecraft.world.entity.projectile.ThrownTrident
-import net.minecraft.world.entity.projectile.WitherSkull
-import net.minecraft.world.item.BowItem
-import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
-import net.minecraft.world.item.Tier
+import net.minecraft.world.entity.projectile.*
+import net.minecraft.world.item.*
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.item.enchantment.Enchantments
@@ -241,10 +228,11 @@ open class ItemSlingshot(
     protected open fun customArrow(arrow: AbstractArrow, ammo: ItemStack, weapon: ItemStack): AbstractArrow {
         return this.customBullet(
             if (arrow is EntityBullet) arrow
-            else ModItems.STONE_BULLET.get().createBullet(arrow.level(), ammo, arrow.owner as? LivingEntity, weapon).apply {
-                this.setPos(arrow.x, arrow.y, arrow.z)
-                this.owner = arrow.owner
-            }
+            else ModItems.STONE_BULLET.get().createBullet(arrow.level(), ammo, arrow.owner as? LivingEntity, weapon)
+                .apply {
+                    this.setPos(arrow.x, arrow.y, arrow.z)
+                    this.owner = arrow.owner
+                }
         ).apply { attachEnchantment(weapon) }
     }
 
@@ -260,8 +248,17 @@ open class ItemSlingshot(
         val SUPPORTED_PROJECTILES: Map<Item, (Level, LivingEntity, ItemStack) -> Projectile> = mapOf(
             Items.SNOWBALL to { level, entity, _ -> Snowball(level, entity) },
             Items.EGG to { level, entity, _ -> ThrownEgg(level, entity) },
-            Items.FIRE_CHARGE to { level, entity, _ -> SmallFireball(EntityType.SMALL_FIREBALL, level).setShooter(entity) },
-            Items.WITHER_SKELETON_SKULL to { level, entity, _ -> WitherSkull(EntityType.WITHER_SKULL, level).setShooter(entity) },
+            Items.FIRE_CHARGE to { level, entity, _ ->
+                SmallFireball(
+                    EntityType.SMALL_FIREBALL,
+                    level
+                ).setShooter(entity)
+            },
+            Items.WITHER_SKELETON_SKULL to { level, entity, _ ->
+                WitherSkull(EntityType.WITHER_SKULL, level).setShooter(
+                    entity
+                )
+            },
             Items.EXPERIENCE_BOTTLE to { level, entity, _ -> ThrownExperienceBottle(level, entity) },
             Items.TRIDENT to { level, entity, stack -> ThrownTrident(level, entity, stack.copy()) },
             Items.ENDER_PEARL to { level, entity, _ -> ThrownEnderpearl(level, entity) },
@@ -274,14 +271,14 @@ open class ItemSlingshot(
         fun onClientSetup(event: FMLClientSetupEvent) {
             event.enqueueWork {
                 ModItems.getEntriesIsInstance<ItemSlingshot>().forEach { item ->
-                    ItemProperties.register(item, ResourceLocation.parse("pull")) { pStack, _, pEntity, _ ->
+                    ItemProperties.register(item, ResourceLocation("pull")) { pStack, _, pEntity, _ ->
                         if (pEntity == null || pEntity.useItem != pStack) {
                             0f
                         } else {
                             (pStack.useDuration - pEntity.useItemRemainingTicks) / 20f * item.getChargeMultiplier(pStack)
                         }
                     }
-                    ItemProperties.register(item, ResourceLocation.parse("pulling")) { pStack, _, pEntity, _ ->
+                    ItemProperties.register(item, ResourceLocation("pulling")) { pStack, _, pEntity, _ ->
                         if (pEntity != null && pEntity.isUsingItem && pEntity.useItem === pStack) {
                             1f
                         } else {

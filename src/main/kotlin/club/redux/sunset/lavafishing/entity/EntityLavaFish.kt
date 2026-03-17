@@ -38,7 +38,6 @@ import net.minecraft.world.phys.Vec3
 import net.minecraftforge.client.event.EntityRenderersEvent
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
 import net.minecraftforge.registries.ForgeRegistries
 
 open class EntityLavaFish(
@@ -60,10 +59,11 @@ open class EntityLavaFish(
         this.goalSelector.availableGoals.clear()
 
         this.goalSelector.addGoal(0, PanicGoal(this, 1.25))
-        this.goalSelector.addGoal(2, AvoidEntityGoal(
-            this, Player::class.java,
-            8.0f, 1.6, 1.4
-        ) { EntitySelector.NO_SPECTATORS.test(it) })
+        this.goalSelector.addGoal(
+            2, AvoidEntityGoal(
+                this, Player::class.java,
+                8.0f, 1.6, 1.4
+            ) { EntitySelector.NO_SPECTATORS.test(it) })
     }
 
     override fun getPickedResult(target: HitResult): ItemStack = this.bucketItemStack
@@ -72,7 +72,7 @@ open class EntityLavaFish(
     override fun getBucketItemStack(): ItemStack {
         return ItemStack(
             ForgeRegistries.ITEMS.getValue(
-                ResourceLocation.parse(ForgeRegistries.ENTITY_TYPES.getKey(this.type).toString() + "_bucket")
+                ResourceLocation(ForgeRegistries.ENTITY_TYPES.getKey(this.type).toString() + "_bucket")
             )!!
         )
     }

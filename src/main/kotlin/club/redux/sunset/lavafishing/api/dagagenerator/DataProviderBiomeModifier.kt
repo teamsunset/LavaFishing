@@ -33,7 +33,7 @@ open class DataProviderBiomeModifier(
             return DataProvider.saveStable(
                 pOutput,
                 modifier.toJson(),
-                pathProvider.json(ResourceLocation.fromNamespaceAndPath(modId, name))
+                pathProvider.json(ResourceLocation(modId, name))
             )
         }.toTypedArray())
     }

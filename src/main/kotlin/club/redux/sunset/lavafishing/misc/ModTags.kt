@@ -38,6 +38,6 @@ object ModTags {
         val PROMETHIUM_BLOCK = tagKey(OreDirectoryType.STORAGE_BLOCKS, "promethium")
 
         private fun tagKey(type: OreDirectoryType, path: String): TagKey<net.minecraft.world.item.Item> =
-            ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "${type.type}/${path}"))
+            ItemTags.create(ResourceLocation("c", "${type.type}/${path}"))
     }
 }

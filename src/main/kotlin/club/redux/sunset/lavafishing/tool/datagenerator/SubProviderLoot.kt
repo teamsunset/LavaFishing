@@ -18,7 +18,7 @@ abstract class SubProviderLoot : LootTableSubProvider {
     private val tables = mutableListOf<TableBuilderEntry>()
 
     protected fun createLocation(modId: String, path: String): ResourceLocation {
-        return ResourceLocation.fromNamespaceAndPath(modId, path)
+        return ResourceLocation(modId, path)
     }
 
     protected fun add(vararg table: TableBuilderEntry) = this.tables.addAll(table)
