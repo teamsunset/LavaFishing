@@ -133,10 +133,10 @@ dependencies {
     // Jei
     compileOnly(fg.deobf(jeiCommonApi))
     compileOnly(fg.deobf(jeiForgeApi))
-    compileOnly(fg.deobf(jei))
+    runtimeOnly(fg.deobf(jei))
 
     // Configured
-    compileOnly(fg.deobf(configured))
+    implementation(fg.deobf(configured))
 }
 
 minecraft {
