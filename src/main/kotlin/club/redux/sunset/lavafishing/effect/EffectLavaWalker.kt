@@ -26,14 +26,12 @@ class EffectLavaWalker : MobEffect(MobEffectCategory.BENEFICIAL, 0xCC3300) {
 
     override fun shouldApplyEffectTickThisTick(tickCount: Int, amplifier: Int): Boolean = true
 
-    override fun applyEffectTick(pLivingEntity: LivingEntity, pAmplifier: Int): Boolean {
+    override fun applyEffectTick(level: ServerLevel, pLivingEntity: LivingEntity, pAmplifier: Int): Boolean {
         if (!pLivingEntity.isSpectator && !pLivingEntity.isShiftKeyDown) {
             val pos = pLivingEntity.position()
             val movement = pLivingEntity.deltaMovement
             val onPos = pLivingEntity.onPos
             val futureBlockPos = BlockPos.containing(pos.add(movement.scale(1.5)))
-            val level = pLivingEntity.level()
-
             if (pLivingEntity.isInLava) {
                 pLivingEntity.deltaMovement = movement.add(0.0, 0.1, 0.0)
             } else if (level.getFluidState(onPos).`is`(FluidTags.LAVA)) {

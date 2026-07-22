@@ -10,7 +10,7 @@ import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent
 
 
 object ModPotions : Registrar<Potion>(BuiltInRegistries.POTION, BuiltConstants.MOD_ID) {
-    val LAVA_WALKER by this.register { Potion(MobEffectInstance(ModMobEffects.LAVA_WALKER, 4800)) }
+    val LAVA_WALKER by this.register { Potion(it, MobEffectInstance(ModMobEffects.LAVA_WALKER, 4800)) }
 
     fun onRegisterBrewingRecipes(event: RegisterBrewingRecipesEvent) {
         event.builder.apply {

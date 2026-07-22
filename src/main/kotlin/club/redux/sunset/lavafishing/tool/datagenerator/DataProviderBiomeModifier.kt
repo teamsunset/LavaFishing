@@ -9,8 +9,8 @@ import com.google.gson.JsonPrimitive
 import net.minecraft.data.CachedOutput
 import net.minecraft.data.DataProvider
 import net.minecraft.data.PackOutput
+import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.level.biome.Biome
@@ -31,7 +31,7 @@ open class DataProviderBiomeModifier(
             return DataProvider.saveStable(
                 pOutput,
                 modifier.toJson(),
-                pathProvider.json(ResourceLocation.fromNamespaceAndPath(modId, name))
+                pathProvider.json(Identifier.fromNamespaceAndPath(modId, name))
             )
         }.toTypedArray())
     }
@@ -64,7 +64,7 @@ open class DataProviderBiomeModifier(
         constructor(
             biomes: List<ResourceKey<Biome>>,
             spawners: List<Spawner>,
-        ) : this(JsonArray().apply { biomes.forEach { add(JsonPrimitive(it.location().toString())) } }, spawners)
+        ) : this(JsonArray().apply { biomes.forEach { add(JsonPrimitive(it.identifier().toString())) } }, spawners)
 
         override fun toJson(): JsonElement {
             return (super.toJson() as JsonObject).apply {

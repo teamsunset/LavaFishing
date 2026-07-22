@@ -52,6 +52,8 @@ object ModItemsAqua : Registrar<Item>(BuiltInRegistries.ITEM, Aquaculture.MOD_ID
             .build()
     )
 
-    private fun registerHook(hook: Hook) = this.register { HookItem(hook) }
-        .post { Hook.HOOKS[hook.name] = DeferredItem.createItem(it.key!!) }
+    private fun registerHook(hook: Hook) = this.register { name -> HookItem(hook, properties(name)) }
+        .post { Hook.HOOKS[hook.name] = DeferredItem.createItem(it.key) }
+
+    private fun properties(name: String) = Item.Properties().setId(this.createResourceKey(name))
 }

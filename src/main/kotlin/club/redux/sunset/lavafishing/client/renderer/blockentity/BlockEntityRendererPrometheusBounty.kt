@@ -6,16 +6,15 @@ import club.redux.sunset.lavafishing.registry.ModBlockEntityTypes
 import net.minecraft.client.renderer.Sheets
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.blockentity.ChestRenderer
-import net.minecraft.client.resources.model.Material
-import net.minecraft.world.level.block.state.properties.ChestType
+import net.minecraft.client.renderer.blockentity.state.ChestRenderState
+import net.minecraft.client.resources.model.sprite.SpriteId
 import net.neoforged.neoforge.client.event.EntityRenderersEvent
 
 class BlockEntityRendererPrometheusBounty(
     context: BlockEntityRendererProvider.Context,
 ) : ChestRenderer<BlockEntityPrometheusBounty>(context) {
-    override fun getMaterial(blockEntity: BlockEntityPrometheusBounty, chestType: ChestType): Material {
-        return Material(Sheets.CHEST_SHEET, LavaFishing.resourceLocation("entity/chest/prometheus_bounty"))
-    }
+    override fun getCustomSprite(blockEntity: BlockEntityPrometheusBounty, state: ChestRenderState) =
+        SpriteId(Sheets.CHEST_SHEET, LavaFishing.identifier("entity/chest/prometheus_bounty"))
 
     companion object {
         @JvmStatic

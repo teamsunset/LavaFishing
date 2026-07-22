@@ -16,7 +16,7 @@ object ModDataComponentTypes : Registrar<DataComponentType<*>>(
         it.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     }
 
-    private fun <T> registerComponentType(
+    private fun <T : Any> registerComponentType(
         builder: (DataComponentType.Builder<T>) -> DataComponentType.Builder<T>,
     ) = this.register { builder(DataComponentType.builder()).build() }
 }

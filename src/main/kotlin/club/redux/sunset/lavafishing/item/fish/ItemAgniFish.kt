@@ -6,7 +6,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
-class ItemAgniFish : ItemLavaFish() {
+class ItemAgniFish(properties: Properties) : ItemLavaFish(properties) {
     override fun finishUsingItem(pStack: ItemStack, pLevel: Level, pLivingEntity: LivingEntity): ItemStack {
         pLivingEntity.addEffect(MobEffectInstance(ModMobEffects.ENDLESS_FLAME, 2400))
         return super.finishUsingItem(pStack, pLevel, pLivingEntity)

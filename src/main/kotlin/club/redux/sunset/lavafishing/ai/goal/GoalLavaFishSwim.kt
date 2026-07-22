@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.tags.FluidTags
 import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal
 import net.minecraft.world.entity.ai.util.DefaultRandomPos
-import net.minecraft.world.entity.animal.AbstractFish
+import net.minecraft.world.entity.animal.fish.AbstractFish
 import net.minecraft.world.phys.Vec3
 
 class GoalLavaFishSwim(private val fish: AbstractFish) : RandomSwimmingGoal(fish, 1.0, 40) {

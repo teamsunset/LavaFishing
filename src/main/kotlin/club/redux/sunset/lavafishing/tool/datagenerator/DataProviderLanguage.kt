@@ -4,7 +4,6 @@ import net.minecraft.data.PackOutput
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Block
 import net.neoforged.neoforge.common.data.LanguageProvider
 import java.util.*
@@ -28,9 +27,6 @@ abstract class DataProviderLanguage(
         add(this, this@DataProviderLanguage.match(*pairs))
 
     protected fun String.addTranslation(vararg pairs: Pair<Locale, String>) =
-        add(this, this@DataProviderLanguage.match(*pairs))
-
-    protected fun ItemStack.addTranslation(vararg pairs: Pair<Locale, String>) =
         add(this, this@DataProviderLanguage.match(*pairs))
 
     protected fun MobEffect.addTranslation(vararg pairs: Pair<Locale, String>) =

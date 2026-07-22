@@ -3,9 +3,8 @@ package club.redux.sunset.lavafishing.misc
 import club.redux.sunset.lavafishing.BuiltConstants
 import club.redux.sunset.lavafishing.tool.tag.Tagger
 import net.minecraft.core.registries.Registries
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.tags.ItemTags
-import net.minecraft.tags.TagKey
 
 object ModTags {
     object Block : Tagger<net.minecraft.world.level.block.Block>(Registries.BLOCK, BuiltConstants.MOD_ID) {
@@ -37,7 +36,7 @@ object ModTags {
         val PROMETHIUM_NUGGET = tagKey(OreDirectoryType.NUGGETS, "promethium")
         val PROMETHIUM_BLOCK = tagKey(OreDirectoryType.STORAGE_BLOCKS, "promethium")
 
-        private fun tagKey(type: OreDirectoryType, path: String): TagKey<net.minecraft.world.item.Item> =
-            ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "${type.type}/${path}"))
+        private fun tagKey(type: OreDirectoryType, path: String) =
+            ItemTags.create(Identifier.fromNamespaceAndPath("c", "${type.type}/${path}"))
     }
 }

@@ -28,3 +28,6 @@ src/generated
 .xcodemap
 
 .kotlin
+
+.omo
+.sisyphus

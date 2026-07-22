@@ -5,7 +5,7 @@ import club.redux.sunset.lavafishing.misc.LavaFishType
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
-import net.minecraft.world.entity.animal.AbstractSchoolingFish
+import net.minecraft.world.entity.animal.fish.AbstractSchoolingFish
 import net.minecraft.world.level.Level
 
 class EntityAmphibious(

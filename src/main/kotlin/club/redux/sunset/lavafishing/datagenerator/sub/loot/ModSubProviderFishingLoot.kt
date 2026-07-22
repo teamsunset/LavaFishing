@@ -3,7 +3,7 @@ package club.redux.sunset.lavafishing.datagenerator.sub.loot
 import club.redux.sunset.lavafishing.BuiltConstants
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.tool.datagenerator.SubProviderLoot
-import net.minecraft.advancements.critereon.LocationPredicate
+import net.minecraft.advancements.criterion.LocationPredicate
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.registries.Registries
 import net.minecraft.world.item.Items

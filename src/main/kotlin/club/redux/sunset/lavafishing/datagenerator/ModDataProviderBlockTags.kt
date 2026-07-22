@@ -6,14 +6,12 @@ import net.minecraft.core.HolderLookup
 import net.minecraft.data.PackOutput
 import net.minecraft.tags.BlockTags
 import net.neoforged.neoforge.common.data.BlockTagsProvider
-import net.neoforged.neoforge.common.data.ExistingFileHelper
 import java.util.concurrent.CompletableFuture
 
 class ModDataProviderBlockTags(
     packOutput: PackOutput,
     lookupProvider: CompletableFuture<HolderLookup.Provider>,
-    existingFileHelper: ExistingFileHelper,
-) : BlockTagsProvider(packOutput, lookupProvider, BuiltConstants.MOD_ID, existingFileHelper) {
+) : BlockTagsProvider(packOutput, lookupProvider, BuiltConstants.MOD_ID) {
     override fun addTags(pProvider: HolderLookup.Provider) {
         tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
             ModBlocks.PROMETHIUM_BLOCK.get(),

@@ -1,0 +1,13 @@
+{
+  "layers": {
+    "humanoid": [
+      {"texture": "lavafishing:promethium"}
+    ],
+    "humanoid_baby": [
+      {"texture": "lavafishing:promethium"}
+    ],
+    "humanoid_leggings": [
+      {"texture": "lavafishing:promethium"}
+    ]
+  }
+}

@@ -11,6 +11,7 @@ import com.teammetallurgy.aquaculture.init.AquaSounds
 import net.minecraft.advancements.CriteriaTriggers
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.util.RandomSource
@@ -21,8 +22,8 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal
 import net.minecraft.world.entity.ai.goal.PanicGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
-import net.minecraft.world.entity.animal.AbstractFish
-import net.minecraft.world.entity.animal.AbstractSchoolingFish
+import net.minecraft.world.entity.animal.fish.AbstractFish
+import net.minecraft.world.entity.animal.fish.AbstractSchoolingFish
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ItemUtils
@@ -34,7 +35,6 @@ import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.LiquidBlock
 import net.minecraft.world.level.levelgen.Heightmap
 import net.minecraft.world.level.pathfinder.PathType
-import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import net.neoforged.neoforge.client.event.EntityRenderersEvent
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent
@@ -66,16 +66,14 @@ open class EntityLavaFish(
             ) { EntitySelector.NO_SPECTATORS.test(it) })
     }
 
-    override fun getPickedResult(target: HitResult): ItemStack = this.bucketItemStack
+    override fun getPickResult(): ItemStack = this.bucketItemStack
 
 
     override fun getBucketItemStack(): ItemStack {
         return ItemStack(
             BuiltInRegistries.ITEM.get(
-                LavaFishing.resourceLocation(
-                    BuiltInRegistries.ENTITY_TYPE.getKey(this.type).path.toString() + "_bucket"
-                )
-            )
+                LavaFishing.identifier(BuiltInRegistries.ENTITY_TYPE.getKey(this.type).path + "_bucket")
+            ).orElseThrow().value()
         )
     }
 
@@ -93,18 +91,18 @@ open class EntityLavaFish(
             }
 
             this.discard()
-            return InteractionResult.sidedSuccess(level.isClientSide)
+            return if (level.isClientSide) InteractionResult.SUCCESS else InteractionResult.SUCCESS_SERVER
         } else {
             return InteractionResult.PASS
         }
     }
 
-    override fun handleAirSupply(pAirSupply: Int) {
+    override fun handleAirSupply(level: ServerLevel, pAirSupply: Int) {
         if (this.isAlive && this.isInWater) {
             this.freezeTick--
             if (this.freezeTick == -20) {
                 this.freezeTick = 0
-                this.hurt(this.damageSources().freeze(), 1.0f)
+                this.hurtServer(level, this.damageSources().freeze(), 1.0f)
             }
         }
     }
@@ -123,7 +121,7 @@ open class EntityLavaFish(
     }
 
     override fun stopFollowing() {
-        if (this.leader != null) super.stopFollowing()
+        if (this.isFollower) super.stopFollowing()
     }
 
     override fun aiStep() = this.castToProxy(IMixinProxyAbstractFish::class).aiStepFromMob()
@@ -140,7 +138,7 @@ open class EntityLavaFish(
         fun canSpawnHere(
             fish: EntityType<out AbstractFish>,
             serverLevelAccessor: ServerLevelAccessor,
-            spawnReason: MobSpawnType,
+            spawnReason: EntitySpawnReason,
             pos: BlockPos,
             random: RandomSource,
         ): Boolean {

@@ -8,8 +8,8 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
-class ItemPromethiumBullet : ItemBullet(
-    Properties().fireResistant().component(ModDataComponentTypes.BULLET_DIVISION_TIMES, 1),
+class ItemPromethiumBullet(properties: Properties) : ItemBullet(
+    properties.fireResistant().component(ModDataComponentTypes.BULLET_DIVISION_TIMES, 1),
     { ModEntityTypes.PROMETHIUM_BULLET.get() }
 ) {
     override fun createBullet(pLevel: Level, pAmmo: ItemStack, pShooter: Entity?, pWeapon: ItemStack?): EntityBullet {

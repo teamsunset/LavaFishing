@@ -1,7 +1,6 @@
 package club.redux.sunset.lavafishing.registry
 
 import club.redux.sunset.lavafishing.BuiltConstants
-import club.redux.sunset.lavafishing.LavaFishing
 import club.redux.sunset.lavafishing.entity.bullet.EntityBullet
 import club.redux.sunset.lavafishing.entity.bullet.EntityNeptuniumBullet
 import club.redux.sunset.lavafishing.entity.bullet.EntityPromethiumBullet
@@ -10,7 +9,7 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
-import net.minecraft.world.item.Tiers
+import net.minecraft.world.item.ToolMaterial
 import net.minecraft.world.level.Level
 import net.neoforged.neoforge.registries.DeferredHolder
 import kotlin.reflect.KClass
@@ -20,8 +19,8 @@ object ModEntityTypes : Registrar<EntityType<*>>(BuiltInRegistries.ENTITY_TYPE, 
     val TYPE_MAP: MutableMap<DeferredHolder<EntityType<*>, out EntityType<*>>, KClass<out Entity>> = mutableMapOf()
 
     // EntityTypes
-    val STONE_BULLET by this.registerBullet { entityType, level -> EntityBullet(entityType, level, Tiers.STONE) }
-    val IRON_BULLET by this.registerBullet { entityType, level -> EntityBullet(entityType, level, Tiers.IRON) }
+    val STONE_BULLET by this.registerBullet { entityType, level -> EntityBullet(entityType, level, ToolMaterial.STONE) }
+    val IRON_BULLET by this.registerBullet { entityType, level -> EntityBullet(entityType, level, ToolMaterial.IRON) }
     val NEPTUNIUM_BULLET by this.registerBullet(::EntityNeptuniumBullet)
     val PROMETHIUM_BULLET by this.registerBullet(::EntityPromethiumBullet)
 
@@ -43,13 +42,11 @@ object ModEntityTypes : Registrar<EntityType<*>>(BuiltInRegistries.ENTITY_TYPE, 
 
     private inline fun <reified T : EntityBullet> registerBullet(
         noinline constructor: (EntityType<T>, Level) -> T,
-    ): Delegator<EntityType<T>> {
-        return this.registerWithMap {
-            EntityType.Builder.of(constructor, MobCategory.MISC)
-                .sized(0.2f, 0.2f)
-                .clientTrackingRange(4)
-                .updateInterval(10)
-                .build(LavaFishing.resourceLocation(it).toString())
-        }
+    ) = this.registerWithMap {
+        EntityType.Builder.of(constructor, MobCategory.MISC)
+            .sized(0.2f, 0.2f)
+            .clientTrackingRange(4)
+            .updateInterval(10)
+            .build(this.createResourceKey(it))
     }
 }

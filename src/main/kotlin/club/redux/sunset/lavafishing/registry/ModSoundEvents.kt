@@ -7,5 +7,5 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.sounds.SoundEvent
 
 object ModSoundEvents : Registrar<SoundEvent>(BuiltInRegistries.SOUND_EVENT, BuiltConstants.MOD_ID) {
-    val SLINGSHOT by this.register { SoundEvent.createVariableRangeEvent(LavaFishing.resourceLocation(it)) }
+    val SLINGSHOT by this.register { SoundEvent.createVariableRangeEvent(LavaFishing.identifier(it)) }
 }

@@ -22,7 +22,7 @@ class ModSubProviderEntityLoot(
                     it.get(),
                     LootTable.lootTable().withPool(
                         LootPool.lootPool()
-                            .add(LootItem.lootTableItem(BuiltInRegistries.ITEM.get(it.key!!.location())))
+                            .add(LootItem.lootTableItem(BuiltInRegistries.ITEM.getValue(it.id)))
                     ).withPool(
                         LootPool.lootPool()
                             .add(LootItem.lootTableItem(Items.BONE_MEAL))

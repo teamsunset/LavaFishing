@@ -1,62 +1,31 @@
 package club.redux.sunset.lavafishing.client.model
 
 import club.redux.sunset.lavafishing.LavaFishing
+import club.redux.sunset.lavafishing.client.renderer.entity.state.LavaFishRenderState
 import club.redux.sunset.lavafishing.tool.bedrock.BedrockLoader
-import com.mojang.blaze3d.vertex.PoseStack
-import com.mojang.blaze3d.vertex.VertexConsumer
-import net.minecraft.client.model.HierarchicalModel
+import net.minecraft.client.animation.KeyframeAnimation
+import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelPart
-import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.LivingEntity
 import net.neoforged.neoforge.client.event.EntityRenderersEvent
 
 
-class ModelEel<T : Entity>(val root: ModelPart) : HierarchicalModel<T>() {
-    private val whole: ModelPart = root.getChild("whole")
+class ModelEel(root: ModelPart) : EntityModel<LavaFishRenderState>(root) {
+    private val swimAnimation: KeyframeAnimation = BedrockLoader.animations(ANIMATION)["swim"].bake(root)
 
-    override fun renderToBuffer(
-        poseStack: PoseStack,
-        vertexConsumer: VertexConsumer,
-        packedLight: Int,
-        packedOverlay: Int,
-        color: Int,
-    ) {
-        this.whole.render(poseStack, vertexConsumer, packedLight, packedOverlay, color)
-    }
-
-    override fun root(): ModelPart = this.root
-
-    override fun setupAnim(
-        pEntity: T,
-        pLimbSwing: Float,
-        pLimbSwingAmount: Float,
-        pAgeInTicks: Float,
-        pNetHeadYaw: Float,
-        pHeadPitch: Float,
-    ) {
-        if (pEntity is LivingEntity) {
-            this.root().allParts.forEach(ModelPart::resetPose)
-            animateWalk(
-                ANIMATIONS["swim"],
-                pLimbSwing,
-                pLimbSwingAmount,
-                5F,
-                Float.MAX_VALUE
-            )
-        }
+    override fun setupAnim(state: LavaFishRenderState) {
+        resetPose()
+        swimAnimation.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 5.0f, Float.MAX_VALUE)
     }
 
     companion object {
-        @JvmField val LAYER_LOCATION: ModelLayerLocation =
-            ModelLayerLocation(LavaFishing.resourceLocation("eel"), "main")
+        val LAYER_LOCATION: ModelLayerLocation = ModelLayerLocation(LavaFishing.identifier("eel"), "main")
 
-        val ANIMATIONS = BedrockLoader.loadAnimations("/assets/lavafishing/animation/eel.animation.json")
+        private val GEOMETRY = LavaFishing.identifier("geo/eel.geo.json")
+        private val ANIMATION = LavaFishing.identifier("animation/eel.animation.json")
 
         fun onRegisterLayerDefinitions(event: EntityRenderersEvent.RegisterLayerDefinitions) {
-            event.registerLayerDefinition(LAYER_LOCATION) {
-                BedrockLoader.loadGeometry("/assets/lavafishing/geo/eel.geo.json")
-            }
+            event.registerLayerDefinition(LAYER_LOCATION) { BedrockLoader.geometry(GEOMETRY) }
         }
     }
 }

@@ -3,7 +3,7 @@ package club.redux.sunset.lavafishing.datagenerator.sub.loot
 import club.redux.sunset.lavafishing.BuiltConstants
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.tool.datagenerator.SubProviderLoot
-import net.minecraft.advancements.critereon.LocationPredicate
+import net.minecraft.advancements.criterion.LocationPredicate
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.registries.Registries
 import net.minecraft.world.item.Items
@@ -11,6 +11,7 @@ import net.minecraft.world.level.biome.Biomes
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures
 import net.minecraft.world.level.storage.loot.LootPool
 import net.minecraft.world.level.storage.loot.LootTable
+import net.minecraft.world.level.storage.loot.entries.EmptyLootItem
 import net.minecraft.world.level.storage.loot.entries.LootItem
 import net.minecraft.world.level.storage.loot.entries.NestedLootTable
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction
@@ -32,7 +33,7 @@ class ModSubProviderBoxLoot(lookupProvider: HolderLookup.Provider) : SubProvider
             junkKey,
             LootTable.lootTable().withPool(
                 LootPool.lootPool().setRolls(UniformGenerator.between(2f, 8f))
-                    .add(LootItem.lootTableItem(Items.AIR).setWeight(15))
+                    .add(EmptyLootItem.emptyItem().setWeight(15))
                     .add(
                         LootItem.lootTableItem(Items.WEEPING_VINES).setWeight(5).`when`(
                             LocationCheck.checkLocation(

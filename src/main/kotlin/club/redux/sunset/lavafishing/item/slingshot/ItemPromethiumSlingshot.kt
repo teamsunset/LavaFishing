@@ -1,14 +1,14 @@
 package club.redux.sunset.lavafishing.item.slingshot
 
-import club.redux.sunset.lavafishing.misc.ModTiers
+import club.redux.sunset.lavafishing.misc.ModToolMaterials
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
-class ItemPromethiumSlingshot : ItemSlingshot(
-    ModTiers.PROMETHIUM,
-    Properties().fireResistant()
+class ItemPromethiumSlingshot(properties: Properties) : ItemSlingshot(
+    ModToolMaterials.PROMETHIUM,
+    properties.fireResistant()
 ) {
 
     override fun onUseTick(pLevel: Level, pLivingEntity: LivingEntity, pStack: ItemStack, pRemainingUseDuration: Int) {

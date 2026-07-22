@@ -12,18 +12,18 @@ import net.minecraft.world.level.storage.loot.entries.NestedLootTable
 import net.neoforged.neoforge.event.LootTableLoadEvent
 
 object ModLootTables {
-    @JvmField val FISH: ResourceKey<LootTable> = register("gameplay/fishing/fish")
-    @JvmField val LAVA_FISHING: ResourceKey<LootTable> = register("gameplay/fishing/lava/fishing")
-    @JvmField val LAVA_FISH: ResourceKey<LootTable> = register("gameplay/fishing/lava/fish")
-    @JvmField val LAVA_JUNK: ResourceKey<LootTable> = register("gameplay/fishing/lava/junk")
-    @JvmField val LAVA_TREASURE: ResourceKey<LootTable> = register("gameplay/fishing/lava/treasure")
-    @JvmField val NETHER_FISHING: ResourceKey<LootTable> = register("gameplay/fishing/nether/fishing")
-    @JvmField val NETHER_FISH: ResourceKey<LootTable> = register("gameplay/fishing/nether/fish")
-    @JvmField val NETHER_JUNK: ResourceKey<LootTable> = register("gameplay/fishing/nether/junk")
-    @JvmField val NETHER_TREASURE: ResourceKey<LootTable> = register("gameplay/fishing/nether/treasure")
+    val FISH: ResourceKey<LootTable> = register("gameplay/fishing/fish")
+    val LAVA_FISHING: ResourceKey<LootTable> = register("gameplay/fishing/lava/fishing")
+    val LAVA_FISH: ResourceKey<LootTable> = register("gameplay/fishing/lava/fish")
+    val LAVA_JUNK: ResourceKey<LootTable> = register("gameplay/fishing/lava/junk")
+    val LAVA_TREASURE: ResourceKey<LootTable> = register("gameplay/fishing/lava/treasure")
+    val NETHER_FISHING: ResourceKey<LootTable> = register("gameplay/fishing/nether/fishing")
+    val NETHER_FISH: ResourceKey<LootTable> = register("gameplay/fishing/nether/fish")
+    val NETHER_JUNK: ResourceKey<LootTable> = register("gameplay/fishing/nether/junk")
+    val NETHER_TREASURE: ResourceKey<LootTable> = register("gameplay/fishing/nether/treasure")
 
     private fun register(path: String): ResourceKey<LootTable> {
-        return BuiltInLootTables.register(ResourceKey.create(Registries.LOOT_TABLE, LavaFishing.resourceLocation(path)))
+        return BuiltInLootTables.register(ResourceKey.create(Registries.LOOT_TABLE, LavaFishing.identifier(path)))
     }
 
     fun onLootTableLoad(event: LootTableLoadEvent) {
@@ -38,7 +38,7 @@ object ModLootTables {
             put(AquaLootTables.NETHER_TREASURE, NETHER_TREASURE)
         }
 
-        lootTablesInjects.filter { it.key.location() == event.name }.forEach { (k, v) ->
+        lootTablesInjects.filter { it.key.identifier() == event.name }.forEach { (_, v) ->
             event.table.removePool("main")
             event.table.addPool(
                 LootPool.Builder()

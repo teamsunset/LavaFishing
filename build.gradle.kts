@@ -1,43 +1,42 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import com.github.jengelman.gradle.plugins.shadow.transformers.KotlinModuleMetadataTransformer
+import org.gradle.api.file.DuplicatesStrategy
 import org.jetbrains.gradle.ext.settings
 import org.jetbrains.gradle.ext.taskTriggers
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-val minecraftVersion: String by project
-val minecraftVersionRange: String by project
-val neoforgeVersion: String by project
-val neoforgeVersionRange: String by project
-val modLoader: String by project
-val modLoaderVersionRange: String by project
-val minecraftMappingChannel: String by project
-val minecraftMappingMinecraftVersion: String by project
-val minecraftMappingVersion: String by project
-val aquacultureVersion: String by project
-val aquacultureVersionRange: String by project
-val kotlinForForgeVersion: String by project
-val kotlinForForgeVersionRange: String by project
-val jeiVersion: String by project
-val modId: String by project
-val modName: String by project
-val modLicense: String by project
-val modVersion: String by project
-val modGroupId: String by project
-val modAuthors: String by project
-val modCredits: String by project
-val modDescription: String by project
+val minecraftVersion = providers.gradleProperty("minecraftVersion").get()
+val minecraftVersionRange = providers.gradleProperty("minecraftVersionRange").get()
+val neoforgeVersion = providers.gradleProperty("neoforgeVersion").get()
+val neoforgeVersionRange = providers.gradleProperty("neoforgeVersionRange").get()
+val modLoader = providers.gradleProperty("modLoader").get()
+val modLoaderVersionRange = providers.gradleProperty("modLoaderVersionRange").get()
+val aquacultureVersion = providers.gradleProperty("aquacultureVersion").get()
+val aquacultureVersionRange = providers.gradleProperty("aquacultureVersionRange").get()
+val kotlinForForgeVersion = providers.gradleProperty("kotlinForForgeVersion").get()
+val kotlinForForgeVersionRange = providers.gradleProperty("kotlinForForgeVersionRange").get()
+val jeiVersion = providers.gradleProperty("jeiVersion").get()
+val modId = providers.gradleProperty("modId").get()
+val modName = providers.gradleProperty("modName").get()
+val modLicense = providers.gradleProperty("modLicense").get()
+val modVersion = providers.gradleProperty("modVersion").get()
+val modGroupId = providers.gradleProperty("modGroupId").get()
+val modAuthors = providers.gradleProperty("modAuthors").get()
+val modCredits = providers.gradleProperty("modCredits").get()
+val modDescription = providers.gradleProperty("modDescription").get()
 
-val shade: Configuration by configurations.creating
-val fullShade: Configuration by configurations.creating
+val shade = configurations.create("shade")
+val fullShade = configurations.create("fullShade")
 
-val runtimeMaven: Configuration by configurations.creating
-val providedMaven: Configuration by configurations.creating
-val compileMaven: Configuration by configurations.creating
+configurations.create("runtimeMaven")
+configurations.create("providedMaven")
+configurations.create("compileMaven")
 
 val mainSourceSet = extensions.getByType(JavaPluginExtension::class.java).sourceSets.getByName("main")
 
-val javaVersion = JavaLanguageVersion.of(21)
+val javaVersion = JavaLanguageVersion.of(25)
 
 version = "$minecraftVersion-$modVersion"
 group = modGroupId
@@ -55,43 +54,37 @@ plugins {
     idea
     `maven-publish`
     `java-library`
-    id("com.gradleup.shadow") version "9.3.1"
-    id("org.jetbrains.gradle.plugin.idea-ext") version "1.3"
-    id("net.neoforged.moddev") version "2.0.137"
-    kotlin("jvm") version "2.2.21"
-    kotlin("kapt") version "2.2.21"
-    kotlin("plugin.serialization") version "2.2.21"
-    kotlin("plugin.lombok") version "2.2.21"
+    id("com.gradleup.shadow") version "9.6.0"
+    id("org.jetbrains.gradle.plugin.idea-ext") version "1.4.1"
+    id("net.neoforged.moddev") version "2.0.142"
+    kotlin("jvm") version "2.4.0"
+    kotlin("kapt") version "2.4.0"
+    kotlin("plugin.serialization") version "2.4.0"
+    kotlin("plugin.lombok") version "2.4.0"
 }
 
 repositories {
-    maven { url = uri("https://maven.aliyun.com/repository/public/") }
-    maven { url = uri("https://jitpack.io") }
     maven("Kotlin for Forge") { url = uri("https://thedarkcolour.github.io/KotlinForForge/") }
     maven("Jared's maven") { url = uri("https://maven.blamejared.com/") }
-    maven("Aquaculture") { url = uri("https://girafi.dk/maven/") }
-    maven("ModMaven") { url = uri("https://modmaven.dev") }
     maven("AppleSkin") { url = uri("https://maven.ryanliptak.com/") }
     maven {
         url = uri("https://www.cursemaven.com")
         content { includeGroup("curse.maven") }
     }
-    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
     val mixinProcessor = "org.spongepowered:mixin:0.8.7:processor"
-    val aquaculture =
-        "com.teammetallurgy.aquaculture:aquaculture2_${minecraftVersion}:${minecraftVersion}-${aquacultureVersion}"
+    val aquaculture = "curse.maven:aquaculture-60028:8192770"
     val kotlinforforge = "thedarkcolour:kotlinforforge-neoforge:${kotlinForForgeVersion}"
     val jeiForgeApi = "mezz.jei:jei-${minecraftVersion}-neoforge-api:${jeiVersion}"
     val jei = "mezz.jei:jei-${minecraftVersion}-neoforge:${jeiVersion}"
-    val appleSkin = "squeek.appleskin:appleskin-neoforge:mc1.21-3.0.7"
+    val appleSkin = "squeek.appleskin:appleskin-neoforge:mc26.1-3.0.9"
 
     // JUnit
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.3")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:6.1.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:6.1.2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // Mixin
@@ -111,6 +104,16 @@ dependencies {
     runtimeOnly(appleSkin)
 }
 
+fun dataRunArguments(outputDirectory: String) = listOf(
+    "--mod",
+    modId,
+    "--all",
+    "--output",
+    file(outputDirectory).absolutePath,
+    "--existing",
+    file("src/main/resources/").absolutePath,
+)
+
 neoForge {
     version = neoforgeVersion
 
@@ -124,18 +127,12 @@ neoForge {
         register("server") { server() }
         register("gameTestServer") { type.set("gameTestServer") }
         register("data") {
-            data()
-            programArguments.addAll(
-                listOf(
-                    "--mod",
-                    modId,
-                    "--all",
-                    "--output",
-                    file("src/generated/resources/").absolutePath,
-                    "--existing",
-                    file("src/main/resources/").absolutePath,
-                ),
-            )
+            clientData()
+            programArguments.addAll(dataRunArguments("src/generated/resources/client"))
+        }
+        register("serverData") {
+            serverData()
+            programArguments.addAll(dataRunArguments("src/generated/resources/server"))
         }
     }
 
@@ -145,10 +142,11 @@ neoForge {
         }
     }
 
-    parchment {
-        minecraftVersion = minecraftMappingMinecraftVersion
-        mappingsVersion = minecraftMappingVersion
+    unitTest {
+        enable()
+        testedMod = mods.getByName(modId)
     }
+
 }
 
 val props = mapOf(
@@ -169,7 +167,7 @@ val props = mapOf(
     "mod_credits" to modCredits
 )
 
-val generateTemplates by tasks.registering(Copy::class) {
+val generateTemplates = tasks.register<Copy>("generateTemplates") {
     val src = file("src/main/templates/java")
     val dst = layout.buildDirectory.dir("generated/sources/templates/java")
     inputs.properties(props)
@@ -178,7 +176,10 @@ val generateTemplates by tasks.registering(Copy::class) {
     into(dst)
     expand(props)
 }
-sourceSets["main"].resources.srcDirs("src/generated/resources")
+sourceSets["main"].resources.srcDirs(
+    "src/generated/resources/client",
+    "src/generated/resources/server",
+)
 sourceSets["main"].java.srcDirs(generateTemplates.map { it.destinationDir })
 rootProject.idea.project.settings.taskTriggers.afterSync(generateTemplates)
 project.eclipse.synchronizationTasks(generateTemplates)
@@ -186,7 +187,7 @@ project.eclipse.synchronizationTasks(generateTemplates)
 tasks.withType(JavaCompile::class.java).configureEach { options.encoding = "UTF-8" }
 
 tasks.processResources {
-    val targets = listOf("META-INF/neoforge.mods.toml", "pack.mcmeta")
+    val targets = listOf("META-INF/neoforge.mods.toml")
     inputs.properties(props)
 
     filesMatching(targets) {
@@ -217,7 +218,12 @@ tasks.jar {
 }
 
 tasks.shadowJar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    filesMatching(listOf("META-INF/services/**", "**/*.kotlin_module")) {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
     mergeServiceFiles()
+    transform(KotlinModuleMetadataTransformer::class.java)
     minimize {
         fullShade.dependencies.forEach { exclude(dependency(it)) }
     }

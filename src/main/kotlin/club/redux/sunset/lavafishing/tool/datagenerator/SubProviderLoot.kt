@@ -3,8 +3,8 @@ package club.redux.sunset.lavafishing.tool.datagenerator
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.loot.LootTableSubProvider
+import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.storage.loot.LootTable
 import java.util.function.BiConsumer
 
@@ -21,7 +21,7 @@ abstract class SubProviderLoot(protected val lookupProvider: HolderLookup.Provid
     private val tables = mutableListOf<TableBuilderEntry>()
 
     protected fun createKey(modId: String, path: String): ResourceKey<LootTable> {
-        return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(modId, path))
+        return ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(modId, path))
     }
 
     protected fun add(vararg table: TableBuilderEntry) = this.tables.addAll(table)

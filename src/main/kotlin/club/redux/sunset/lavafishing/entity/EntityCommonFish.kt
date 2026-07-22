@@ -3,14 +3,15 @@ package club.redux.sunset.lavafishing.entity;
 import club.redux.sunset.lavafishing.ai.goal.GoalLavaFishSwim
 import club.redux.sunset.lavafishing.misc.LavaFishType
 import com.teammetallurgy.aquaculture.entity.ai.goal.FollowTypeSchoolLeaderGoal
+import net.minecraft.tags.FluidTags
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.control.MoveControl
-import net.minecraft.world.entity.animal.AbstractFish
-import net.minecraft.world.entity.animal.AbstractSchoolingFish
+import net.minecraft.world.entity.animal.fish.AbstractFish
+import net.minecraft.world.entity.animal.fish.AbstractSchoolingFish
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.material.Fluids
+import net.minecraft.server.level.ServerLevel
 import kotlin.math.sqrt
 
 class EntityCommonFish(
@@ -24,14 +25,14 @@ class EntityCommonFish(
         this.moveControl = MoveControlLavaFish(this)
     }
 
-    override fun handleAirSupply(pAirSupply: Int) {
-        super.handleAirSupply(pAirSupply)
+    override fun handleAirSupply(level: ServerLevel, pAirSupply: Int) {
+        super.handleAirSupply(level, pAirSupply)
         if (this.isAlive && !this.isInLava) {
-            this.airSupply = pAirSupply - 1
-            if (this.airSupply == -20) {
-                this.airSupply = 0
-                this.hurt(this.damageSources().drown(), 2.0f)
-            }
+                this.airSupply = pAirSupply - 1
+                if (this.airSupply == -20) {
+                    this.airSupply = 0
+                    this.hurtServer(level, this.damageSources().drown(), 2.0f)
+                }
         } else {
             this.airSupply = 300
         }
@@ -45,7 +46,7 @@ class EntityCommonFish(
                 ((random.nextFloat() * 2.0f - 1.0f) * 0.05f).toDouble()
             )
             this.setOnGround(false)
-            this.hasImpulse = true
+            this.hurtMarked = true
             this.playSound(this.flopSound, this.soundVolume, this.voicePitch)
         }
         super.aiStep()
@@ -60,7 +61,7 @@ class EntityCommonFish(
     companion object {
         class MoveControlLavaFish internal constructor(private val fish: AbstractFish) : MoveControl(fish) {
             override fun tick() {
-                if (fish.isEyeInFluidType(Fluids.LAVA.fluidType)) {
+                if (fish.isEyeInFluid(FluidTags.LAVA)) {
                     fish.deltaMovement = fish.deltaMovement.add(0.0, 0.005, 0.0)
                 }
 

@@ -24,7 +24,7 @@ object EventTooltip {
         processor: (MutableComponent) -> MutableComponent,
     ): List<Component> {
         val tooltips = mutableListOf<Component>()
-        val isShiftDown = InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_LEFT_SHIFT)
+        val isShiftDown = InputConstants.isKeyDown(Minecraft.getInstance().window, GLFW.GLFW_KEY_LEFT_SHIFT)
         val key = "$tooltipPath.${if (isShiftDown) "desc" else "title"}"
 
         fun MutableComponent.appendShift() = this.append(" ")
@@ -60,11 +60,11 @@ object EventTooltip {
 
         val tooltipPath = "${BuiltConstants.MOD_ID}.${itemLocation.path}.tooltip"
         val color =
-            if (event.itemStack.tags.toList().contains(ModTags.Item.NEPTUNIUM)) ChatFormatting.AQUA
+            if (event.itemStack.tags().toList().contains(ModTags.Item.NEPTUNIUM)) ChatFormatting.AQUA
             else ChatFormatting.DARK_RED
         val tooltips = getTooltips(tooltipPath, Style.EMPTY.applyFormats(color)) {
             (it.contents as? TranslatableContents)?.key?.let { key ->
-                if (key == "${BuiltConstants.MOD_ID}.${ModItems.PROMETHIUM_BULLET.key!!.location().path}.tooltip.title") {
+                if (key == "${BuiltConstants.MOD_ID}.${ModItems.PROMETHIUM_BULLET.key!!.identifier().path}.tooltip.title") {
                     val times = event.itemStack.get(ModDataComponentTypes.BULLET_DIVISION_TIMES) ?: 1
                     if (times > 1)
                         it.append(

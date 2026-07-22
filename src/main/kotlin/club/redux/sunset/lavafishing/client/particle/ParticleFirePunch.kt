@@ -1,10 +1,12 @@
 package club.redux.sunset.lavafishing.client.particle
 
 import net.minecraft.client.multiplayer.ClientLevel
-import net.minecraft.client.particle.*
+import net.minecraft.client.particle.Particle
+import net.minecraft.client.particle.ParticleProvider
+import net.minecraft.client.particle.SingleQuadParticle
+import net.minecraft.client.particle.SpriteSet
 import net.minecraft.core.particles.SimpleParticleType
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.minecraft.util.RandomSource
 
 class ParticleFirePunch(
     level: ClientLevel,
@@ -12,10 +14,11 @@ class ParticleFirePunch(
     yCoord: Double,
     zCoord: Double,
     spriteSet: SpriteSet,
+    random: RandomSource,
     xd: Double,
     yd: Double,
     zd: Double,
-) : TextureSheetParticle(level, xCoord, yCoord, zCoord, xd, yd, zd) {
+) : SingleQuadParticle(level, xCoord, yCoord, zCoord, xd, yd, zd, spriteSet.get(random)) {
     init {
         this.gravity = 0.9f
         this.friction = 0.85f
@@ -31,11 +34,8 @@ class ParticleFirePunch(
         this.bCol = 1f
     }
 
-    override fun getRenderType(): ParticleRenderType {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
-    }
+    override fun getLayer(): Layer = Layer.TRANSLUCENT
 
-    @OnlyIn(Dist.CLIENT)
     class Provider(private val sprites: SpriteSet) : ParticleProvider<SimpleParticleType> {
         override fun createParticle(
             pType: SimpleParticleType,
@@ -46,8 +46,9 @@ class ParticleFirePunch(
             dx: Double,
             dy: Double,
             dz: Double,
+            random: RandomSource,
         ): Particle {
-            return ParticleFirePunch(pLevel, x, y, z, this.sprites, dx, dy, dz)
+            return ParticleFirePunch(pLevel, x, y, z, this.sprites, random, dx, dy, dz)
         }
     }
 }

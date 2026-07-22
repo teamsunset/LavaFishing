@@ -8,33 +8,32 @@ import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModItemsAqua
 import net.minecraft.core.HolderLookup
 import net.minecraft.data.PackOutput
-import net.minecraft.data.tags.ItemTagsProvider
 import net.minecraft.tags.ItemTags
-import net.minecraft.world.item.ArmorItem
 import net.minecraft.world.item.FishingRodItem
-import net.minecraft.world.level.block.Block
 import net.neoforged.neoforge.common.Tags
-import net.neoforged.neoforge.common.data.ExistingFileHelper
+import net.neoforged.neoforge.common.data.ItemTagsProvider
 import java.util.concurrent.CompletableFuture
 
 class ModDataProviderItemTags(
     packOutput: PackOutput,
     lookupProvider: CompletableFuture<HolderLookup.Provider>,
-    blockTags: CompletableFuture<TagLookup<Block>>,
-    existingFileHelper: ExistingFileHelper,
-) : ItemTagsProvider(packOutput, lookupProvider, blockTags, BuiltConstants.MOD_ID, existingFileHelper) {
+) : ItemTagsProvider(packOutput, lookupProvider, BuiltConstants.MOD_ID) {
     override fun addTags(pProvider: HolderLookup.Provider) {
         ModItems.getEntriesIsInstance<ItemLavaFish>().forEach { tag(ItemTags.FISHES).add(it) }
 
         tag(ModTags.OreDirectory.PROMETHIUM_INGOT).add(ModItems.PROMETHIUM_INGOT.get())
         tag(ModTags.OreDirectory.PROMETHIUM_NUGGET).add(ModItems.PROMETHIUM_NUGGET.get())
         tag(ModTags.OreDirectory.PROMETHIUM_BLOCK).add(ModItems.PROMETHIUM_BLOCK.get())
-
         tag(Tags.Items.INGOTS).addTags(ModTags.OreDirectory.PROMETHIUM_INGOT)
         tag(Tags.Items.NUGGETS).addTags(ModTags.OreDirectory.PROMETHIUM_NUGGET)
         tag(Tags.Items.STORAGE_BLOCKS).addTags(ModTags.OreDirectory.PROMETHIUM_BLOCK)
 
-        tag(Tags.Items.ARMORS).add(*ModItems.getEntriesIsInstance<ArmorItem>().toTypedArray())
+        tag(Tags.Items.ARMORS).add(
+            ModItems.PROMETHIUM_HELMET.get(),
+            ModItems.PROMETHIUM_CHESTPLATE.get(),
+            ModItems.PROMETHIUM_LEGGINGS.get(),
+            ModItems.PROMETHIUM_BOOTS.get(),
+        )
         tag(ItemTags.BOW_ENCHANTABLE).add(*ModItems.getEntriesIsInstance<ItemSlingshot>().toTypedArray())
         tag(ItemTags.CROSSBOW_ENCHANTABLE).add(*ModItems.getEntriesIsInstance<ItemSlingshot>().toTypedArray())
 

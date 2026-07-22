@@ -4,6 +4,6 @@ import net.minecraft.world.food.FoodProperties
 import net.minecraft.world.item.Item
 
 open class ItemSimpleFood(
-    propertiesModifier: Properties.() -> Properties = { this },
+    properties: Properties,
     foodPropertiesBuilderModifier: FoodProperties.Builder.() -> FoodProperties.Builder,
-) : Item(Properties().run(propertiesModifier).food(FoodProperties.Builder().run(foodPropertiesBuilderModifier).build()))
+) : Item(properties.food(FoodProperties.Builder().run(foodPropertiesBuilderModifier).build()))

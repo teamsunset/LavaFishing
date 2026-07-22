@@ -13,14 +13,14 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent
 
 class EffectEndlessFlame : MobEffect(MobEffectCategory.HARMFUL, 0xCC3300) {
 
-    override fun applyEffectTick(pLivingEntity: LivingEntity, pAmplifier: Int): Boolean {
+    override fun applyEffectTick(level: ServerLevel, pLivingEntity: LivingEntity, pAmplifier: Int): Boolean {
         pLivingEntity.apply {
             remainingFireTicks = 20
             setSharedFlagOnFire(true)
             if (isInWaterOrRain) {
-                hurt(damageSources().onFire(), 0.2f)
+                hurtServer(level, damageSources().onFire(), 0.2f)
             }
-            hurt(pLivingEntity.damageSources().onFire(), 0.1f)
+            hurtServer(level, damageSources().onFire(), 0.1f)
         }
 
         return true

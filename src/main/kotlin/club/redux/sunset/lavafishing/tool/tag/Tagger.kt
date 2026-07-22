@@ -1,14 +1,14 @@
 package club.redux.sunset.lavafishing.tool.tag
 
 import net.minecraft.core.Registry
+import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
 import kotlin.reflect.KProperty
 
-abstract class Tagger<T>(private val registry: ResourceKey<out Registry<T>>, private val modId: String) {
+abstract class Tagger<T : Any>(private val registry: ResourceKey<out Registry<T>>, private val modId: String) {
     protected fun tag(path: String): TagKey<T> =
-        TagKey.create(registry, ResourceLocation.fromNamespaceAndPath(modId, path))
+        TagKey.create(registry, Identifier.fromNamespaceAndPath(modId, path))
 
     @JvmName("stringTag")
     protected fun String.tag() = this@Tagger.tag(this)

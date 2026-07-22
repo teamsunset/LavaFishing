@@ -9,14 +9,12 @@ import net.minecraft.core.HolderLookup
 import net.minecraft.data.PackOutput
 import net.minecraft.data.tags.EntityTypeTagsProvider
 import net.minecraft.tags.EntityTypeTags
-import net.neoforged.neoforge.common.data.ExistingFileHelper
 import java.util.concurrent.CompletableFuture
 
 class ModDataProviderEntityTypeTags(
     packOutput: PackOutput,
     lookupProvider: CompletableFuture<HolderLookup.Provider>,
-    existingFileHelper: ExistingFileHelper,
-) : EntityTypeTagsProvider(packOutput, lookupProvider, BuiltConstants.MOD_ID, existingFileHelper) {
+) : EntityTypeTagsProvider(packOutput, lookupProvider, BuiltConstants.MOD_ID) {
     override fun addTags(pProvider: HolderLookup.Provider) {
         super.addTags(pProvider)
         tag(ModTags.EntityType.LAVA_FISH).add(*ModEntityTypes.getEntitiesByEntityClass<EntityLavaFish>().toTypedArray())
