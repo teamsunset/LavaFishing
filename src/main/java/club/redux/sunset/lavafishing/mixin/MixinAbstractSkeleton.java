@@ -9,11 +9,12 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -32,17 +33,21 @@ public abstract class MixinAbstractSkeleton extends Monster implements RangedAtt
         super(pEntityType, pLevel);
     }
 
-    @Inject(method = "performRangedAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/AbstractSkeleton;getArrow(Lnet/minecraft/world/item/ItemStack;FLnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/entity/projectile/AbstractArrow;"), cancellable = true)
-    public void performRangedAttack(LivingEntity pTarget, float pDistanceFactor, CallbackInfo ci) {
+    @Inject(method = "performRangedAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/skeleton/AbstractSkeleton;getArrow(Lnet/minecraft/world/item/ItemStack;FLnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/entity/projectile/arrow/AbstractArrow;"), cancellable = true)
+    private void lavafishing$performSlingshotRangedAttack(LivingEntity target, float power, CallbackInfo ci) {
         ItemStack weapon = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof BowItem));
         ItemStack itemstack = this.getProjectile(weapon);
         if (!(weapon.getItem() instanceof ItemSlingshot slingshot)) return;
 
         Projectile projectile = slingshot.createProjectile(this.level(), this, weapon, itemstack, true);
+        if (projectile instanceof AbstractArrow arrow) {
+            arrow.setBaseDamageFromMob(power);
+            projectile = slingshot.customArrow(arrow, itemstack, weapon);
+        }
 
-        double d0 = pTarget.getX() - this.getX();
-        double d1 = pTarget.getY(0.3333333333333333) - projectile.getY();
-        double d2 = pTarget.getZ() - this.getZ();
+        double d0 = target.getX() - this.getX();
+        double d1 = target.getY(0.3333333333333333) - projectile.getY();
+        double d2 = target.getZ() - this.getZ();
         double d3 = Math.sqrt(d0 * d0 + d2 * d2);
         projectile.shoot(d0, d1 + d3 * 0.2F, d2, 1.6F, (float) (14 - this.level().getDifficulty().getId() * 4));
         this.playSound(ModSoundEvents.INSTANCE.getSLINGSHOT().get(), 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
@@ -52,12 +57,12 @@ public abstract class MixinAbstractSkeleton extends Monster implements RangedAtt
     }
 
     @Inject(method = "populateDefaultEquipmentSlots", at = @At("TAIL"))
-    protected void populateDefaultEquipmentSlots(RandomSource pRandom, DifficultyInstance pDifficulty, CallbackInfo ci) {
-        if (pRandom.nextDouble() < 0.01) {
+    private void lavafishing$populateSlingshotEquipment(RandomSource random, DifficultyInstance difficulty, CallbackInfo ci) {
+        if (random.nextDouble() < 0.01) {
             this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.INSTANCE.getIRON_SLINGSHOT().get()));
-            if (pRandom.nextDouble() < 0.01) {
+            if (random.nextDouble() < 0.01) {
                 List<Item> supportedItems = Stream.concat(ItemSlingshot.Companion.getSUPPORTED_PROJECTILES().keySet().stream(), ModItems.INSTANCE.getEntries().stream().filter(item -> item instanceof ItemBullet)).toList();
-                this.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(supportedItems.get(pRandom.nextInt(supportedItems.size()))));
+                this.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(supportedItems.get(random.nextInt(supportedItems.size()))));
             }
         }
     }

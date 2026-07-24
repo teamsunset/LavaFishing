@@ -2,9 +2,9 @@ package club.redux.sunset.lavafishing.mixin;
 
 import club.redux.sunset.lavafishing.mixinproxy.IMixinProxyAbstractFish;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.AbstractFish;
 import net.minecraft.world.entity.animal.Bucketable;
-import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.animal.fish.AbstractFish;
+import net.minecraft.world.entity.animal.fish.WaterAnimal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;

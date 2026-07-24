@@ -21,6 +21,7 @@ class PathNavigationLavaBound(mob: Mob, level: Level) : PathNavigation(mob, leve
      * If on ground or swimming and can swim
      */
     override fun canUpdatePath(): Boolean = this.allowBreaching || this.mob.isInLiquid
+    override fun canNavigateGround(): Boolean = false
     override fun getTempMobPos(): Vec3 = Vec3(this.mob.x, this.mob.getY(0.5), this.mob.z)
     override fun getGroundY(pVec: Vec3): Double = pVec.y
 
@@ -35,7 +36,7 @@ class PathNavigationLavaBound(mob: Mob, level: Level) : PathNavigation(mob, leve
     }
 
     override fun isStableDestination(pos: BlockPos): Boolean {
-        return !this.level.getBlockState(pos).isSolidRender(this.level, pos)
+        return !this.level.getBlockState(pos).isSolidRender
     }
 
     /**

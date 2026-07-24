@@ -1,7 +1,7 @@
 package club.redux.sunset.lavafishing.client.model
 
 import club.redux.sunset.lavafishing.LavaFishing
-import club.redux.sunset.lavafishing.client.renderer.entity.state.LavaFishRenderState
+import club.redux.sunset.lavafishing.client.renderer.entity.state.RenderStateLavaFish
 import club.redux.sunset.lavafishing.tool.bedrock.BedrockLoader
 import net.minecraft.client.animation.KeyframeAnimation
 import net.minecraft.client.model.EntityModel
@@ -10,10 +10,10 @@ import net.minecraft.client.model.geom.ModelPart
 import net.neoforged.neoforge.client.event.EntityRenderersEvent
 
 
-class ModelEel(root: ModelPart) : EntityModel<LavaFishRenderState>(root) {
+class ModelEel(root: ModelPart) : EntityModel<RenderStateLavaFish>(root) {
     private val swimAnimation: KeyframeAnimation = BedrockLoader.animations(ANIMATION)["swim"].bake(root)
 
-    override fun setupAnim(state: LavaFishRenderState) {
+    override fun setupAnim(state: RenderStateLavaFish) {
         resetPose()
         swimAnimation.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 5.0f, Float.MAX_VALUE)
     }

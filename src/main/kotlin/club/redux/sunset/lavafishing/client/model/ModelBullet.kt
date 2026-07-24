@@ -1,7 +1,7 @@
 package club.redux.sunset.lavafishing.client.model
 
 import club.redux.sunset.lavafishing.LavaFishing
-import club.redux.sunset.lavafishing.client.renderer.entity.state.BulletRenderState
+import club.redux.sunset.lavafishing.client.renderer.entity.state.RenderStateBullet
 import club.redux.sunset.lavafishing.tool.bedrock.BedrockLoader
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.geom.ModelLayerLocation
@@ -11,9 +11,9 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent
 
 class ModelBullet(
     root: ModelPart,
-) : EntityModel<BulletRenderState>(root) {
+) : EntityModel<RenderStateBullet>(root) {
 
-    override fun setupAnim(state: BulletRenderState) = resetPose()
+    override fun setupAnim(state: RenderStateBullet) = resetPose()
 
     companion object {
         val LAYER_LOCATION: ModelLayerLocation = ModelLayerLocation(LavaFishing.identifier("bullet"), "main")

@@ -5,7 +5,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
-import net.minecraft.world.entity.animal.WaterAnimal
+import net.minecraft.world.entity.animal.fish.WaterAnimal
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.HitResult
@@ -28,7 +28,7 @@ open class EntityNeptuniumBullet(
     }
 
     init {
-        this.waterInertia = 1.0F
+        this.setWaterInertia(1.0F)
     }
 
     private fun getTargets(radius: Double): List<LivingEntity> {
@@ -46,7 +46,7 @@ open class EntityNeptuniumBullet(
             .filter { this.distanceTo(it) < radius }
             .filter { !(this.piercingIgnoreEntityIds?.contains(it.id) ?: false) }
             .filter {
-                this.inGround || this.deltaMovement == Vec3.ZERO || this.getDirection(it).dot(this.deltaMovement) > 0
+                this.isInGround || this.deltaMovement == Vec3.ZERO || this.getDirection(it).dot(this.deltaMovement) > 0
             }
             .map { it as LivingEntity }
     }
@@ -56,9 +56,9 @@ open class EntityNeptuniumBullet(
 
         if (this.isInWater) {
             val targets = this.getTargets(this.range + this.deltaMovement.length())
-            if (this.inGround) {
+            if (this.isInGround) {
                 targets.minByOrNull(this::distanceTo)?.let { entity ->
-                    this.inGround = false
+                    this.isInGround = false
                     this.deltaMovement = this.getDirection(entity).scale(1.5)
                 }
                 return
