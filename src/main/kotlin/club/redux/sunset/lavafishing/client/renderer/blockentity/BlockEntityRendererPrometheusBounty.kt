@@ -17,7 +17,6 @@ class BlockEntityRendererPrometheusBounty(
         SpriteId(Sheets.CHEST_SHEET, LavaFishing.identifier("entity/chest/prometheus_bounty"))
 
     companion object {
-        @JvmStatic
         fun onRegisterRenderers(event: EntityRenderersEvent.RegisterRenderers) {
             event.registerBlockEntityRenderer(
                 ModBlockEntityTypes.PROMETHEUS_BOUNTY.get(),

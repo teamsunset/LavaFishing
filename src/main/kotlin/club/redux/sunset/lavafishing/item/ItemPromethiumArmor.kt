@@ -1,65 +1,49 @@
 package club.redux.sunset.lavafishing.item
 
-import club.redux.sunset.lavafishing.LavaFishing
 import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModMobEffects
-import com.mojang.blaze3d.systems.RenderSystem
-import com.mojang.blaze3d.vertex.BufferUploader
-import com.mojang.blaze3d.vertex.DefaultVertexFormat
-import com.mojang.blaze3d.vertex.Tesselator
-import com.mojang.blaze3d.vertex.VertexFormat
 import com.mojang.math.Axis
 import net.minecraft.client.Minecraft
-import net.minecraft.client.renderer.GameRenderer
+import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.client.resources.model.ModelBakery
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
-import net.minecraft.util.Mth
+import net.minecraft.tags.FluidTags
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.item.ArmorItem
-import net.minecraft.world.item.ArmorMaterial
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.equipment.ArmorMaterial
+import net.minecraft.world.item.equipment.ArmorType
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.material.FogType
-import net.neoforged.neoforge.client.event.RenderBlockScreenEffectEvent
 import net.neoforged.neoforge.client.event.ViewportEvent
-import net.neoforged.neoforge.common.NeoForgeMod
+import net.neoforged.neoforge.client.event.RenderBlockScreenEffectEvent
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent
 import net.neoforged.neoforge.event.tick.EntityTickEvent
-import org.lwjgl.opengl.GL11
 
 class ItemPromethiumArmor(
-    armorMaterial: Holder<ArmorMaterial>,
-    type: Type,
-) : ArmorItem(armorMaterial, type, Properties().durability(type.getDurability(40)).fireResistant().stacksTo(1)) {
-
-    private var texture: String? = null
-
-    fun setArmorTexture(filename: String): Item = this.apply { this.texture = filename }
-
-    override fun isEnchantable(stack: ItemStack): Boolean = true
-
-    // 这玩意居然是实时的
-    override fun getArmorTexture(
-        stack: ItemStack,
-        entity: Entity,
-        slot: EquipmentSlot,
-        layer: ArmorMaterial.Layer,
-        innerModel: Boolean,
-    ) = LavaFishing.resourceLocation("textures/armor/" + this.texture + ".png")
-
-    override fun getXpRepairRatio(stack: ItemStack): Float = super.getXpRepairRatio(stack)
+    armorMaterial: ArmorMaterial,
+    val armorType: ArmorType,
+    properties: Properties,
+) : Item(properties.humanoidArmor(armorMaterial, armorType).fireResistant().stacksTo(1)) {
 
 
     companion object {
+        private val ARMOR_SLOTS = listOf(
+            EquipmentSlot.FEET,
+            EquipmentSlot.LEGS,
+            EquipmentSlot.CHEST,
+            EquipmentSlot.HEAD,
+        )
+
+        private fun LivingEntity.promethiumArmorItems(): List<ItemPromethiumArmor> =
+            ARMOR_SLOTS.map { getItemBySlot(it).item }.filterIsInstance<ItemPromethiumArmor>()
+
         fun onEntityTickPost(event: EntityTickEvent.Post) {
             val entity = event.entity
             if (entity !is LivingEntity) return
@@ -74,10 +58,10 @@ class ItemPromethiumArmor(
             val isOnLava = listOf(entity.onPos, futureBlockPos).any { level.getBlockState(it).`is`(Blocks.LAVA) }
             val isOnHotFloor = level.getBlockState(entity.onPos).`is`(Blocks.MAGMA_BLOCK)
 
-            val types = entity.armorSlots.map { it.item }.filterIsInstance<ItemPromethiumArmor>().map { it.type }
+            val types = entity.promethiumArmorItems().map { it.armorType }
 
-            if (types.contains(Type.LEGGINGS) && (isOnLava || isOnFire || isOnHotFloor)) applyEffect(MobEffects.MOVEMENT_SPEED)
-            if (types.contains(Type.BOOTS) && isOnLava) applyEffect(ModMobEffects.LAVA_WALKER)
+            if (types.contains(ArmorType.LEGGINGS) && (isOnLava || isOnFire || isOnHotFloor)) applyEffect(MobEffects.SPEED)
+            if (types.contains(ArmorType.BOOTS) && isOnLava) applyEffect(ModMobEffects.LAVA_WALKER)
         }
 
         fun onFogRender(event: ViewportEvent.RenderFog) {
@@ -89,74 +73,40 @@ class ItemPromethiumArmor(
             ) {
                 event.nearPlaneDistance = 0.0f
                 event.farPlaneDistance = 20.0f
-                event.isCanceled = true
             }
         }
 
-        /**
-         * # 戴帽子时减少渲染的火焰效果
-         * 抄原版的
-         */
         fun onRenderBlockScreen(event: RenderBlockScreenEffectEvent) {
             if (event.overlayType != RenderBlockScreenEffectEvent.OverlayType.FIRE) return
-            if (!event.player.getItemBySlot(EquipmentSlot.HEAD).`is`(ModItems.PROMETHIUM_HELMET)) return
+            if (!event.player.getItemBySlot(EquipmentSlot.HEAD).`is`(ModItems.PROMETHIUM_HELMET.get())) return
 
             val poseStack = event.poseStack
+            val sprite = event.sprites.get(ModelBakery.FIRE_1)
+            val builder = event.bufferSource.getBuffer(RenderTypes.fireScreenEffect(sprite.atlasLocation()))
+            val alpha = if (event.player.isEyeInFluid(FluidTags.LAVA)) 0.0f else 0.3f
 
-            RenderSystem.setShader { GameRenderer.getPositionTexColorShader() }
-            RenderSystem.depthFunc(GL11.GL_ALWAYS)
-            RenderSystem.depthMask(false)
-            RenderSystem.enableBlend()
-
-            val textureAtlasSprite = ModelBakery.FIRE_1.sprite()
-            RenderSystem.setShaderTexture(0, textureAtlasSprite.atlasLocation())
-
-            val uMin = textureAtlasSprite.u0
-            val uMax = textureAtlasSprite.u1
-            val uMid = (uMin + uMax) / 2.0f
-            val vMin = textureAtlasSprite.v0
-            val vMax = textureAtlasSprite.v1
-            val vMid = (vMin + vMax) / 2.0f
-            val shrinkRatio = textureAtlasSprite.uvShrinkRatio()
-            val uAdjustedMin = Mth.lerp(shrinkRatio, uMin, uMid)
-            val uAdjustedMax = Mth.lerp(shrinkRatio, uMax, uMid)
-            val vAdjustedMin = Mth.lerp(shrinkRatio, vMin, vMid)
-            val vAdjustedMax = Mth.lerp(shrinkRatio, vMax, vMid)
-
-            for (i in 0..1) {
+            repeat(2) { index ->
                 poseStack.pushPose()
+                poseStack.translate((-(index * 2 - 1)).toFloat() * 0.24f, -0.3f, 0.0f)
+                poseStack.mulPose(Axis.YP.rotationDegrees((index * 2 - 1).toFloat() * 10.0f))
 
-                poseStack.translate((-(i * 2 - 1)).toFloat() * 0.24f, -0.3f, 0.0f)
-                poseStack.mulPose(Axis.YP.rotationDegrees((i * 2 - 1).toFloat() * 10.0f))
-
-                val matrix4f = poseStack.last().pose()
-                val bufferBuilder =
-                    Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR)
-
-                val alpha = if (event.player.isEyeInFluidType(NeoForgeMod.LAVA_TYPE.value())) 0f else 0.3f // Modified
-
-                bufferBuilder.addVertex(matrix4f, -0.5f, -0.5f, -0.5f)
-                    .setUv(uAdjustedMax, vAdjustedMax)
+                val pose = poseStack.last().pose()
+                builder.addVertex(pose, -0.5f, -0.5f, -0.5f)
+                    .setUv(sprite.u1, sprite.v1)
                     .setColor(1.0f, 1.0f, 1.0f, alpha)
-                bufferBuilder.addVertex(matrix4f, 0.5f, -0.5f, -0.5f)
-                    .setUv(uAdjustedMin, vAdjustedMax)
+                builder.addVertex(pose, 0.5f, -0.5f, -0.5f)
+                    .setUv(sprite.u0, sprite.v1)
                     .setColor(1.0f, 1.0f, 1.0f, alpha)
-                bufferBuilder.addVertex(matrix4f, 0.5f, 0.5f, -0.5f)
-                    .setUv(uAdjustedMin, vAdjustedMin)
+                builder.addVertex(pose, 0.5f, 0.5f, -0.5f)
+                    .setUv(sprite.u0, sprite.v0)
                     .setColor(1.0f, 1.0f, 1.0f, alpha)
-                bufferBuilder.addVertex(matrix4f, -0.5f, 0.5f, -0.5f)
-                    .setUv(uAdjustedMax, vAdjustedMin)
+                builder.addVertex(pose, -0.5f, 0.5f, -0.5f)
+                    .setUv(sprite.u1, sprite.v0)
                     .setColor(1.0f, 1.0f, 1.0f, alpha)
-
-                BufferUploader.drawWithShader(bufferBuilder.buildOrThrow())
                 poseStack.popPose()
             }
 
-            RenderSystem.disableBlend()
-            RenderSystem.depthMask(true)
-            RenderSystem.depthFunc(GL11.GL_LEQUAL)
-
-            event.isCanceled = true
+            event.setCanceled(true)
         }
 
         /**
@@ -165,7 +115,7 @@ class ItemPromethiumArmor(
         fun onLivingDamagePre(event: LivingDamageEvent.Pre) {
             val damage = event.newDamage
             if (listOf(DamageTypes.LAVA, DamageTypes.IN_FIRE, DamageTypes.ON_FIRE).any { event.source.`is`(it) }) {
-                val count = event.entity.armorSlots.map { it.item }.filterIsInstance<ItemPromethiumArmor>().count()
+                val count = event.entity.promethiumArmorItems().size
                 event.newDamage -= count / 4f * damage
             }
         }
@@ -174,15 +124,15 @@ class ItemPromethiumArmor(
          * # 有胸甲时回血，全套抵消伤害
          */
         fun onLivingIncomingDamage(event: LivingIncomingDamageEvent) {
-            val armorItems = event.entity.armorSlots.map { it.item }.filterIsInstance<ItemPromethiumArmor>()
+            val armorItems = event.entity.promethiumArmorItems()
 
             if (listOf(DamageTypes.LAVA, DamageTypes.IN_FIRE, DamageTypes.ON_FIRE).any { event.source.`is`(it) }) {
-                if (armorItems.any { it.type == Type.CHESTPLATE }) event.entity.heal(0.04f)
-                if (armorItems.count() == 4) event.isCanceled = true
+                if (armorItems.any { it.armorType == ArmorType.CHESTPLATE }) event.entity.heal(0.04f)
+                if (armorItems.size == ARMOR_SLOTS.size) event.setCanceled(true)
             }
 
-            if (event.source.`is`(DamageTypes.HOT_FLOOR) && armorItems.any { it.type == Type.BOOTS }) {
-                event.isCanceled = true
+            if (event.source.`is`(DamageTypes.HOT_FLOOR) && armorItems.any { it.armorType == ArmorType.BOOTS }) {
+                event.setCanceled(true)
             }
         }
     }

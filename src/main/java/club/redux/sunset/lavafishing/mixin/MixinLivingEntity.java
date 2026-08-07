@@ -4,7 +4,6 @@ import club.redux.sunset.lavafishing.registry.ModItems;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.extensions.ILivingEntityExtension;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,25 +20,17 @@ public abstract class MixinLivingEntity extends Entity implements Attackable, IL
     }
 
     @Shadow
-    protected abstract boolean isAffectedByFluids();
+    public abstract ItemStack getItemBySlot(EquipmentSlot slot);
 
-    @Shadow
-    public abstract boolean canStandOnFluid(FluidState pFluidState);
-
-    @Shadow
-    public abstract ItemStack getItemBySlot(EquipmentSlot equipmentSlot);
-
-    @Shadow
-    private float speed;
-
-    @Inject(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;moveRelative(FLnet/minecraft/world/phys/Vec3;)V"))
-    public void travel(Vec3 pTravelVector, CallbackInfo ci) {
-        if (this.isControlledByLocalInstance()) {
-            if (this.isInLava() && this.isAffectedByFluids() && !this.canStandOnFluid(this.level().getFluidState(this.blockPosition()))) {
-                if (this.getItemBySlot(EquipmentSlot.LEGS).is(ModItems.INSTANCE.getPROMETHIUM_LEGGINGS().get())) {
-                    this.moveRelative(0.08F, pTravelVector);
-                }
-            }
+    @Inject(method = "travel", at = @At("HEAD"))
+    private void lavafishing$applyPromethiumLeggingsBoost(
+            Vec3 input,
+            CallbackInfo callbackInfo
+    ) {
+        if (this.isLocalInstanceAuthoritative()
+                && this.isInLava()
+                && this.getItemBySlot(EquipmentSlot.LEGS).is(ModItems.INSTANCE.getPROMETHIUM_LEGGINGS().get())) {
+            this.moveRelative(0.08F, input);
         }
     }
 }

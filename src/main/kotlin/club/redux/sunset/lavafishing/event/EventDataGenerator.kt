@@ -7,36 +7,29 @@ import club.redux.sunset.lavafishing.datagenerator.sub.loot.ModSubProviderEntity
 import club.redux.sunset.lavafishing.datagenerator.sub.loot.ModSubProviderFishingLoot
 import net.minecraft.data.loot.LootTableProvider
 import net.minecraft.data.loot.LootTableProvider.SubProviderEntry
-import net.minecraft.data.tags.TagsProvider
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
 import net.neoforged.neoforge.data.event.GatherDataEvent
 import java.util.*
-import java.util.concurrent.CompletableFuture
 
 
 object EventDataGenerator {
     @JvmStatic
-    fun onGatherData(event: GatherDataEvent) {
-        val generator = event.generator
+    fun onGatherClientData(event: GatherDataEvent.Client) {
         val packOutput = event.generator.packOutput
-        val existingFileHelper = event.existingFileHelper
+
+        event.addProvider(ModDataProviderItemModel(packOutput))
+        event.addProvider(ModDataProviderLanguage(packOutput, Locale.PRC))
+        event.addProvider(ModDataProviderLanguage(packOutput, Locale.US))
+    }
+
+    @JvmStatic
+    fun onGatherServerData(event: GatherDataEvent.Server) {
+        val packOutput = event.generator.packOutput
         val lookupProvider = event.lookupProvider
 
-        generator.addProvider(
-            event.includeServer(),
-            ModDataProviderItemTags(
-                packOutput,
-                lookupProvider,
-                CompletableFuture.completedFuture(TagsProvider.TagLookup.empty()),
-                existingFileHelper
-            )
-        )
-        generator.addProvider(
-            event.includeServer(),
-            ModDataProviderEntityTypeTags(packOutput, lookupProvider, existingFileHelper)
-        )
-        generator.addProvider(
-            event.includeServer(),
+        event.addProvider(ModDataProviderItemTags(packOutput, lookupProvider))
+        event.addProvider(ModDataProviderEntityTypeTags(packOutput, lookupProvider))
+        event.addProvider(
             LootTableProvider(
                 packOutput,
                 setOf(),
@@ -46,50 +39,39 @@ object EventDataGenerator {
                     SubProviderEntry(::ModSubProviderBoxLoot, LootContextParamSets.CHEST),
                     SubProviderEntry(::ModSubProviderFishingLoot, LootContextParamSets.FISHING),
                 ),
-                lookupProvider
+                lookupProvider,
             )
         )
-        generator.addProvider(
-            event.includeServer(),
-            ModDataProviderBlockTags(packOutput, lookupProvider, existingFileHelper)
-        )
-        generator.addProvider(event.includeServer(), ModDataProviderBiomeModifier(packOutput))
-        generator.addProvider(event.includeServer(), ModDataProviderRecipe(packOutput, lookupProvider))
-        generator.addProvider(event.includeClient(), ModDataProviderItemModel(packOutput, existingFileHelper))
-        generator.addProvider(true, ModDataProviderLanguage(packOutput, Locale.PRC))
-        generator.addProvider(true, ModDataProviderLanguage(packOutput, Locale.US))
+        event.addProvider(ModDataProviderBlockTags(packOutput, lookupProvider))
+        event.addProvider(ModDataProviderBiomeModifier(packOutput))
+        event.addProvider(ModDataProviderRecipe.Runner(packOutput, lookupProvider))
     }
 }
 
 // **VANILLA EXAMPLES**
 //
-//        val ADD_SPAWNS_EXAMPLE = ResourceKey.create<BiomeModifier>(
-//            NeoForgeRegistries.Keys.BIOME_MODIFIERS,  // The registry this key is for
-//            ResourceLocation.fromNamespaceAndPath(BuiltConstants.MOD_ID, "add_spawns_example") // The registry name
+//        val addSpawnsExample = ResourceKey.create<BiomeModifier>(
+//            NeoForgeRegistries.Keys.BIOME_MODIFIERS,
+//            Identifier.fromNamespaceAndPath(BuiltConstants.MOD_ID, "add_spawns_example"),
 //        )
 //
 //        val builder = RegistrySetBuilder().add(NeoForgeRegistries.Keys.BIOME_MODIFIERS) { bootstrap ->
-//            // Lookup any necessary registries.
-//            // Static registries only need to be looked up if you need to grab the tag data.
 //            val biomes: HolderGetter<Biome> = bootstrap.lookup(Registries.BIOME)
 //
-//            // Register the biome modifiers.
 //            bootstrap.register(
-//                ADD_SPAWNS_EXAMPLE,
-//                AddSpawnsBiomeModifier( // The biome(s) to spawn the mobs within
-//                    HolderSet.direct(biomes.getOrThrow(Biomes.PLAINS)),  // The spawners of the entities to add
-//                    listOf(
-//                        SpawnerData(EntityType.GHAST, 1, 5, 10)
-//                    )
-//                )
+//                addSpawnsExample,
+//                AddSpawnsBiomeModifier.singleSpawn(
+//                    HolderSet.direct(biomes.getOrThrow(Biomes.PLAINS)),
+//                    Weighted(SpawnerData(EntityType.GHAST, 5, 10), 1),
+//                ),
 //            )
 //        }
 //
-//        event.generator.addProvider(
-//            event.includeServer(), DatapackBuiltinEntriesProvider(
-//                event.generator.packOutput,
-//                event.lookupProvider,
+//        event.addProvider(
+//            DatapackBuiltinEntriesProvider(
+//                packOutput,
+//                lookupProvider,
 //                builder,
-//                mutableSetOf(event.modContainer.modId)
-//            )
+//                setOf(BuiltConstants.MOD_ID),
+//            ),
 //        )

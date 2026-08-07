@@ -6,12 +6,14 @@ import club.redux.sunset.lavafishing.util.UtilLevel.getHolder
 import club.redux.sunset.lavafishing.util.UtilProjectile.setShooter
 import net.minecraft.core.Direction
 import net.minecraft.core.Position
+import net.minecraft.core.component.DataComponents
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.projectile.AbstractArrow
 import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow
 import net.minecraft.world.item.ArrowItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.enchantment.EnchantmentHelper
@@ -33,7 +35,8 @@ open class ItemBullet(
 
     open fun attachBasePropertiesToBullet(bullet: EntityBullet) = Unit
 
-    open fun customBullet(pLevel: Level): EntityBullet = entityTypeProvider().create(pLevel)!!
+    open fun customBullet(pLevel: Level): EntityBullet =
+        entityTypeProvider().create(pLevel, EntitySpawnReason.TRIGGERED)!!
 
     override fun asProjectile(pLevel: Level, pPos: Position, pStack: ItemStack, pDirection: Direction): Projectile {
         return this.createBullet(pLevel).apply {
@@ -62,13 +65,17 @@ open class ItemBullet(
     open fun createBullet(pLevel: Level, pAmmo: ItemStack, pShooter: Entity?, pWeapon: ItemStack?): EntityBullet {
         val bullet = this.customBullet(pLevel)
         this.attachBasePropertiesToBullet(bullet)
+        bullet.setPickupItemStack(pAmmo.copyWithCount(1))
+        if (pAmmo.has(DataComponents.INTANGIBLE_PROJECTILE)) {
+            bullet.pickup = AbstractArrow.Pickup.CREATIVE_ONLY
+        }
 
         if (pWeapon != null && pLevel is ServerLevel) {
             require(!pWeapon.isEmpty) { "Invalid weapon firing an arrow" }
 
-            bullet.firedFromWeapon = pWeapon.copy()
-            bullet.pierceLevel = EnchantmentHelper.getPiercingCount(pLevel, pWeapon, pAmmo.copy()).toByte()
-            EnchantmentHelper.onProjectileSpawned(pLevel, pWeapon, bullet) { bullet.firedFromWeapon = null }
+            bullet.setFiringWeapon(pWeapon, EnchantmentHelper.getPiercingCount(pLevel, pWeapon, pAmmo))
+            bullet.attachEnchantmentEffects(pWeapon)
+            EnchantmentHelper.onProjectileSpawned(pLevel, pWeapon, bullet) { }
         }
         return bullet.setShooter(pShooter)
     }

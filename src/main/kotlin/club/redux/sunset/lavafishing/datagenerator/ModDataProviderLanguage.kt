@@ -41,6 +41,10 @@ class ModDataProviderLanguage(
             Locale.PRC to "滞留型熔岩行者药水",
             Locale.US to "Lingering Potion of Lava Walker"
         )
+        "item.minecraft.tipped_arrow.effect.lava_walker".addTranslation(
+            Locale.PRC to "熔岩行者之箭",
+            Locale.US to "Arrow of Lava Walker"
+        )
 
         // Fish
         val fishMap = mapOf(
@@ -173,14 +177,21 @@ class ModDataProviderLanguage(
         )
 
         // Block
-        ModBlocks.PROMETHEUS_BOUNTY.get().addTranslation(
+        arrayOf(
             Locale.PRC to "普罗米修斯的恩惠",
             Locale.US to "Prometheus Bounty"
-        )
-        ModBlocks.PROMETHIUM_BLOCK.get().addTranslation(
+        ).let {
+            ModBlocks.PROMETHEUS_BOUNTY.get().addTranslation(*it)
+            ModItems.PROMETHEUS_BOUNTY.get().addTranslation(*it)
+        }
+
+        arrayOf(
             Locale.PRC to "钷块",
             Locale.US to "Promethium Block"
-        )
+        ).let {
+            ModBlocks.PROMETHIUM_BLOCK.get().addTranslation(*it)
+            ModItems.PROMETHIUM_BLOCK.get().addTranslation(*it)
+        }
 
         // Food
         ModItems.SPICY_FISH_FILLET.get().addTranslation(

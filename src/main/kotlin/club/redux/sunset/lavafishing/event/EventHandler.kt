@@ -8,32 +8,24 @@ import club.redux.sunset.lavafishing.client.model.*
 import club.redux.sunset.lavafishing.client.particle.ParticleFirePunch
 import club.redux.sunset.lavafishing.client.renderer.blockentity.BlockEntityRendererPrometheusBounty
 import club.redux.sunset.lavafishing.client.renderer.entity.EntityRendererBullet
+import club.redux.sunset.lavafishing.client.renderer.item.property.ItemPropertySlingshotPull
 import club.redux.sunset.lavafishing.effect.EffectEndlessFlame
 import club.redux.sunset.lavafishing.effect.EffectLavaWalker
 import club.redux.sunset.lavafishing.entity.EntityLavaFish
 import club.redux.sunset.lavafishing.item.ItemPromethiumArmor
-import club.redux.sunset.lavafishing.item.block.BlockItemWithoutLevelRenderer
 import club.redux.sunset.lavafishing.item.fish.ItemLavaFish
-import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot
 import club.redux.sunset.lavafishing.misc.ModLootTables
-import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModParticleTypes
 import club.redux.sunset.lavafishing.registry.ModPotions
+import club.redux.sunset.lavafishing.tool.bedrock.BedrockLoader
 import net.minecraft.client.particle.SpriteSet
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent
-import net.neoforged.neoforge.client.event.EntityRenderersEvent
-import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent
-import net.neoforged.neoforge.client.event.RenderBlockScreenEffectEvent
-import net.neoforged.neoforge.client.event.ViewportEvent
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
+import net.neoforged.neoforge.client.event.*
 import net.neoforged.neoforge.data.event.GatherDataEvent
 import net.neoforged.neoforge.event.LootTableLoadEvent
-import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent
@@ -101,6 +93,7 @@ class EventHandler {
         fun onRenderBlockScreen(event: RenderBlockScreenEffectEvent) {
             ItemPromethiumArmor.onRenderBlockScreen(event)
         }
+
     }
 
     @EventBusSubscriber(modid = BuiltConstants.MOD_ID)
@@ -117,8 +110,13 @@ class EventHandler {
         }
 
         @SubscribeEvent
-        fun onGatherData(event: GatherDataEvent) {
-            EventDataGenerator.onGatherData(event)
+        fun onGatherClientData(event: GatherDataEvent.Client) {
+            EventDataGenerator.onGatherClientData(event)
+        }
+
+        @SubscribeEvent
+        fun onGatherServerData(event: GatherDataEvent.Server) {
+            EventDataGenerator.onGatherServerData(event)
         }
 
         @SubscribeEvent
@@ -126,24 +124,18 @@ class EventHandler {
             EntityLavaFish.onEntityAttributeCreation(event)
         }
 
-        @SubscribeEvent
-        fun onRegisterCapabilities(event: RegisterCapabilitiesEvent) {
-            ModItems.onRegisterCapabilities(event)
-        }
-
-        @SubscribeEvent
-        fun onModifyDefaultComponents(event: ModifyDefaultComponentsEvent) {
-            ItemLavaFish.onModifyDefaultComponents(event)
-        }
     }
 
     @EventBusSubscriber(modid = BuiltConstants.MOD_ID, value = [Dist.CLIENT])
     object ModEventClient {
+        @SubscribeEvent
+        fun onRegisterRangeSelectItemModelProperties(event: RegisterRangeSelectItemModelPropertyEvent) {
+            ItemPropertySlingshotPull.onRegisterRangeSelectItemModelProperties(event)
+        }
 
         @SubscribeEvent
-        fun onClientSetup(event: FMLClientSetupEvent) {
-            ItemSlingshot.onClientSetup(event)
-            ModItems.onClientSetup(event)
+        fun onAddClientReloadListeners(event: AddClientReloadListenersEvent) {
+            BedrockLoader.onAddClientReloadListeners(event)
         }
 
         @SubscribeEvent
@@ -173,11 +165,6 @@ class EventHandler {
             ModelSnail.onRegisterLayerDefinitions(event)
             ModelEel.onRegisterLayerDefinitions(event)
             ModelLobster.onRegisterLayerDefinitions(event)
-        }
-
-        @SubscribeEvent
-        fun onRegisterClientExtensions(event: RegisterClientExtensionsEvent) {
-            BlockItemWithoutLevelRenderer.onRegisterClientExtensions(event)
         }
     }
 }

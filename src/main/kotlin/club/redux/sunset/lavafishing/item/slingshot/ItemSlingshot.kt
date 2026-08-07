@@ -6,89 +6,96 @@ import club.redux.sunset.lavafishing.registry.ModItems
 import club.redux.sunset.lavafishing.registry.ModSoundEvents
 import club.redux.sunset.lavafishing.util.UtilItemStack.getEnchantmentLevel
 import club.redux.sunset.lavafishing.util.UtilProjectile.setShooter
-import net.minecraft.client.renderer.item.ItemProperties
 import net.minecraft.core.Holder
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundSource
 import net.minecraft.stats.Stats
-import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.entity.projectile.*
-import net.minecraft.world.entity.projectile.windcharge.WindCharge
+import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow
+import net.minecraft.world.entity.projectile.arrow.ThrownTrident
+import net.minecraft.world.entity.projectile.hurtingprojectile.SmallFireball
+import net.minecraft.world.entity.projectile.hurtingprojectile.WitherSkull
+import net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.WindCharge
+import net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownEgg
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownEnderpearl
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownExperienceBottle
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownLingeringPotion
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownSplashPotion
 import net.minecraft.world.item.*
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import net.neoforged.neoforge.event.EventHooks
+import net.minecraft.world.phys.Vec3
 import java.util.function.Predicate
 
 open class ItemSlingshot(
-    open val tier: Tier,
+    open val tier: ToolMaterial,
     properties: Properties,
-) : BowItem(properties.durability((BASE_DURABILITY_MUTIPLIER * tier.uses).toInt())) {
+) : BowItem(
+    properties
+        .durability((BASE_DURABILITY_MUTIPLIER * tier.durability).toInt())
+        .repairable(tier.repairItems)
+        .enchantable(tier.enchantmentValue),
+) {
 
     /**
      * # 释放
      *
      * 抄原版的
      */
-    override fun releaseUsing(pStack: ItemStack, pLevel: Level, pEntityLiving: LivingEntity, pTimeLeft: Int) {
-        if (pEntityLiving is Player) {
-            //这里居然是用事件获取弹射物的
-            val itemStack: ItemStack = pEntityLiving.getProjectile(pStack)
-            if (!itemStack.isEmpty) {
-                var overtime: Int = this.getUseDuration(pStack, pEntityLiving) - pTimeLeft
-                overtime *= this.getChargeMultiplier(pStack)
-                overtime = EventHooks.onArrowLoose(pStack, pLevel, pEntityLiving, overtime, !itemStack.isEmpty)
+    override fun releaseUsing(
+        pStack: ItemStack,
+        pLevel: Level,
+        pEntityLiving: LivingEntity,
+        pTimeLeft: Int,
+    ): Boolean {
+        val player = pEntityLiving as? Player ?: return false
+        val projectileStack = player.getProjectile(pStack)
+        if (projectileStack.isEmpty) return false
 
-                if (overtime < 0) return
+        var chargeTime = (getUseDuration(pStack, player) - pTimeLeft) * getChargeMultiplier(pStack)
+        chargeTime = EventHooks.onArrowLoose(pStack, pLevel, player, chargeTime, true)
+        if (chargeTime < 0) return false
 
-                val f = getPowerForTime(overtime)
-                if (!(f.toDouble() < 0.1)) {
-                    val list = draw(pStack, itemStack, pEntityLiving)
-                    if (pLevel is ServerLevel) {
-                        if (list.isNotEmpty()) {
-                            this.shoot(
-                                pLevel,
-                                pEntityLiving,
-                                pEntityLiving.usedItemHand,
-                                pStack,
-                                list,
-                                f * 3.0f,
-                                1.0f,
-                                f == 1.0f,
-                                null
-                            )
-                        }
-                    }
+        val power = getPowerForTime(chargeTime)
+        if (power < 0.1f) return false
 
-                    pLevel.playSound(
-                        null,
-                        pEntityLiving.x,
-                        pEntityLiving.y,
-                        pEntityLiving.z,
-                        ModSoundEvents.SLINGSHOT,
-                        SoundSource.PLAYERS,
-                        1.0f,
-                        1.0f / (pLevel.getRandom().nextFloat() * 0.4f + 1.2f) + f * 0.5f
-                    )
-                    pEntityLiving.awardStat(Stats.ITEM_USED[this])
-                }
-            }
+        val projectiles = draw(pStack, projectileStack, player)
+        if (pLevel is ServerLevel && projectiles.isNotEmpty()) {
+            shoot(
+                pLevel,
+                player,
+                player.usedItemHand,
+                pStack,
+                projectiles,
+                power * 3.0f,
+                1.0f,
+                power == 1.0f,
+                null,
+            )
         }
+
+        pLevel.playSound(
+            null,
+            player.x,
+            player.y,
+            player.z,
+            ModSoundEvents.SLINGSHOT,
+            SoundSource.PLAYERS,
+            1.0f,
+            1.0f / (pLevel.random.nextFloat() * 0.4f + 1.2f) + power * 0.5f,
+        )
+        player.awardStat(Stats.ITEM_USED[this])
+        return true
     }
 
-    override fun getAllSupportedProjectiles(pStack: ItemStack): Predicate<ItemStack> = Predicate { stack ->
+    override fun getAllSupportedProjectiles(): Predicate<ItemStack> = Predicate { stack ->
         stack.item is ItemBullet || SUPPORTED_PROJECTILES.keys.any { stack.item == it }
     }
-
-    override fun isValidRepairItem(pStack: ItemStack, pRepairCandidate: ItemStack) =
-        this.tier.repairIngredient.test(pRepairCandidate)
-
-    override fun getEnchantmentValue(stack: ItemStack) = this.tier.enchantmentValue
 
 //    override fun isPrimaryItemFor(stack: ItemStack, enchantment: Holder<Enchantment>): Boolean {
 //        return super.isPrimaryItemFor(stack, enchantment) || this.supportsEnchantment(stack, enchantment)
@@ -108,73 +115,46 @@ open class ItemSlingshot(
         pWeapon: ItemStack,
         pAmmo: ItemStack,
         pIsCrit: Boolean,
-    ): Projectile = when (pAmmo.item) {
+    ): Projectile = when (val ammoItem = pAmmo.item) {
         in SUPPORTED_PROJECTILES.keys -> SUPPORTED_PROJECTILES[pAmmo.item]!!(pLevel, pShooter, pAmmo)
+        is ItemBullet -> ammoItem.createBullet(pLevel, pAmmo, pShooter, pWeapon).apply {
+            if (pIsCrit) setCritArrow(true)
+        }
         else -> super.createProjectile(pLevel, pShooter, pWeapon, pAmmo, pIsCrit)
     }
 
     override fun customArrow(pArrow: AbstractArrow, pAmmo: ItemStack, pWeapon: ItemStack) = this.customBullet(
         pArrow as? EntityBullet ?: ModItems.STONE_BULLET.get()
             .createBullet(pArrow.level(), pAmmo, pArrow.owner, pWeapon)
-    ).apply { attachEnchantmentEffects(pWeapon) }
+    )
 
     open fun customBullet(bullet: EntityBullet) = bullet
     open fun getChargeMultiplier(stack: ItemStack): Int = 1 + stack.getEnchantmentLevel(Enchantments.QUICK_CHARGE)
 
     companion object {
         val SUPPORTED_PROJECTILES: Map<Item, (Level, LivingEntity, ItemStack) -> Projectile> = mapOf(
-            Items.SNOWBALL to { level, entity, _ -> Snowball(level, entity) },
-            Items.EGG to { level, entity, _ -> ThrownEgg(level, entity) },
+            Items.SNOWBALL to { level, entity, stack -> Snowball(level, entity, stack) },
+            Items.EGG to { level, entity, stack -> ThrownEgg(level, entity, stack) },
             Items.FIRE_CHARGE to { level, entity, _ ->
-                SmallFireball(EntityType.SMALL_FIREBALL, level).setShooter(entity)
+                SmallFireball(level, entity, Vec3.ZERO)
             },
             Items.WITHER_SKELETON_SKULL to { level, entity, _ ->
-                WitherSkull(EntityType.WITHER_SKULL, level).setShooter(entity)
+                WitherSkull(level, entity, Vec3.ZERO)
             },
-            Items.EXPERIENCE_BOTTLE to { level, entity, _ -> ThrownExperienceBottle(level, entity) },
+            Items.EXPERIENCE_BOTTLE to { level, entity, stack -> ThrownExperienceBottle(level, entity, stack) },
             Items.TRIDENT to { level, entity, stack ->
                 ThrownTrident(level, entity, stack.also {
                     (level as? ServerLevel)?.let { level -> it.hurtAndBreak(1, level, entity) {} }
                 })
             },
-            Items.ENDER_PEARL to { level, entity, _ -> ThrownEnderpearl(level, entity) },
+            Items.ENDER_PEARL to { level, entity, stack -> ThrownEnderpearl(level, entity, stack) },
             Items.WIND_CHARGE to { level, entity, _ ->
-                WindCharge(EntityType.WIND_CHARGE, level).setShooter(entity)
+                WindCharge(level, entity.x, entity.eyeY, entity.z, Vec3.ZERO).setShooter(entity)
             },
-            Items.POTION to { level, entity, stack -> ThrownPotion(level, entity).apply { item = stack } },
-            Items.SPLASH_POTION to { level, entity, stack -> ThrownPotion(level, entity).apply { item = stack } },
-            Items.LINGERING_POTION to { level, entity, stack -> ThrownPotion(level, entity).apply { item = stack } },
+            Items.POTION to { level, entity, stack -> ThrownSplashPotion(level, entity, stack) },
+            Items.SPLASH_POTION to { level, entity, stack -> ThrownSplashPotion(level, entity, stack) },
+            Items.LINGERING_POTION to { level, entity, stack -> ThrownLingeringPotion(level, entity, stack) },
         )
-
-        @JvmStatic
-        fun onClientSetup(event: FMLClientSetupEvent) {
-            event.enqueueWork {
-                ModItems.getEntriesIsInstance<ItemSlingshot>().forEach { item ->
-                    ItemProperties.register(
-                        item,
-                        ResourceLocation.withDefaultNamespace("pull")
-                    ) { pStack, _, pEntity, _ ->
-                        if (pEntity == null || pEntity.useItem != pStack) {
-                            0f
-                        } else {
-                            (pStack.getUseDuration(pEntity) - pEntity.useItemRemainingTicks) / 20f * item.getChargeMultiplier(
-                                pStack
-                            )
-                        }
-                    }
-                    ItemProperties.register(
-                        item,
-                        ResourceLocation.withDefaultNamespace("pulling")
-                    ) { pStack, _, pEntity, _ ->
-                        if (pEntity != null && pEntity.isUsingItem && pEntity.useItem === pStack) {
-                            1f
-                        } else {
-                            0f
-                        }
-                    }
-                }
-            }
-        }
 
         const val BASE_DURABILITY_MUTIPLIER = 0.5
     }
