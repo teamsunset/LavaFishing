@@ -29,8 +29,6 @@ object ModEntityTypes : Registrar<EntityType<*>>(BuiltInRegistries.ENTITY_TYPE, 
         TYPE_MAP[it]?.isSubclassOf(T::class) ?: false
     } as List<DeferredHolder<EntityType<*>, EntityType<T>>>
 
-    inline fun <reified T : Entity> getEntitiesByEntityClass() = this.getHoldersByEntityClass<T>().map { it.get() }
-
     private inline fun <reified T : Entity> registerWithMap(
         noinline supplier: (String) -> EntityType<T>,
     ) = this.register(supplier).post { TYPE_MAP[it] = T::class }

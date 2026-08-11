@@ -17,7 +17,9 @@ class ModDataProviderEntityTypeTags(
 ) : EntityTypeTagsProvider(packOutput, lookupProvider, BuiltConstants.MOD_ID) {
     override fun addTags(pProvider: HolderLookup.Provider) {
         super.addTags(pProvider)
-        tag(ModTags.EntityType.LAVA_FISH).add(*ModEntityTypes.getEntitiesByEntityClass<EntityLavaFish>().toTypedArray())
+        tag(ModTags.EntityType.LAVA_FISH).add(
+            *ModEntityTypes.getHoldersByEntityClass<EntityLavaFish>().map { it.get() }.toTypedArray()
+        )
 
         FishRegistry.fishEntities.forEach { tag(EntityTypeTags.CAN_BREATHE_UNDER_WATER).add(it.get()) }
     }
