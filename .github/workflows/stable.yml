@@ -70,7 +70,7 @@ jobs:
           files: build/libs/lavafishing-${{ steps.get_version.outputs.version }}-all.jar
 
       - name: Modrinth Release
-        uses: dsx137/modrinth-releaser@v1
+        uses: dsx137/modrinth-releaser@main
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         with:
@@ -98,7 +98,7 @@ jobs:
           relations: aquaculture:requiredDependency,kotlin-for-forge:requiredDependency
 
       - name: Mcmod Release
-        uses: dsx137/mcmod-releaser@v1
+        uses: dsx137/mcmod-releaser@main
         env:
           MCMOD_ACCOUNT: ${{secrets.MCMOD_ACCOUNT}}
         with:
