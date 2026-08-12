@@ -8,27 +8,28 @@ on:
     branches:
       - mc*/dev
 
+concurrency:
+  group: snapshot
+  cancel-in-progress: true
+
 jobs:
   publish:
-    concurrency:
-      group: snapshot
-      cancel-in-progress: true
     runs-on: ubuntu-latest
 
     steps:
       - name: Set up Java
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v5
         with:
           distribution: adopt
-          java-version: 21
+          java-version: 25
 
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Cache Gradle Packages
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.gradle/caches
@@ -49,23 +50,14 @@ jobs:
         run: echo "minecraft_version=$(grep 'minecraftVersion=' gradle.properties | sed 's/minecraftVersion=//g')" >> $GITHUB_OUTPUT
 
       - name: Generate Changelog
+        uses: dsx137/generate-changelog@v1
         id: get_changelog
-        run: |
-          tag="$(git --no-pager tag --sort=creatordate --merged ${{ github.ref_name }} | grep snapshot | tail -1)"
-          limit="-1"
-          if [ -n "$tag" ]; then
-            limit="$tag..HEAD"
-          fi
-          changelog="$(echo -ne "$(git log "$limit" --pretty=format:'- %s')")"
-          changelog="$(echo "$changelog" | sed 's/$/  /')"
-          {
-            echo 'changelog<<EOF'
-            echo "$changelog"
-            echo 'EOF'
-          } >> $GITHUB_OUTPUT
+        with:
+          branch: ${{ github.ref_name }}
+          include: snapshot
 
       - name: Update Snapshot Release
-        uses: andelf/nightly-release@main
+        uses: andelf/nightly-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

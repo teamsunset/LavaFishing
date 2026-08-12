@@ -7,27 +7,29 @@ on:
   pull_request:
     branches:
       - mc*/release
+
+concurrency:
+  group: stable
+  cancel-in-progress: true
+
 jobs:
   publish:
-    concurrency:
-      group: stable
-      cancel-in-progress: true
     runs-on: ubuntu-latest
 
     steps:
       - name: Set up Java
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v5
         with:
           distribution: adopt
-          java-version: 21
+          java-version: 25
 
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Cache Gradle Packages
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.gradle/caches
@@ -50,23 +52,14 @@ jobs:
           echo "minecraft_version=$(grep 'minecraftVersion=' gradle.properties | sed 's/minecraftVersion=//g')" >> $GITHUB_OUTPUT
 
       - name: Generate Changelog
+        uses: dsx137/generate-changelog@v1
         id: get_changelog
-        run: |
-          tag="$(git --no-pager tag --sort=creatordate --merged ${{ github.ref_name }} | grep -v snapshot | tail -1)"
-          limit="-1"
-          if [ -n "$tag" ]; then
-            limit="$tag..HEAD"
-          fi
-          changelog="$(echo -ne "$(git log "$limit" --pretty=format:'- %s')")"
-          changelog="$(echo "$changelog" | sed 's/$/  /')"
-          {
-            echo 'changelog<<EOF'
-            echo "$changelog"
-            echo 'EOF'
-          } >> $GITHUB_OUTPUT
+        with:
+          branch: ${{ github.ref_name }}
+          exclude: snapshot
 
       - name: Create GitHub Release
-        uses: andelf/nightly-release@main
+        uses: andelf/nightly-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -77,7 +70,7 @@ jobs:
           files: build/libs/lavafishing-${{ steps.get_version.outputs.version }}-all.jar
 
       - name: Modrinth Release
-        uses: dsx137/modrinth-releaser@main
+        uses: dsx137/modrinth-releaser@v1
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         with:
@@ -92,20 +85,20 @@ jobs:
           dependencies: Vl1uNAuy:required, ordsPcFz:required
 
       - name: CurseForge Release
-        uses: itsmeow/curseforge-upload@v3.1.2
+        uses: itsmeow/curseforge-upload@v3
         with:
           game_endpoint: minecraft
           token: ${{ secrets.CURSEFORGE_TOKEN }}
           display_name: ${{ steps.get_version.outputs.version }}
           project_id: 1035887
-          game_versions: 11779,NeoForge,Java 21,Client,Server
+          game_versions: Minecraft 26.1:26.1.2,NeoForge,Java 25,Client,Server
           changelog: ${{ steps.get_changelog.outputs.changelog }}
           release_type: release
           file_path: build/libs/lavafishing-${{ steps.get_version.outputs.version }}-all.jar
           relations: aquaculture:requiredDependency,kotlin-for-forge:requiredDependency
 
       - name: Mcmod Release
-        uses: dsx137/mcmod-releaser@main
+        uses: dsx137/mcmod-releaser@v1
         env:
           MCMOD_ACCOUNT: ${{secrets.MCMOD_ACCOUNT}}
         with:
