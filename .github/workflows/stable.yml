@@ -52,7 +52,7 @@ jobs:
           echo "minecraft_version=$(grep 'minecraftVersion=' gradle.properties | sed 's/minecraftVersion=//g')" >> $GITHUB_OUTPUT
 
       - name: Generate Changelog
-        uses: dsx137/generate-changelog@v1
+        uses: dsx137/generate-changelog@main
         id: get_changelog
         with:
           branch: ${{ github.ref_name }}
