@@ -1,6 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.github.jengelman.gradle.plugins.shadow.transformers.KotlinModuleMetadataTransformer
-import org.gradle.api.file.DuplicatesStrategy
 import org.jetbrains.gradle.ext.settings
 import org.jetbrains.gradle.ext.taskTriggers
 import java.time.ZoneOffset
@@ -126,7 +125,7 @@ neoForge {
         register("client") { client() }
         register("server") { server() }
         register("gameTestServer") { type.set("gameTestServer") }
-        register("data") {
+        register("clientData") {
             clientData()
             programArguments.addAll(dataRunArguments("src/generated/resources/client"))
         }

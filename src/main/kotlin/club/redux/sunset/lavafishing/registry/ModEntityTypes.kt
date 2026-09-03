@@ -45,6 +45,7 @@ object ModEntityTypes : Registrar<EntityType<*>>(BuiltInRegistries.ENTITY_TYPE, 
             .sized(0.2f, 0.2f)
             .clientTrackingRange(4)
             .updateInterval(10)
+            .noLootTable()
             .build(this.createResourceKey(it))
     }
 }
