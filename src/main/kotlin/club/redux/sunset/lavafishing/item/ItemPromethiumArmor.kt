@@ -20,8 +20,8 @@ import net.minecraft.world.item.equipment.ArmorMaterial
 import net.minecraft.world.item.equipment.ArmorType
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.material.FogType
-import net.neoforged.neoforge.client.event.ViewportEvent
 import net.neoforged.neoforge.client.event.RenderBlockScreenEffectEvent
+import net.neoforged.neoforge.client.event.ViewportEvent
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent
 import net.neoforged.neoforge.event.tick.EntityTickEvent
@@ -55,7 +55,9 @@ class ItemPromethiumArmor(
             }
 
             val isOnFire = entity.isOnFire
-            val isOnLava = listOf(entity.onPos, futureBlockPos).any { level.getBlockState(it).`is`(Blocks.LAVA) }
+            val isOnLava = entity.isInLava || listOf(entity.onPos, futureBlockPos).any {
+                level.getBlockState(it).`is`(Blocks.LAVA)
+            }
             val isOnHotFloor = level.getBlockState(entity.onPos).`is`(Blocks.MAGMA_BLOCK)
 
             val types = entity.promethiumArmorItems().map { it.armorType }

@@ -1,5 +1,6 @@
 package club.redux.sunset.lavafishing.effect
 
+import club.redux.sunset.lavafishing.misc.LavaSwim
 import club.redux.sunset.lavafishing.registry.ModMobEffects
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleTypes
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
 import net.neoforged.neoforge.event.entity.player.PlayerEvent
+import net.neoforged.neoforge.event.tick.EntityTickEvent
 import kotlin.math.max
 import kotlin.math.pow
 
@@ -24,15 +26,15 @@ class EffectLavaWalker : MobEffect(MobEffectCategory.BENEFICIAL, 0xCC3300) {
         }
     }
 
-    override fun shouldApplyEffectTickThisTick(tickCount: Int, amplifier: Int): Boolean = true
-
-    override fun applyEffectTick(level: ServerLevel, pLivingEntity: LivingEntity, pAmplifier: Int): Boolean {
+    // applyEffectTick only in server, so...
+    private fun applyMovement(level: Level, pLivingEntity: LivingEntity) {
         if (!pLivingEntity.isSpectator && !pLivingEntity.isShiftKeyDown) {
             val pos = pLivingEntity.position()
             val movement = pLivingEntity.deltaMovement
             val onPos = pLivingEntity.onPos
             val futureBlockPos = BlockPos.containing(pos.add(movement.scale(1.5)))
             if (pLivingEntity.isInLava) {
+                if (LavaSwim.isDirectionalSwimming(pLivingEntity)) return
                 pLivingEntity.deltaMovement = movement.add(0.0, 0.1, 0.0)
             } else if (level.getFluidState(onPos).`is`(FluidTags.LAVA)) {
                 this.sendParticles(level, pos)
@@ -44,10 +46,21 @@ class EffectLavaWalker : MobEffect(MobEffectCategory.BENEFICIAL, 0xCC3300) {
                 pLivingEntity.setDeltaMovement(movement.x(), max(movement.y(), movement.y() * multiplier), movement.z())
             }
         }
-        return true
     }
 
     companion object {
+        @JvmStatic
+        fun onEntityTickPre(event: EntityTickEvent.Pre) {
+            val entity = event.entity
+            if (
+                entity is LivingEntity &&
+                (!entity.level().isClientSide || entity.isLocalInstanceAuthoritative) &&
+                entity.hasEffect(ModMobEffects.LAVA_WALKER)
+            ) {
+                ModMobEffects.LAVA_WALKER.value().applyMovement(entity.level(), entity)
+            }
+        }
+
         @JvmStatic
         fun onBreakSpeed(event: PlayerEvent.BreakSpeed) {
             if (event.entity.hasEffect(ModMobEffects.LAVA_WALKER) && event.entity.level()

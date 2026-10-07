@@ -52,6 +52,11 @@ class EventHandler {
         }
 
         @SubscribeEvent
+        fun onEntityTickPre(event: EntityTickEvent.Pre) {
+            EffectLavaWalker.onEntityTickPre(event)
+        }
+
+        @SubscribeEvent
         fun onEntityTickPost(event: EntityTickEvent.Post) {
             ItemPromethiumArmor.onEntityTickPost(event)
         }

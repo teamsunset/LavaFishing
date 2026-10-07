@@ -18,18 +18,13 @@ import net.minecraft.world.entity.projectile.arrow.ThrownTrident
 import net.minecraft.world.entity.projectile.hurtingprojectile.SmallFireball
 import net.minecraft.world.entity.projectile.hurtingprojectile.WitherSkull
 import net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.WindCharge
-import net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball
-import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownEgg
-import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownEnderpearl
-import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownExperienceBottle
-import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownLingeringPotion
-import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownSplashPotion
+import net.minecraft.world.entity.projectile.throwableitemprojectile.*
 import net.minecraft.world.item.*
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
-import net.neoforged.neoforge.event.EventHooks
 import net.minecraft.world.phys.Vec3
+import net.neoforged.neoforge.event.EventHooks
 import java.util.function.Predicate
 
 open class ItemSlingshot(
@@ -120,6 +115,7 @@ open class ItemSlingshot(
         is ItemBullet -> ammoItem.createBullet(pLevel, pAmmo, pShooter, pWeapon).apply {
             if (pIsCrit) setCritArrow(true)
         }
+
         else -> super.createProjectile(pLevel, pShooter, pWeapon, pAmmo, pIsCrit)
     }
 
@@ -136,10 +132,10 @@ open class ItemSlingshot(
             Items.SNOWBALL to { level, entity, stack -> Snowball(level, entity, stack) },
             Items.EGG to { level, entity, stack -> ThrownEgg(level, entity, stack) },
             Items.FIRE_CHARGE to { level, entity, _ ->
-                SmallFireball(level, entity, Vec3.ZERO)
+                SmallFireball(level, entity.x, entity.eyeY, entity.z, Vec3.ZERO).apply { setOwner(entity) }
             },
             Items.WITHER_SKELETON_SKULL to { level, entity, _ ->
-                WitherSkull(level, entity, Vec3.ZERO)
+                WitherSkull(level, entity, Vec3.ZERO).apply { setPos(entity.x, entity.eyeY, entity.z) }
             },
             Items.EXPERIENCE_BOTTLE to { level, entity, stack -> ThrownExperienceBottle(level, entity, stack) },
             Items.TRIDENT to { level, entity, stack ->

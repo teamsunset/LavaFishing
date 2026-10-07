@@ -116,7 +116,7 @@ open class EntityLavaFish(
                 this.deltaMovement = deltaMovement.add(0.0, -0.005, 0.0)
             }
         } else {
-            this.castToProxy(IMixinProxyAbstractFish::class).travelFromLivingEntity(pTravelVector)
+            super.travel(pTravelVector)
         }
     }
 
