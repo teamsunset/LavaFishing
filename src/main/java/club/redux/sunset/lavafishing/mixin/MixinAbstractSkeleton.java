@@ -4,6 +4,7 @@ import club.redux.sunset.lavafishing.item.bullet.ItemBullet;
 import club.redux.sunset.lavafishing.item.slingshot.ItemSlingshot;
 import club.redux.sunset.lavafishing.registry.ModItems;
 import club.redux.sunset.lavafishing.registry.ModSoundEvents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -64,9 +65,11 @@ public abstract class MixinAbstractSkeleton extends Monster implements RangedAtt
         double d1 = target.getY(0.3333333333333333) - projectile.getY();
         double d2 = target.getZ() - this.getZ();
         double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-        projectile.shoot(d0, d1 + d3 * 0.2F, d2, 1.6F, (float) (14 - this.level().getDifficulty().getId() * 4));
-        this.playSound(ModSoundEvents.INSTANCE.getSLINGSHOT().get(), 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-        this.level().addFreshEntity(projectile);
+        if (this.level() instanceof ServerLevel serverLevel) {
+            Projectile.spawnProjectileUsingShoot(projectile, serverLevel, itemstack,
+                    d0, d1 + d3 * 0.2F, d2, 1.6F, (float) (14 - serverLevel.getDifficulty().getId() * 4));
+            this.playSound(ModSoundEvents.INSTANCE.getSLINGSHOT().get(), 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+        }
 
         ci.cancel();
     }

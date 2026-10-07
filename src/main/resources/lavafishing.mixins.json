@@ -6,9 +6,11 @@
   "mixins": [
     "MixinAbstractFish",
     "MixinAbstractSkeleton",
-    "MixinLivingEntity"
+    "MixinLivingEntity",
+    "MixinPlayer"
   ],
   "client": [
+    "client.MixinLocalPlayer"
   ],
   "server": [],
   "injectors": {

@@ -75,7 +75,6 @@ open class ItemBullet(
 
             bullet.setFiringWeapon(pWeapon, EnchantmentHelper.getPiercingCount(pLevel, pWeapon, pAmmo))
             bullet.attachEnchantmentEffects(pWeapon)
-            EnchantmentHelper.onProjectileSpawned(pLevel, pWeapon, bullet) { }
         }
         return bullet.setShooter(pShooter)
     }
