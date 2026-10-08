@@ -1,12 +1,14 @@
 package club.redux.sunset.lavafishing.util
 
-import net.minecraft.world.phys.Vec3
 import java.security.SecureRandom
 import java.util.*
+import kotlin.math.PI
 
 object UtilMath {
+    const val DEG = PI / 180.0
+
     fun Random.estimate(rate: Double) = this.nextDouble() < rate
-    
+
     fun generateArchimedianScrew(numPoints: Int, b: Double = 1.0): List<Pair<Double, Double>> {
         val a = 0.0
 
@@ -31,6 +33,4 @@ object UtilMath {
 
         return points
     }
-
-    fun dot(vecA: Vec3, vecB: Vec3) = vecA.x * vecB.x + vecA.y * vecB.y + vecA.z * vecB.z
 }

@@ -92,6 +92,7 @@ class EntityPromethiumBullet(
             this.explode(1f)
             this.divide(this.divisionNum, this.deltaMovement.length())
             this.deltaMovement = Vec3(this.deltaMovement.x, 0.5, this.deltaMovement.z)
+            this.needsSync = true
             this.divisionTimes--
             if (this.divisionTimes == 0) this.destroy()
         }
@@ -103,6 +104,7 @@ class EntityPromethiumBullet(
         val n = normal.normalize()
         val newV = if (n.length() > 0) v.subtract(n.scale(2 * v.dot(n))) else v
         this.deltaMovement = newV.scale(1.0)
+        this.needsSync = true
         this.divisionTimes--
     }
 
@@ -124,7 +126,7 @@ class EntityPromethiumBullet(
         stack.hasEnchantmentThen(Enchantments.POWER) { this.divisionNum += it }
     }
 
-    //-----------------network----------------//
+    //-----------------persistent----------------//
 
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)

@@ -12,5 +12,8 @@ object UtilEntity {
         } else null
     }
 
-    fun Entity.getTexture(alt: Identifier): Identifier = this.getTexture() ?: alt
+    fun Entity.getTexture(alt: Identifier) = this.getTexture() ?: alt
+
+    fun Entity.getDirectionTo(entity: Entity) = this.position().vectorTo(entity.position()).normalize()
+
 }
