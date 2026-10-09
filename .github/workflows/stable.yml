@@ -57,7 +57,7 @@ jobs:
           exclude: snapshot
 
       - name: Create GitHub Release
-        uses: andelf/nightly-release@v1
+        uses: andelf/nightly-release@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
