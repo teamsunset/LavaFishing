@@ -47,9 +47,7 @@ jobs:
 
       - name: Extract Version
         id: get_version
-        run: |
-          echo "version=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')" >> $GITHUB_OUTPUT
-          echo "minecraft_version=$(grep 'minecraftVersion=' gradle.properties | sed 's/minecraftVersion=//g')" >> $GITHUB_OUTPUT
+        run: ./gradlew -q exportVersion --console=plain >> "$GITHUB_OUTPUT"
 
       - name: Generate Changelog
         uses: dsx137/generate-changelog@main

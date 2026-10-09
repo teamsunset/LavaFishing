@@ -47,7 +47,7 @@ jobs:
 
       - name: Extract Current Minecraft Version
         id: get_version
-        run: echo "minecraft_version=$(grep 'minecraftVersion=' gradle.properties | sed 's/minecraftVersion=//g')" >> $GITHUB_OUTPUT
+        run: ./gradlew -q exportVersion --console=plain >> "$GITHUB_OUTPUT"
 
       - name: Generate Changelog
         uses: dsx137/generate-changelog@main

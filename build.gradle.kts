@@ -18,6 +18,13 @@ val javaVersion = JavaLanguageVersion.of(25)
 version = "${Props.MINECRAFT_VERSION}-${Props.MOD_VERSION}"
 group = Props.MOD_GROUP_ID
 
+tasks.register("exportVersion") {
+    doLast {
+        println("version=${version}")
+        println("minecraft_version=${Props.MINECRAFT_VERSION}")
+    }
+}
+
 base.archivesName.set(Props.MOD_ID)
 java.toolchain.languageVersion.set(javaVersion)
 kapt.keepJavacAnnotationProcessors = true
