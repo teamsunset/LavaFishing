@@ -88,13 +88,10 @@ neoForge {
         register("server") { server() }
         register("gameTestServer") { type.set("gameTestServer") }
         fun dataRunArguments(modId: String, outputDirectory: String) = listOf(
-            "--mod",
-            modId,
+            "--mod", modId,
             "--all",
-            "--output",
-            file(outputDirectory).absolutePath,
-            "--existing",
-            file("src/main/resources/").absolutePath,
+            "--output", file(outputDirectory).absolutePath,
+            "--existing", file("src/main/resources/").absolutePath,
         )
         register("clientData") {
             clientData()
@@ -179,8 +176,6 @@ tasks.shadowJar {
     mergeServiceFiles()
     transform(KotlinModuleMetadataTransformer::class.java)
     minimize {
-        r8 { }
-
         fullShade.dependencies.forEach { exclude(dependency(it)) }
     }
 
