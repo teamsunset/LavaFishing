@@ -28,6 +28,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent
+import net.minecraftforge.client.event.RenderBlockScreenEffectEvent
 import net.minecraftforge.client.event.ViewportEvent
 import net.minecraftforge.data.event.GatherDataEvent
 import net.minecraftforge.event.LootTableLoadEvent
@@ -96,6 +97,11 @@ class EventHandler {
         @SubscribeEvent
         fun onFogRender(event: ViewportEvent.RenderFog) {
             ItemPromethiumArmor.onFogRender(event)
+        }
+
+        @SubscribeEvent
+        fun onRenderBlockScreen(event: RenderBlockScreenEffectEvent) {
+            ItemPromethiumArmor.onRenderBlockScreen(event)
         }
     }
 

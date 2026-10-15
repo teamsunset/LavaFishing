@@ -7,11 +7,12 @@ import com.mojang.blaze3d.vertex.VertexConsumer
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.client.renderer.RenderType
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
 import net.minecraftforge.client.event.EntityRenderersEvent
 
-class ModelCommonFish<T : Entity>(root: ModelPart) : EntityModel<T>() {
+class ModelCommonFish<T : Entity>(root: ModelPart) : EntityModel<T>(RenderType::entityCutout) {
     private val whole: ModelPart = root.getChild("whole")
 
     override fun renderToBuffer(
